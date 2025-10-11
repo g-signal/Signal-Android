@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "360483801060",
+    "project_id": "ba-chat-2298a",
+    "storage_bucket": "ba-chat-2298a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360483801060:android:220b86cbebcb4c49b6a9f1",
+        "android_client_info": {
+          "package_name": "group.ba.voiceapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwLbPFujqRlKld1BQoXPIVf9RWujgXz64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
