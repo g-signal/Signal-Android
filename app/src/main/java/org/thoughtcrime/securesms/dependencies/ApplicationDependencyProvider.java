@@ -13,6 +13,7 @@ import org.signal.core.util.ThreadUtil;
 import org.signal.core.util.billing.BillingApi;
 import org.signal.core.util.concurrent.DeadlockDetector;
 import org.signal.core.util.concurrent.SignalExecutors;
+import org.signal.glide.Log;
 import org.signal.libsignal.net.Network;
 import org.signal.libsignal.zkgroup.profiles.ClientZkProfileOperations;
 import org.signal.libsignal.zkgroup.receipts.ClientZkReceiptOperations;
@@ -323,6 +324,8 @@ public class ApplicationDependencyProvider implements AppDependencies.Provider {
       DynamicCredentialsProvider credentialsProvider = new DynamicCredentialsProvider();
 
       if (credentialsProvider.isInvalid()) {
+        Log.e("ApplicationDependencyProvider", "WebSocket auth failed - ACI: " + (credentialsProvider.getAci() != null ? "present" : "null") +
+                                               ", Password: " + (credentialsProvider.getPassword() != null ? "present" : "null"));
         throw new WebSocketUnavailableException("Invalid auth credentials");
       }
 

@@ -2856,7 +2856,7 @@
     <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">Вы атрымаеце званок, каб пацвердзіць гэты нумар.</string>
     <string name="RegistrationActivity_edit_number">Рэдагаваць нумар</string>
     <string name="RegistrationActivity_missing_google_play_services">Сэрвісы Google Play адсутнічаюць</string>
-    <string name="RegistrationActivity_this_device_is_missing_google_play_services">На гэтай прыладзе Сэрвісы Google Play адсутнічаюць. Вы па-ранейшаму зможаце выкарыстоўваць Signal, але ж з такой канфігурацыі можа адбыцца зніжэнне надзейнасці ці прадукцыйнасці.\n\nКалі вы не прасунуты карыстальнік, не выкарыстоўваеце знешнюю прашыўку Android, або лічыце, што бачыце гэту памылку, звярніцеся па адрасу support@signal.org, каб атрымаць падтрымку ў устараненні непаладак.</string>
+    <string name="RegistrationActivity_this_device_is_missing_google_play_services">На гэтай прыладзе Сэрвісы Google Play адсутнічаюць. Вы па-ранейшаму зможаце выкарыстоўваць Signal, але ж з такой канфігурацыі можа адбыцца зніжэнне надзейнасці ці прадукцыйнасці.\n\nКалі вы не прасунуты карыстальнік, не выкарыстоўваеце знешнюю прашыўку Android, або лічыце, што бачыце гэту памылку, звярніцеся па адрасу support@baxs.com, каб атрымаць падтрымку ў устараненні непаладак.</string>
     <string name="RegistrationActivity_i_understand">Я прымаю</string>
     <string name="RegistrationActivity_play_services_error">Памылка Сэрвісаў Google Play</string>
     <string name="RegistrationActivity_google_play_services_is_updating_or_unavailable">Сэрвісы Google Play абнаўляюцца або часова недаступныя. Калі ласка, паўтарыце спробу.</string>
@@ -3106,7 +3106,7 @@
     <string name="SubmitDebugLogActivity_your_log_will_be_posted_online">Калі вы націснеце «Адправіць», ваш журнал будзе размешчаны ў інтэрнэце на працягу 30 дзён па ўнікальным неапублікаваным URL-адрасе. Вы можаце спачатку захаваць яго лакальна.</string>
 
     <!-- SupportEmailUtil -->
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_support_email" translatable="false">support@signal.org</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_support_email" translatable="false"> support@baxs.com</string> -->
     <string name="SupportEmailUtil_filter">Фільтр:</string>
     <string name="SupportEmailUtil_device_info">Інф. аб прыладзе:</string>
     <string name="SupportEmailUtil_android_version">Версія Android:</string>

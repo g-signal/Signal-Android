@@ -63,7 +63,7 @@ class SignalServiceNetworkAccess(context: Context) {
     )
 
     private fun String.stripProtocol(): String {
-      return this.removePrefix("https://")
+      return this.removePrefix("https://").removePrefix("http://")
     }
 
     private const val COUNTRY_CODE_EGYPT = 20
@@ -266,7 +266,7 @@ class SignalServiceNetworkAccess(context: Context) {
   val uncensoredConfiguration: SignalServiceConfiguration = SignalServiceConfiguration(
     signalServiceUrls = arrayOf(SignalServiceUrl(BuildConfig.SIGNAL_URL, serviceTrustStore)),
     signalCdnUrlMap = mapOf(
-      0 to arrayOf(SignalCdnUrl(BuildConfig.SIGNAL_CDN_URL, serviceTrustStore)),
+      0 to arrayOf(SignalCdnUrl(BuildConfig.SIGNAL_CDN_URL, null,serviceTrustStore, ConnectionSpec.CLEARTEXT)),
       2 to arrayOf(SignalCdnUrl(BuildConfig.SIGNAL_CDN2_URL, serviceTrustStore)),
       3 to arrayOf(SignalCdnUrl(BuildConfig.SIGNAL_CDN3_URL, serviceTrustStore))
     ),

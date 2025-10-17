@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- 开发/测试环境配置 -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- 信任系统默认的 CA 证书 -->
+            <certificates src="system" />
+            <!-- 添加你的自定义证书 -->
+            <certificates src="@raw/whisper" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- 针对测试域名的特定配置 - 允许 HTTP 明文通信 -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">imba-test.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/whisper" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Signal 相关域名 - 保留原有的安全配置 -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">signal.org</domain>
+        <domain includeSubdomains="true">whispersystems.org</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

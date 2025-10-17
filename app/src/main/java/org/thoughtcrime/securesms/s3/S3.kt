@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.s3
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okio.HashingSink
@@ -26,8 +27,13 @@ import java.net.URISyntaxException
 import java.net.URL
 import java.nio.charset.Charset
 import java.security.MessageDigest
+import java.security.cert.X509Certificate
+import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 /**
  * Generic methods for communicating with S3
@@ -35,7 +41,32 @@ import java.util.regex.Pattern
 object S3 {
   private val TAG = Log.tag(S3::class.java)
 
-  private val okHttpClient by lazy { AppDependencies.signalOkHttpClient }
+  // 创建信任所有证书的 TrustManager
+  private val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+    override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+    override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+    override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+  })
+
+  // 为 S3 使用独立的 OkHttpClient，信任所有证书
+  private val okHttpClient by lazy {
+    try {
+      val sslContext = SSLContext.getInstance("TLS")
+      sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+
+      OkHttpClient.Builder()
+        .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+        .hostnameVerifier { _, _ -> true }
+        .followRedirects(true)
+        .followSslRedirects(true)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .build()
+    } catch (e: Exception) {
+      Log.e(TAG, "Failed to create trust-all OkHttpClient, falling back to default", e)
+      AppDependencies.signalOkHttpClient
+    }
+  }
 
   const val DYNAMIC_PATH = "/dynamic"
   const val STATIC_PATH = "/static"
@@ -88,6 +119,7 @@ object S3 {
   @JvmStatic
   @Throws(IOException::class)
   fun getObject(endpoint: String): Response {
+
     val request = Request.Builder()
       .get()
       .url(s3Url(endpoint))
@@ -107,6 +139,8 @@ object S3 {
     }
 
     try {
+
+
       getObject(endpoint).use { response ->
         if (!response.isSuccessful) {
           return ServiceResponse.forApplicationError(
@@ -240,7 +274,8 @@ object S3 {
   @VisibleForTesting
   fun s3Url(path: String): URL {
     try {
-      return URI("https", "updates2.signal.org", path, null).toURL()
+      Log.w(TAG, URI("https", "s3.us-west-2.amazonaws.com", path, null).toURL().toString())
+      return URI("https", "s3.us-west-2.amazonaws.com", path, null).toURL()
     } catch (e: URISyntaxException) {
       throw IOException(e)
     }

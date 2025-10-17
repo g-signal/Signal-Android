@@ -90,6 +90,7 @@ import org.whispersystems.signalservice.internal.push.http.DigestingRequestBody;
 import org.whispersystems.signalservice.internal.push.http.NoCipherOutputStreamFactory;
 import org.whispersystems.signalservice.internal.push.http.OutputStreamFactory;
 import org.whispersystems.signalservice.internal.push.http.ResumableUploadSpec;
+import org.whispersystems.signalservice.internal.push.http.TrustAllCerts;
 import org.whispersystems.signalservice.internal.storage.protos.ReadOperation;
 import org.whispersystems.signalservice.internal.storage.protos.StorageItems;
 import org.whispersystems.signalservice.internal.storage.protos.StorageManifest;
@@ -112,6 +113,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -155,29 +157,29 @@ public class PushServiceSocket {
 
   private static final String TAG = PushServiceSocket.class.getSimpleName();
 
-  private static final String SET_RESTORE_METHOD_PATH   = "/v1/devices/restore_account/%s";
+  private static final String SET_RESTORE_METHOD_PATH = "/v1/devices/restore_account/%s";
 
-  private static final String GROUP_MESSAGE_PATH        = "/v1/messages/multi_recipient?ts=%s&online=%s&urgent=%s&story=%s";
+  private static final String GROUP_MESSAGE_PATH = "/v1/messages/multi_recipient?ts=%s&online=%s&urgent=%s&story=%s";
 
-  private static final String ATTACHMENT_KEY_DOWNLOAD_PATH   = "attachments/%s";
-  private static final String ATTACHMENT_ID_DOWNLOAD_PATH    = "attachments/%d";
-  private static final String AVATAR_UPLOAD_PATH             = "";
+  private static final String ATTACHMENT_KEY_DOWNLOAD_PATH = "attachments/%s";
+  private static final String ATTACHMENT_ID_DOWNLOAD_PATH  = "attachments/%d";
+  private static final String AVATAR_UPLOAD_PATH           = "";
 
-  private static final String STICKER_MANIFEST_PATH          = "stickers/%s/manifest.proto";
-  private static final String STICKER_PATH                   = "stickers/%s/full/%d";
+  private static final String STICKER_MANIFEST_PATH = "stickers/%s/manifest.proto";
+  private static final String STICKER_PATH          = "stickers/%s/full/%d";
 
-  private static final String GROUPSV2_GROUP            = "/v2/groups/";
-  private static final String GROUPSV2_GROUP_PASSWORD   = "/v2/groups/?inviteLinkPassword=%s";
-  private static final String GROUPSV2_GROUP_CHANGES    = "/v2/groups/logs/%s?maxSupportedChangeEpoch=%d&includeFirstState=%s&includeLastState=false";
-  private static final String GROUPSV2_AVATAR_REQUEST   = "/v2/groups/avatar/form";
-  private static final String GROUPSV2_GROUP_JOIN       = "/v2/groups/join/%s";
-  private static final String GROUPSV2_TOKEN            = "/v2/groups/token";
-  private static final String GROUPSV2_JOINED_AT        = "/v2/groups/joined_at_version";
+  private static final String GROUPSV2_GROUP          = "/v2/groups/";
+  private static final String GROUPSV2_GROUP_PASSWORD = "/v2/groups/?inviteLinkPassword=%s";
+  private static final String GROUPSV2_GROUP_CHANGES  = "/v2/groups/logs/%s?maxSupportedChangeEpoch=%d&includeFirstState=%s&includeLastState=false";
+  private static final String GROUPSV2_AVATAR_REQUEST = "/v2/groups/avatar/form";
+  private static final String GROUPSV2_GROUP_JOIN     = "/v2/groups/join/%s";
+  private static final String GROUPSV2_TOKEN          = "/v2/groups/token";
+  private static final String GROUPSV2_JOINED_AT      = "/v2/groups/joined_at_version";
 
   private static final String VERIFICATION_SESSION_PATH = "/v1/verification/session";
   private static final String VERIFICATION_CODE_PATH    = "/v1/verification/session/%s/code";
 
-  private static final String REGISTRATION_PATH    = "/v1/registration";
+  private static final String REGISTRATION_PATH = "/v1/registration";
 
   private static final String BACKUP_AUTH_CHECK_V2 = "/v2/svr/auth/check";
   private static final String BACKUP_AUTH_CHECK_V3 = "/v3/backup/auth/check";
@@ -200,25 +202,25 @@ public class PushServiceSocket {
   private final Map<Integer, ConnectionHolder[]> cdnClientsMap;
   private final ConnectionHolder[]               storageClients;
 
-  private final SignalServiceConfiguration       configuration;
-  private final CredentialsProvider              credentialsProvider;
-  private final String                           signalAgent;
-  private final SecureRandom                     random;
-  private final boolean                          automaticNetworkRetry;
+  private final SignalServiceConfiguration configuration;
+  private final CredentialsProvider        credentialsProvider;
+  private final String                     signalAgent;
+  private final SecureRandom               random;
+  private final boolean                    automaticNetworkRetry;
 
   public PushServiceSocket(SignalServiceConfiguration configuration,
                            CredentialsProvider credentialsProvider,
                            String signalAgent,
                            boolean automaticNetworkRetry)
   {
-    this.configuration             = configuration;
-    this.credentialsProvider       = credentialsProvider;
-    this.signalAgent               = signalAgent;
-    this.automaticNetworkRetry     = automaticNetworkRetry;
-    this.serviceClients            = createServiceConnectionHolders(configuration.getSignalServiceUrls(), configuration.getNetworkInterceptors(), configuration.getDns(), configuration.getSignalProxy());
-    this.cdnClientsMap             = createCdnClientsMap(configuration.getSignalCdnUrlMap(), configuration.getNetworkInterceptors(), configuration.getDns(), configuration.getSignalProxy());
-    this.storageClients            = createConnectionHolders(configuration.getSignalStorageUrls(), configuration.getNetworkInterceptors(), configuration.getDns(), configuration.getSignalProxy());
-    this.random                    = new SecureRandom();
+    this.configuration         = configuration;
+    this.credentialsProvider   = credentialsProvider;
+    this.signalAgent           = signalAgent;
+    this.automaticNetworkRetry = automaticNetworkRetry;
+    this.serviceClients        = createServiceConnectionHolders(configuration.getSignalServiceUrls(), configuration.getNetworkInterceptors(), configuration.getDns(), configuration.getSignalProxy());
+    this.cdnClientsMap         = createCdnClientsMap(configuration.getSignalCdnUrlMap(), configuration.getNetworkInterceptors(), configuration.getDns(), configuration.getSignalProxy());
+    this.storageClients        = createConnectionHolders(configuration.getSignalStorageUrls(), configuration.getNetworkInterceptors(), configuration.getDns(), configuration.getSignalProxy());
+    this.random                = new SecureRandom();
   }
 
   public SignalServiceConfiguration getConfiguration() {
@@ -254,7 +256,7 @@ public class PushServiceSocket {
   }
 
   public RegistrationSessionMetadataResponse requestVerificationCode(String sessionId, Locale locale, boolean androidSmsRetriever, VerificationCodeTransport transport) throws IOException {
-    String path = String.format(VERIFICATION_CODE_PATH, sessionId);
+    String              path    = String.format(VERIFICATION_CODE_PATH, sessionId);
     Map<String, String> headers = locale != null ? Collections.singletonMap("Accept-Language", locale.getLanguage() + "-" + locale.getCountry()) : NO_HEADERS;
     Map<String, String> body    = new HashMap<>();
 
@@ -275,8 +277,8 @@ public class PushServiceSocket {
   }
 
   public RegistrationSessionMetadataResponse submitVerificationCode(String sessionId, String verificationCode) throws IOException {
-    String path = String.format(VERIFICATION_CODE_PATH, sessionId);
-    Map<String, String> body =  new HashMap<>();
+    String              path = String.format(VERIFICATION_CODE_PATH, sessionId);
+    Map<String, String> body = new HashMap<>();
     body.put("code", verificationCode);
     try (Response response = makeServiceRequest(path, "PUT", jsonRequestBody(JsonUtil.toJson(body)), NO_HEADERS, new SubmitVerificationCodeResponseHandler(), SealedSenderAccess.NONE, false)) {
       return parseSessionMetadataResponse(response);
@@ -330,7 +332,8 @@ public class PushServiceSocket {
     } catch (InvalidKeyException e) {
       throw new AssertionError("unexpected invalid key", e);
     }
-
+    Log.e("pushService", "path=" + path);
+    Log.e("pushService", "body=" + JsonUtil.toJson(body));
     String response = makeServiceRequest(path, "POST", JsonUtil.toJson(body), NO_HEADERS, new RegistrationSessionResponseHandler(), SealedSenderAccess.NONE);
     return JsonUtil.fromJson(response, VerifyAccountResponse.class);
   }
@@ -441,7 +444,8 @@ public class PushServiceSocket {
   }
 
   public byte[] retrieveSticker(byte[] packId, int stickerId)
-      throws NonSuccessfulResponseCodeException, PushNetworkException {
+      throws NonSuccessfulResponseCodeException, PushNetworkException
+  {
     String                hexPackId = Hex.toStringCondensed(packId);
     ByteArrayOutputStream output    = new ByteArrayOutputStream();
 
@@ -455,7 +459,8 @@ public class PushServiceSocket {
   }
 
   public byte[] retrieveStickerManifest(byte[] packId)
-      throws NonSuccessfulResponseCodeException, PushNetworkException {
+      throws NonSuccessfulResponseCodeException, PushNetworkException
+  {
     String                hexPackId = Hex.toStringCondensed(packId);
     ByteArrayOutputStream output    = new ByteArrayOutputStream();
 
@@ -553,13 +558,13 @@ public class PushServiceSocket {
       throws IOException
   {
     return uploadToCdn0(AVATAR_UPLOAD_PATH, uploadAttributes.acl, uploadAttributes.key,
-                       uploadAttributes.policy, uploadAttributes.algorithm,
-                       uploadAttributes.credential, uploadAttributes.date,
-                       uploadAttributes.signature,
-                       new ByteArrayInputStream(avatarCipherText),
-                       "application/octet-stream", avatarCipherText.length, false,
-                       new NoCipherOutputStreamFactory(),
-                       null, null);
+                        uploadAttributes.policy, uploadAttributes.algorithm,
+                        uploadAttributes.credential, uploadAttributes.date,
+                        uploadAttributes.signature,
+                        new ByteArrayInputStream(avatarCipherText),
+                        "application/octet-stream", avatarCipherText.length, false,
+                        new NoCipherOutputStreamFactory(),
+                        null, null);
   }
 
   public ResumableUploadSpec getResumableUploadSpec(AttachmentUploadForm uploadForm) throws IOException {
@@ -609,20 +614,34 @@ public class PushServiceSocket {
   }
 
   private void downloadFromCdn(OutputStream outputStream, long offset, int cdnNumber, Map<String, String> headers, String path, long maxSizeBytes, ProgressListener listener)
-      throws PushNetworkException, NonSuccessfulResponseCodeException, MissingConfigurationException {
+      throws PushNetworkException, NonSuccessfulResponseCodeException, MissingConfigurationException
+  {
+
     ConnectionHolder[] cdnNumberClients = cdnClientsMap.get(cdnNumber);
     if (cdnNumberClients == null) {
       throw new MissingConfigurationException("Attempted to download from unsupported CDN number: " + cdnNumber + ", Our configuration supports: " + cdnClientsMap.keySet());
     }
-    ConnectionHolder   connectionHolder = getRandom(cdnNumberClients, random);
-    OkHttpClient       okHttpClient     = connectionHolder.getClient()
-                                                          .newBuilder()
-                                                          .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                          .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                          .build();
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
 
+    ConnectionHolder connectionHolder = getRandom(cdnNumberClients, random);
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .build();
+    Log.e("url=3", path);
+    Log.e("url=3", connectionHolder.getUrl());
+    System.out.println(connectionHolder.getUrl());
     Request.Builder request = new Request.Builder().url(connectionHolder.getUrl() + "/" + path).get();
-
     if (connectionHolder.getHostHeader().isPresent()) {
       request.addHeader("Host", connectionHolder.getHostHeader().get());
     }
@@ -643,14 +662,15 @@ public class PushServiceSocket {
     }
 
     try (Response response = call.execute()) {
+      Log.e("url response =", response.isSuccessful() + "");
       if (response.isSuccessful()) {
         ResponseBody body = response.body();
 
-        if (body == null)                        throw new PushNetworkException("No response body!");
+        if (body == null) throw new PushNetworkException("No response body!");
         if (body.contentLength() > maxSizeBytes) throw new PushNetworkException("Response exceeds max size!");
 
-        InputStream  in     = body.byteStream();
-        byte[]       buffer = new byte[32768];
+        InputStream in     = body.byteStream();
+        byte[]      buffer = new byte[32768];
 
         int  read      = 0;
         long totalRead = offset;
@@ -673,6 +693,7 @@ public class PushServiceSocket {
         throw new NonSuccessfulResponseCodeException(response.code(), "Response: " + response);
       }
     } catch (NonSuccessfulResponseCodeException | PushNetworkException e) {
+      Log.e("url response =", e.getLocalizedMessage());
       throw e;
     } catch (IOException e) {
       throw new PushNetworkException(e);
@@ -688,12 +709,12 @@ public class PushServiceSocket {
     if (cdnNumberClients == null) {
       throw new MissingConfigurationException("Attempted to download from unsupported CDN number: " + cdnNumber + ", Our configuration supports: " + cdnClientsMap.keySet());
     }
-    ConnectionHolder   connectionHolder = getRandom(cdnNumberClients, random);
-    OkHttpClient       okHttpClient     = connectionHolder.getClient()
-                                                          .newBuilder()
-                                                          .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                          .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                          .build();
+    ConnectionHolder connectionHolder = getRandom(cdnNumberClients, random);
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .build();
 
     Request.Builder request = new Request.Builder().url(connectionHolder.getUrl() + "/" + path).head();
 
@@ -739,31 +760,41 @@ public class PushServiceSocket {
                                         CancelationSignal cancelationSignal)
       throws PushNetworkException, NonSuccessfulResponseCodeException
   {
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
     ConnectionHolder connectionHolder = getRandom(cdnClientsMap.get(0), random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .build();
 
     DigestingRequestBody file = new DigestingRequestBody(data, outputStreamFactory, contentType, length, incremental, progressListener, cancelationSignal, 0);
 
     RequestBody requestBody = new MultipartBody.Builder()
-                                               .setType(MultipartBody.FORM)
-                                               .addFormDataPart("acl", acl)
-                                               .addFormDataPart("key", key)
-                                               .addFormDataPart("policy", policy)
-                                               .addFormDataPart("Content-Type", contentType)
-                                               .addFormDataPart("x-amz-algorithm", algorithm)
-                                               .addFormDataPart("x-amz-credential", credential)
-                                               .addFormDataPart("x-amz-date", date)
-                                               .addFormDataPart("x-amz-signature", signature)
-                                               .addFormDataPart("file", "file", file)
-                                               .build();
+        .setType(MultipartBody.FORM)
+        .addFormDataPart("acl", acl)
+        .addFormDataPart("key", key)
+        .addFormDataPart("policy", policy)
+        .addFormDataPart("Content-Type", contentType)
+        .addFormDataPart("x-amz-algorithm", algorithm)
+        .addFormDataPart("x-amz-credential", credential)
+        .addFormDataPart("x-amz-date", date)
+        .addFormDataPart("x-amz-signature", signature)
+        .addFormDataPart("file", "file", file)
+        .build();
 
     Request.Builder request = new Request.Builder()
-                                         .url(connectionHolder.getUrl() + "/" + path)
-                                         .post(requestBody);
+        .url(connectionHolder.getUrl() + "/" + path)
+        .post(requestBody);
 
     if (connectionHolder.getHostHeader().isPresent()) {
       request.addHeader("Host", connectionHolder.getHostHeader().get());
@@ -777,7 +808,7 @@ public class PushServiceSocket {
 
     try (Response response = call.execute()) {
       if (response.isSuccessful()) return file.getAttachmentDigest();
-      else                         throw new NonSuccessfulResponseCodeException(response.code(), "Response: " + response);
+      else throw new NonSuccessfulResponseCodeException(response.code(), "Response: " + response);
     } catch (PushNetworkException | NonSuccessfulResponseCodeException e) {
       throw e;
     } catch (IOException e) {
@@ -790,12 +821,22 @@ public class PushServiceSocket {
   }
 
   public String getResumableUploadUrl(AttachmentUploadForm uploadForm) throws IOException {
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
     ConnectionHolder connectionHolder = getRandom(cdnClientsMap.get(uploadForm.cdn), random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .build();
 
     Request.Builder request = new Request.Builder().url(buildConfiguredUrl(connectionHolder, uploadForm.signedUploadLocation))
                                                    .post(RequestBody.create(null, ""));
@@ -845,12 +886,22 @@ public class PushServiceSocket {
   }
 
   private AttachmentDigest uploadToCdn2(String resumableUrl, InputStream data, String contentType, long length, boolean incremental, OutputStreamFactory outputStreamFactory, ProgressListener progressListener, CancelationSignal cancelationSignal) throws IOException {
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
     ConnectionHolder connectionHolder = getRandom(cdnClientsMap.get(2), random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .build();
 
     ResumeInfo           resumeInfo = getResumeInfoCdn2(resumableUrl, length);
     DigestingRequestBody file       = new DigestingRequestBody(data, outputStreamFactory, contentType, length, incremental, progressListener, cancelationSignal, resumeInfo.contentStart);
@@ -879,7 +930,7 @@ public class PushServiceSocket {
 
     try (Response response = call.execute()) {
       if (response.isSuccessful()) return file.getAttachmentDigest();
-      else                         throw new NonSuccessfulResponseCodeException(response.code(), "Response: " + response);
+      else throw new NonSuccessfulResponseCodeException(response.code(), "Response: " + response);
     } catch (PushNetworkException | NonSuccessfulResponseCodeException e) {
       throw e;
     } catch (IOException e) {
@@ -917,12 +968,22 @@ public class PushServiceSocket {
                                         Map<String, String> headers)
       throws IOException
   {
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
     ConnectionHolder connectionHolder = getRandom(cdnClientsMap.get(3), random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .build();
 
     ResumeInfo           resumeInfo = getResumeInfoCdn3(resumableUrl, headers);
     DigestingRequestBody file       = new DigestingRequestBody(data, outputStreamFactory, contentType, length, incremental, progressListener, cancelationSignal, resumeInfo.contentStart);
@@ -978,12 +1039,23 @@ public class PushServiceSocket {
   }
 
   private ResumeInfo getResumeInfoCdn2(String resumableUrl, long contentLength) throws IOException {
+
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
     ConnectionHolder connectionHolder = getRandom(cdnClientsMap.get(2), random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .build();
 
     final long   offset;
     final String contentRange;
@@ -1036,13 +1108,13 @@ public class PushServiceSocket {
 
   private ResumeInfo getResumeInfoCdn3(String resumableUrl, Map<String, String> headers) throws IOException {
     ConnectionHolder connectionHolder = getRandom(cdnClientsMap.get(3), random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .build();
 
-    final long   offset;
+    final long offset;
 
     Request.Builder request = new Request.Builder().url(buildConfiguredUrl(connectionHolder, resumableUrl))
                                                    .head()
@@ -1086,6 +1158,8 @@ public class PushServiceSocket {
     final HttpUrl resumableHttpUrl;
     try {
       resumableHttpUrl = HttpUrl.get(url);
+      System.out.println("Malformed=="+resumableHttpUrl);
+      System.out.println("Malformed=="+endpointUrl.host());
     } catch (IllegalArgumentException e) {
       throw new IOException("Malformed URL!", e);
     }
@@ -1147,7 +1221,8 @@ public class PushServiceSocket {
   }
 
   private Response validateServiceResponse(Response response)
-      throws NonSuccessfulResponseCodeException, PushNetworkException, MalformedResponseException {
+      throws NonSuccessfulResponseCodeException, PushNetworkException, MalformedResponseException
+  {
     int    responseCode    = response.code();
     String responseMessage = response.message();
 
@@ -1186,8 +1261,8 @@ public class PushServiceSocket {
                                   accountLockFailure.svr3Credentials);
       case 428:
         ProofRequiredResponse proofRequiredResponse = readResponseJson(response, ProofRequiredResponse.class);
-        String                retryAfterRaw = response.header("Retry-After");
-        long                  retryAfter    = Util.parseInt(retryAfterRaw, -1);
+        String retryAfterRaw = response.header("Retry-After");
+        long retryAfter = Util.parseInt(retryAfterRaw, -1);
 
         throw new ProofRequiredException(proofRequiredResponse, retryAfter);
 
@@ -1222,7 +1297,10 @@ public class PushServiceSocket {
       }
 
       try {
-        return call.execute();
+        Response response = call.execute();
+        System.out.println(response.code());
+        System.out.println(response.isSuccessful());
+        return response;
       } finally {
         synchronized (connections) {
           connections.remove(call);
@@ -1249,12 +1327,15 @@ public class PushServiceSocket {
                                       RequestBody body,
                                       Map<String, String> headers,
                                       @Nullable SealedSenderAccess sealedSenderAccess,
-                                      boolean doNotAddAuthenticationOrUnidentifiedAccessKey) {
+                                      boolean doNotAddAuthenticationOrUnidentifiedAccessKey)
+  {
 
     ServiceConnectionHolder connectionHolder = (ServiceConnectionHolder) getRandom(serviceClients, random);
 
     Request.Builder request = new Request.Builder();
     request.url(String.format("%s%s", connectionHolder.getUrl(), urlFragment));
+    Log.e("pushService", "" + String.format("%s%s", connectionHolder.getUrl(), urlFragment));
+    System.out.println(String.format("%s%s", connectionHolder.getUrl(), urlFragment));
     request.method(method, body);
 
     for (Map.Entry<String, String> header : headers.entrySet()) {
@@ -1289,13 +1370,24 @@ public class PushServiceSocket {
   private Response makeStorageRequest(String authorization, String path, String method, RequestBody body, Map<String, String> headers, ResponseCodeHandler responseCodeHandler)
       throws PushNetworkException, NonSuccessfulResponseCodeException
   {
-    ConnectionHolder connectionHolder = getRandom(storageClients, random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
 
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
+    ConnectionHolder connectionHolder = getRandom(storageClients, random);
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .build();
+    Log.e("url=4", path);
     Request.Builder request = new Request.Builder().url(connectionHolder.getUrl() + path);
     request.method(method, body);
 
@@ -1362,17 +1454,17 @@ public class PushServiceSocket {
 
   public CallingResponse makeCallingRequest(long requestId, String url, String httpMethod, List<Pair<String, String>> headers, byte[] body) {
     ConnectionHolder connectionHolder = getRandom(serviceClients, random);
-    OkHttpClient     okHttpClient     = connectionHolder.getClient()
-                                                        .newBuilder()
-                                                        .followRedirects(false)
-                                                        .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
-                                                        .build();
-
-    RequestBody     requestBody = body != null ? RequestBody.create(null, body) : null;
-    Request.Builder builder     = new Request.Builder()
-                                             .url(url)
-                                             .method(httpMethod, requestBody);
+    OkHttpClient okHttpClient = connectionHolder.getClient()
+                                                .newBuilder()
+                                                .followRedirects(false)
+                                                .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .build();
+    Log.e("url=5", url);
+    RequestBody requestBody = body != null ? RequestBody.create(null, body) : null;
+    Request.Builder builder = new Request.Builder()
+        .url(url)
+        .method(httpMethod, requestBody);
 
     if (headers != null) {
       for (Pair<String, String> header : headers) {
@@ -1429,7 +1521,8 @@ public class PushServiceSocket {
   private static Map<Integer, ConnectionHolder[]> createCdnClientsMap(final Map<Integer, SignalCdnUrl[]> signalCdnUrlMap,
                                                                       final List<Interceptor> interceptors,
                                                                       final Optional<Dns> dns,
-                                                                      final Optional<SignalProxy> proxy) {
+                                                                      final Optional<SignalProxy> proxy)
+  {
     validateConfiguration(signalCdnUrlMap);
     final Map<Integer, ConnectionHolder[]> result = new HashMap<>();
     for (Map.Entry<Integer, SignalCdnUrl[]> entry : signalCdnUrlMap.entrySet()) {
@@ -1463,15 +1556,15 @@ public class PushServiceSocket {
       context.init(null, trustManagers, null);
 
       OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                                                     .sslSocketFactory(new Tls12SocketFactory(context.getSocketFactory()), (X509TrustManager)trustManagers[0])
-                                                     .connectionSpecs(url.getConnectionSpecs().orElse(Util.immutableList(ConnectionSpec.RESTRICTED_TLS)))
-                                                     .dns(dns.orElse(Dns.SYSTEM));
+          .sslSocketFactory(new Tls12SocketFactory(context.getSocketFactory()), (X509TrustManager) trustManagers[0])
+          .connectionSpecs(url.getConnectionSpecs().orElse(Util.immutableList(ConnectionSpec.RESTRICTED_TLS)))
+          .dns(dns.orElse(Dns.SYSTEM));
 
       if (proxy.isPresent()) {
         builder.socketFactory(new TlsProxySocketFactory(proxy.get().getHost(), proxy.get().getPort(), dns));
       }
 
-      builder.sslSocketFactory(new Tls12SocketFactory(context.getSocketFactory()), (X509TrustManager)trustManagers[0])
+      builder.sslSocketFactory(new Tls12SocketFactory(context.getSocketFactory()), (X509TrustManager) trustManagers[0])
              .connectionSpecs(url.getConnectionSpecs().orElse(Util.immutableList(ConnectionSpec.RESTRICTED_TLS)))
              .build();
 
@@ -1572,11 +1665,11 @@ public class PushServiceSocket {
   private static <T> T readResponseJson(Response response, Class<T> clazz)
       throws PushNetworkException, MalformedResponseException
   {
-      return readBodyJson(response.body(), clazz);
+    return readBodyJson(response.body(), clazz);
   }
 
 
-  public enum VerificationCodeTransport { SMS, VOICE }
+  public enum VerificationCodeTransport {SMS, VOICE}
 
   public static class RegistrationLockV2 {
     @JsonProperty
@@ -1651,7 +1744,7 @@ public class PushServiceSocket {
 
   private static class EmptyResponseCodeHandler implements ResponseCodeHandler {
     @Override
-    public void handle(int responseCode, ResponseBody body, Function<String, String> getHeader) { }
+    public void handle(int responseCode, ResponseBody body, Function<String, String> getHeader) {}
   }
 
   /**
@@ -1694,7 +1787,7 @@ public class PushServiceSocket {
     }
   }
 
-  private static final ResponseCodeHandler GROUPS_V2_PUT_RESPONSE_HANDLER   = (responseCode, body, getHeader) -> {
+  private static final ResponseCodeHandler GROUPS_V2_PUT_RESPONSE_HANDLER = (responseCode, body, getHeader) -> {
     if (getHeader.apply("X-Signal-Timestamp") == null) {
       throw new NonSuccessfulResponseCodeException(500, "Missing timestamp header");
     }
@@ -1702,14 +1795,16 @@ public class PushServiceSocket {
     if (responseCode == 409) throw new GroupExistsException();
   };
 
-  private static final ResponseCodeHandler GROUPS_V2_GET_CURRENT_HANDLER    = (responseCode, body, getHeader) -> {
+  private static final ResponseCodeHandler GROUPS_V2_GET_CURRENT_HANDLER = (responseCode, body, getHeader) -> {
     if (getHeader.apply("X-Signal-Timestamp") == null) {
       throw new NonSuccessfulResponseCodeException(500, "Missing timestamp header");
     }
 
     switch (responseCode) {
-      case 403: throw new NotInGroupException();
-      case 404: throw new GroupNotFoundException();
+      case 403:
+        throw new NotInGroupException();
+      case 404:
+        throw new GroupNotFoundException();
     }
   };
 
@@ -1730,7 +1825,7 @@ public class PushServiceSocket {
     }
   };
 
-  private static final ResponseCodeHandler GROUPS_V2_GET_JOIN_INFO_HANDLER  = (responseCode, body, getHeader) -> {
+  private static final ResponseCodeHandler GROUPS_V2_GET_JOIN_INFO_HANDLER = (responseCode, body, getHeader) -> {
     if (getHeader.apply("X-Signal-Timestamp") == null) {
       throw new NonSuccessfulResponseCodeException(500, "Missing timestamp header");
     }

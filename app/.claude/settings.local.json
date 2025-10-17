@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//e/code/Signal-Android/**)",
+      "Bash(powershell -Command \"Test-Path $env:USERPROFILE\\.android\\debug.keystore\")",
+      "Bash(keytool:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

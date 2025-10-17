@@ -30,6 +30,7 @@ public final class FcmUtil {
 
     try {
       token = Tasks.await(FirebaseMessaging.getInstance().getToken());
+      Log.w(TAG, "token="+token);
     } catch (InterruptedException e) {
       Log.w(TAG, "Was interrupted while waiting for the token.");
     } catch (ExecutionException e) {

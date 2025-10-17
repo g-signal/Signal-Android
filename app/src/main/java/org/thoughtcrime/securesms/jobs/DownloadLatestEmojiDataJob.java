@@ -276,6 +276,7 @@ public class DownloadLatestEmojiDataJob extends BaseJob {
   {
     EmojiFiles.NameCollection names = EmojiFiles.NameCollection.read(context, version);
     for (final String imagePath : imagePaths) {
+      Log.e("imgePath",imagePath);
       if (cancelled.produce()) {
         Log.w(TAG, "Job was cancelled while downloading images.");
         return;

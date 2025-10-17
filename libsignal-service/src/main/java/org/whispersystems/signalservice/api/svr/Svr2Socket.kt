@@ -40,7 +40,7 @@ internal class Svr2Socket(
     val openRequest: Request.Builder = Request.Builder()
       .url("${svr2Url.url}/v1/$mrEnclave")
       .addHeader("Authorization", authorization.asBasic())
-
+    Log.w(TAG, "${svr2Url.url}/v1/$mrEnclave")
     if (svr2Url.hostHeader.isPresent) {
       openRequest.addHeader("Host", svr2Url.hostHeader.get())
       Log.w(TAG, "Using alternate host: ${svr2Url.hostHeader.get()}")

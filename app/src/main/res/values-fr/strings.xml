@@ -2680,7 +2680,7 @@
     <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">Nous vous appellerons à ce numéro pour le confirmer.</string>
     <string name="RegistrationActivity_edit_number">Modifier le numéro</string>
     <string name="RegistrationActivity_missing_google_play_services">Services Google Play indisponibles</string>
-    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Les services Google Play ne sont pas disponibles sur cet appareil. Vous pouvez quand même utiliser Signal, mais cette configuration risque d\'entraîner une perte de fiabilité ou de performances.\n\nSi vous n\'êtes pas un utilisateur de niveau avancé, que vous n\'utilisez pas une ROM Android personnalisée ou si vous pensez que ce message s\'affiche par erreur, veuillez contacter support@signal.org pour obtenir de l\'aide.</string>
+    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Les services Google Play ne sont pas disponibles sur cet appareil. Vous pouvez quand même utiliser Signal, mais cette configuration risque d\'entraîner une perte de fiabilité ou de performances.\n\nSi vous n\'êtes pas un utilisateur de niveau avancé, que vous n\'utilisez pas une ROM Android personnalisée ou si vous pensez que ce message s\'affiche par erreur, veuillez contacter  support@baxs.com pour obtenir de l\'aide.</string>
     <string name="RegistrationActivity_i_understand">Je comprends</string>
     <string name="RegistrationActivity_play_services_error">Erreur des services Google Play</string>
     <string name="RegistrationActivity_google_play_services_is_updating_or_unavailable">Les services Google Play sont en cours de mise à jour ou temporairement indisponibles. Veuillez réessayer.</string>
@@ -2920,7 +2920,7 @@
     <string name="SubmitDebugLogActivity_your_log_will_be_posted_online">Après avoir cliqué sur \"Envoyer\", votre journal sera publié en ligne pendant 30 jours sur une URL non publique unique. Vous pouvez d\'abord l\'enregistrer localement.</string>
 
     <!-- SupportEmailUtil -->
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_support_email" translatable="false">support@signal.org</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_support_email" translatable="false"> support@baxs.com</string> -->
     <string name="SupportEmailUtil_filter">Filtre :</string>
     <string name="SupportEmailUtil_device_info">Infos sur l\'appareil :</string>
     <string name="SupportEmailUtil_android_version">Version d\'Android :</string>

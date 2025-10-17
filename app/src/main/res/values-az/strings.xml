@@ -2680,7 +2680,7 @@
     <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">Bu nömrəni təsdiqləmək üçün bir zəng gələcək.</string>
     <string name="RegistrationActivity_edit_number">Nömrəyə düzəliş et</string>
     <string name="RegistrationActivity_missing_google_play_services">Google Play Xidmətləri əskikdir</string>
-    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Bu cihazda Google Play Xidmətləri əskikdir. Signal-ı hələ də istifadə edə bilərsiniz, ancaq bu konfiqurasiya etibarlılığın və ya performansın düşməsinə səbəb ola bilər.\n\nƏgər qabaqcıl bir istifadəçi deyilsinizsə, alternativ bir Android ROM istifadə etmirsinizsə və bunun xəta olduğuna inanırsınızsa, zəhmət olmasa nasazlıqların aşkarlanması üzrə kömək üçün support@signal.org ünvanı üzərindən bizimlə əlaqə saxlayın.</string>
+    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Bu cihazda Google Play Xidmətləri əskikdir. Signal-ı hələ də istifadə edə bilərsiniz, ancaq bu konfiqurasiya etibarlılığın və ya performansın düşməsinə səbəb ola bilər.\n\nƏgər qabaqcıl bir istifadəçi deyilsinizsə, alternativ bir Android ROM istifadə etmirsinizsə və bunun xəta olduğuna inanırsınızsa, zəhmət olmasa nasazlıqların aşkarlanması üzrə kömək üçün support@baxs.com ünvanı üzərindən bizimlə əlaqə saxlayın.</string>
     <string name="RegistrationActivity_i_understand">Anlayıram</string>
     <string name="RegistrationActivity_play_services_error">Play Xidmətlər Xətası</string>
     <string name="RegistrationActivity_google_play_services_is_updating_or_unavailable">Google Play Xidmətləri yenilənir və ya müvəqqəti olaraq əlçatmazdır. Zəhmət olmasa yenidən sınayın.</string>
@@ -2920,7 +2920,7 @@
     <string name="SubmitDebugLogActivity_your_log_will_be_posted_online">\"Göndər\"ə kliklədiyinizdə, jurnalınızın unikal və dərc edilməmiş URL-də 30 gün ərzində onlayn paylaşılacaq. Əvvəlcə yerli yaddaşda saxlaya bilərsiniz.</string>
 
     <!-- SupportEmailUtil -->
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_support_email" translatable="false">support@signal.org</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_support_email" translatable="false"> support@baxs.com</string> -->
     <string name="SupportEmailUtil_filter">Filtr:</string>
     <string name="SupportEmailUtil_device_info">Cihaz məlumatı:</string>
     <string name="SupportEmailUtil_android_version">Android versiyası:</string>
