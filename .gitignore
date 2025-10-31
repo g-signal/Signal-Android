@@ -37,3 +37,6 @@ kls_database.db
 .gradle
 .github
 */build
+*/*.log
+app/playProd
+.git
