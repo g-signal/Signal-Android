@@ -33,3 +33,7 @@ maps.key
 /local/
 kls_database.db
 .kotlin
+.claude
+.gradle
+.github
+*/build
