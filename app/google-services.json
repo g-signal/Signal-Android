@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:360483801060:android:3fa24efde4de223cb6a9f1",
+        "android_client_info": {
+          "package_name": "com.baxs.bachat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwLbPFujqRlKld1BQoXPIVf9RWujgXz64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:360483801060:android:220b86cbebcb4c49b6a9f1",
         "android_client_info": {
           "package_name": "group.ba.voiceapp"

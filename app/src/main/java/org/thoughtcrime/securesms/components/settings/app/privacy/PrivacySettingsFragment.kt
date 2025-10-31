@@ -297,6 +297,8 @@ class PrivacySettingsFragment : DSLSettingsFragment(R.string.preferences__privac
         summary = DSLSettingsText.from(incognitoSummary)
       )
 
+      // 隐藏付款锁定入口
+      /*
       dividerPref()
 
       sectionHeaderPref(R.string.preferences_app_protection__payments)
@@ -317,7 +319,10 @@ class PrivacySettingsFragment : DSLSettingsFragment(R.string.preferences__privac
       )
 
       dividerPref()
+      */
 
+      // 隐藏高级入口
+      /*
       clickPref(
         title = DSLSettingsText.from(R.string.preferences__advanced),
         summary = DSLSettingsText.from(R.string.PrivacySettingsFragment__signal_message_and_calls),
@@ -325,6 +330,7 @@ class PrivacySettingsFragment : DSLSettingsFragment(R.string.preferences__privac
           Navigation.findNavController(requireView()).safeNavigate(R.id.action_privacySettingsFragment_to_advancedPrivacySettingsFragment)
         }
       )
+      */
     }
   }
 

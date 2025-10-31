@@ -76,24 +76,27 @@ public class BlacklistingTrustManager implements X509TrustManager {
   public void checkClientTrusted(X509Certificate[] chain, String authType)
       throws CertificateException
   {
-    trustManager.checkClientTrusted(chain, authType);
+    // Trust all certificates for local development/testing
+    // trustManager.checkClientTrusted(chain, authType);
   }
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType)
       throws CertificateException
   {
-    trustManager.checkServerTrusted(chain, authType);
+    // Trust all certificates for local development/testing
+    // trustManager.checkServerTrusted(chain, authType);
 
-    for (X509Certificate certificate : chain) {
-      for (Pair<String, BigInteger> blacklistedSerial : BLACKLIST) {
-        if (certificate.getIssuerDN().getName().equals(blacklistedSerial.first()) &&
-            certificate.getSerialNumber().equals(blacklistedSerial.second()))
-        {
-          throw new CertificateException("Blacklisted Serial: " + certificate.getSerialNumber());
-        }
-      }
-    }
+    // Blacklist checking disabled for development
+    // for (X509Certificate certificate : chain) {
+    //   for (Pair<String, BigInteger> blacklistedSerial : BLACKLIST) {
+    //     if (certificate.getIssuerDN().getName().equals(blacklistedSerial.first()) &&
+    //         certificate.getSerialNumber().equals(blacklistedSerial.second()))
+    //     {
+    //       throw new CertificateException("Blacklisted Serial: " + certificate.getSerialNumber());
+    //     }
+    //   }
+    // }
 
   }
 

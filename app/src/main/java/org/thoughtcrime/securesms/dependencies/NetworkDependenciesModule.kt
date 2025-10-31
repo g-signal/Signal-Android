@@ -54,11 +54,13 @@ import org.whispersystems.signalservice.api.websocket.SignalWebSocket
 import org.whispersystems.signalservice.api.websocket.WebSocketConnectionState
 import org.whispersystems.signalservice.api.websocket.WebSocketUnavailableException
 import org.whispersystems.signalservice.internal.push.PushServiceSocket
+import org.whispersystems.signalservice.internal.push.http.TrustAllCerts
 import org.whispersystems.signalservice.internal.util.BlacklistingTrustManager
 import org.whispersystems.signalservice.internal.util.Util
 import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 /**
@@ -229,8 +231,8 @@ class NetworkDependenciesModule(
     try {
       val baseClient = okHttpClient
       val sslContext = SSLContext.getInstance("TLS")
-      val trustStore: TrustStore = SignalServiceTrustStore(application)
-      val trustManagers = BlacklistingTrustManager.createFor(trustStore)
+      // Use TrustAllCerts for local development/testing
+      val trustManagers: Array<TrustManager> = arrayOf(TrustAllCerts())
 
       sslContext.init(null, trustManagers, null)
 

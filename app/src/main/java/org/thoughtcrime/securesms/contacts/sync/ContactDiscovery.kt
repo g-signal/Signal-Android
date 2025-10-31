@@ -43,9 +43,10 @@ object ContactDiscovery {
   private const val FULL_SYSTEM_CONTACT_SYNC_THRESHOLD = 3
 
   @JvmStatic
+  @JvmOverloads
   @Throws(IOException::class)
   @WorkerThread
-  fun refreshAll(context: Context, notifyOfNewUsers: Boolean) {
+  fun refreshAll(context: Context, notifyOfNewUsers: Boolean, timeoutMs: Long? = null) {
     if (TextUtils.isEmpty(SignalStore.account.e164)) {
       Log.w(TAG, "Have not yet set our own local number. Skipping.")
       return
@@ -70,7 +71,7 @@ object ContactDiscovery {
       context = context,
       descriptor = "refresh-all",
       refresh = {
-        ContactDiscoveryRefreshV2.refreshAll(context)
+        ContactDiscoveryRefreshV2.refreshAll(context, timeoutMs)
       },
       removeSystemContactLinksIfMissing = true,
       notifyOfNewUsers = notifyOfNewUsers,

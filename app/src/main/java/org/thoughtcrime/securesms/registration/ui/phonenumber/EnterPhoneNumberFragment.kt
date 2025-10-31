@@ -131,7 +131,7 @@ class EnterPhoneNumberFragment : LoggingFragment(R.layout.fragment_registration_
     val activity = requireActivity() as AppCompatActivity
     activity.setSupportActionBar(binding.toolbar)
 
-    requireActivity().addMenuProvider(UseProxyMenuProvider(), viewLifecycleOwner)
+    // requireActivity().addMenuProvider(UseProxyMenuProvider(), viewLifecycleOwner)
 
     sharedViewModel.uiState.observe(viewLifecycleOwner) { sharedState ->
       presentRegisterButton(sharedState)

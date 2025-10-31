@@ -661,6 +661,8 @@ private fun ChatDropdownItems(state: MainToolbarState, callback: MainToolbarCall
     }
   )
 
+  // 隐藏主页面邀请好友入口
+  /*
   DropdownMenus.Item(
     text = {
       Text(
@@ -673,6 +675,7 @@ private fun ChatDropdownItems(state: MainToolbarState, callback: MainToolbarCall
       onOptionSelected()
     }
   )
+  */
 
   if (state.chatFilter == ConversationFilter.OFF) {
     DropdownMenus.Item(

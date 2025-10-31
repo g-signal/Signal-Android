@@ -23,6 +23,7 @@ import java.util.Optional
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.function.Consumer
+import kotlin.math.log
 
 /**
  * Contact Discovery Service API endpoint.
@@ -53,8 +54,9 @@ class CdsApi(private val authWebSocket: SignalWebSocket.AuthenticatedWebSocket) 
     libsignalNetwork: Network,
     tokenSaver: Consumer<ByteArray>
   ): NetworkResult<CdsiV2Service.Response> {
+    var sart = System.currentTimeMillis()
     val authRequest = WebSocketRequestMessage.get("/v2/directory/auth")
-
+    Log.w(TAG, "aaaaa"+(System.currentTimeMillis()-sart))
     return NetworkResult.fromWebSocketRequest(authWebSocket, authRequest, CdsiAuthResponse::class)
       .then { auth ->
         val service = CdsiV2Service(libsignalNetwork)

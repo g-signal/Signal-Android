@@ -337,7 +337,8 @@ abstract class OnboardingState private constructor(
    */
   data class DisplayState(
     private val shouldShowNewGroup: Boolean = SignalStore.onboarding.shouldShowNewGroup(),
-    private val shouldShowInviteFriends: Boolean = SignalStore.onboarding.shouldShowInviteFriends(),
+    // 隐藏邀请好友卡片
+    private val shouldShowInviteFriends: Boolean = false, // SignalStore.onboarding.shouldShowInviteFriends(),
     private val shouldShowAddPhoto: Boolean = SignalStore.onboarding.shouldShowAddPhoto() && !SignalStore.misc.hasEverHadAnAvatar,
     private val shouldShowAppearance: Boolean = SignalStore.onboarding.shouldShowAppearance()
   ) {

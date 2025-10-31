@@ -49,18 +49,18 @@ object AvatarPreference {
     }
 
     override fun bind(model: Model) {
-      if (model.recipient.isSelf) {
+      // if (model.recipient.isSelf) {
         badge.setBadge(null)
         badge.setOnClickListener(null)
-      } else {
-        badge.setBadgeFromRecipient(model.recipient)
-        badge.setOnClickListener {
-          val badge = model.recipient.badges.firstOrNull()
-          if (badge != null) {
-            model.onBadgeClick(badge)
-          }
-        }
-      }
+      // } else {
+      //   badge.setBadgeFromRecipient(model.recipient)
+      //   badge.setOnClickListener {
+      //     val badge = model.recipient.badges.firstOrNull()
+      //     if (badge != null) {
+      //       model.onBadgeClick(badge)
+      //     }
+      //   }
+      // }
 
       avatar.setStoryRingFromState(model.storyViewState)
       avatar.displayChatAvatar(model.recipient)

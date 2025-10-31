@@ -27,4 +27,16 @@
             <certificates src="system" />
         </trust-anchors>
     </domain-config>
+
+
+    <!-- 针对测试域名的特定配置 - 允许 HTTP 明文通信 -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">ba-chat.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/whisper" />
+        </trust-anchors>
+    </domain-config>
+
+
 </network-security-config>

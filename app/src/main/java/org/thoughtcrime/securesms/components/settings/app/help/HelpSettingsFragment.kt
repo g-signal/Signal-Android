@@ -47,15 +47,15 @@ class HelpSettingsFragment : ComposeFragment() {
       LazyColumn(
         modifier = Modifier.padding(contentPadding)
       ) {
-        item {
-          Rows.LinkRow(
-            text = stringResource(R.string.HelpSettingsFragment__support_center),
-            icon = ImageVector.vectorResource(R.drawable.symbol_open_20),
-            onClick = {
-              CommunicationActions.openBrowserLink(context, getString(R.string.support_center_url))
-            }
-          )
-        }
+        // item {
+        //   Rows.LinkRow(
+        //     text = stringResource(R.string.HelpSettingsFragment__support_center),
+        //     icon = ImageVector.vectorResource(R.drawable.symbol_open_20),
+        //     onClick = {
+        //       CommunicationActions.openBrowserLink(context, getString(R.string.support_center_url))
+        //     }
+        //   )
+        // }
 
         item {
           Rows.TextRow(

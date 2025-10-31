@@ -17,7 +17,7 @@ import okio.ByteString;
 
 public final class GroupInviteLinkUrl {
 
-  private static final String GROUP_URL_HOST   = "signal.group";
+  private static final String GROUP_URL_HOST   = "group.baxs.com";
   private static final String GROUP_URL_PREFIX = "https://" + GROUP_URL_HOST + "/#";
 
   private final GroupMasterKey    groupMasterKey;
@@ -84,7 +84,7 @@ public final class GroupInviteLinkUrl {
       URI url = new URI(urlString);
 
       if (!"https".equalsIgnoreCase(url.getScheme()) &&
-          !"sgnl".equalsIgnoreCase(url.getScheme()))
+          !"baxs".equalsIgnoreCase(url.getScheme()))
       {
         return null;
       }

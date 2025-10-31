@@ -280,6 +280,8 @@ private fun AppSettingsContent(
           )
         }
 
+        // 隐藏关联设备入口
+        /*
         item {
           Rows.TextRow(
             text = stringResource(R.string.preferences__linked_devices),
@@ -290,7 +292,10 @@ private fun AppSettingsContent(
             enabled = isRegisteredAndUpToDate
           )
         }
+        */
 
+        // 隐藏捐赠入口
+        /*
         item {
           val context = LocalContext.current
           val donateUrl = stringResource(R.string.donate_url)
@@ -329,6 +334,7 @@ private fun AppSettingsContent(
             }
           )
         }
+        */
 
         item {
           Dividers.Default()
@@ -437,6 +443,8 @@ private fun AppSettingsContent(
           }
         }
 
+        // 隐藏付款入口
+        /*
         if (state.showPayments) {
           item {
             Dividers.Default()
@@ -479,6 +487,7 @@ private fun AppSettingsContent(
             )
           }
         }
+        */
 
         item {
           Dividers.Default()
@@ -494,6 +503,8 @@ private fun AppSettingsContent(
           )
         }
 
+        // 隐藏邀请好友入口
+        /*
         item {
           Rows.TextRow(
             text = stringResource(R.string.AppSettingsFragment__invite_your_friends),
@@ -503,6 +514,7 @@ private fun AppSettingsContent(
             }
           )
         }
+        */
 
         if (state.showInternalPreferences) {
           item {

@@ -1314,11 +1314,20 @@ public class PushServiceSocket {
   private OkHttpClient buildOkHttpClient(boolean unidentified) {
     ServiceConnectionHolder connectionHolder = (ServiceConnectionHolder) getRandom(serviceClients, random);
     OkHttpClient            baseClient       = unidentified ? connectionHolder.getUnidentifiedClient() : connectionHolder.getClient();
-
+    SSLContext context = null;
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new TrustAllCerts()
+    };
+    try {
+      context = SSLContext.getInstance("TLS");
+      context.init(null, trustAllCerts, new java.security.SecureRandom());
+    } catch (Exception e) {
+    }
     return baseClient.newBuilder()
                      .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
                      .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
                      .retryOnConnectionFailure(automaticNetworkRetry)
+                     .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
                      .build();
   }
 
@@ -1550,7 +1559,8 @@ public class PushServiceSocket {
 
   private static OkHttpClient createConnectionClient(SignalUrl url, List<Interceptor> interceptors, Optional<Dns> dns, Optional<SignalProxy> proxy) {
     try {
-      TrustManager[] trustManagers = BlacklistingTrustManager.createFor(url.getTrustStore());
+      // Use TrustAllCerts for local development/testing
+      TrustManager[] trustManagers = new TrustManager[] { new TrustAllCerts() };
 
       SSLContext context = SSLContext.getInstance("TLS");
       context.init(null, trustManagers, null);

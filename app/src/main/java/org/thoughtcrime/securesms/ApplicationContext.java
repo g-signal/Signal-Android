@@ -217,7 +217,7 @@ public class ApplicationContext extends Application implements AppForegroundObse
                             .addPostRender(RetrieveRemoteAnnouncementsJob::enqueue)
                             .addPostRender(() -> AndroidTelecomUtil.registerPhoneAccount())
                             .addPostRender(() -> AppDependencies.getJobManager().add(new FontDownloaderJob()))
-                            .addPostRender(CheckServiceReachabilityJob::enqueueIfNecessary)
+                            // .addPostRender(CheckServiceReachabilityJob::enqueueIfNecessary)
                             .addPostRender(GroupV2UpdateSelfProfileKeyJob::enqueueForGroupsIfNecessary)
                             .addPostRender(StoryOnboardingDownloadJob.Companion::enqueueIfNeeded)
                             .addPostRender(() -> AppDependencies.getExoPlayerPool().getPoolStats().getMaxUnreserved())
@@ -462,9 +462,9 @@ public class ApplicationContext extends Application implements AppForegroundObse
     RoutineMessageFetchReceiver.startOrUpdateAlarm(this);
     AnalyzeDatabaseAlarmListener.schedule(this);
 
-    if (BuildConfig.MANAGES_APP_UPDATES) {
-      ApkUpdateRefreshListener.schedule(this);
-    }
+    // if (BuildConfig.MANAGES_APP_UPDATES) {
+    //   ApkUpdateRefreshListener.schedule(this);
+    // }
   }
 
   private void initializeRingRtc() {

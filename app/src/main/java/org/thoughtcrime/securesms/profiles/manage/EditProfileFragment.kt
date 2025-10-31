@@ -102,6 +102,8 @@ class EditProfileFragment : LoggingFragment() {
       }
     }
 
+    // 隐藏用户名入口
+    /*
     binding.manageProfileUsernameContainer.setOnClickListener { v: View ->
       if (!viewModel.isRegisteredAndUpToDate) {
         onClickWhenUnregisteredOrDeprecated()
@@ -119,6 +121,8 @@ class EditProfileFragment : LoggingFragment() {
         findNavController(v).safeNavigate(EditProfileFragmentDirections.actionManageUsername())
       }
     }
+    */
+    binding.manageProfileUsernameContainer.visibility = View.GONE
 
     binding.manageProfileAboutContainer.setOnClickListener { v: View ->
       if (!viewModel.isRegisteredAndUpToDate) {
@@ -146,6 +150,8 @@ class EditProfileFragment : LoggingFragment() {
       }
     }
 
+    // 隐藏徽章入口
+    /*
     binding.manageProfileBadgesContainer.setOnClickListener { v: View ->
       if (!viewModel.isRegisteredAndUpToDate) {
         onClickWhenUnregisteredOrDeprecated()
@@ -155,6 +161,8 @@ class EditProfileFragment : LoggingFragment() {
         findNavController(v).safeNavigate(EditProfileFragmentDirections.actionManageProfileFragmentToBadgeManageFragment())
       }
     }
+    */
+    binding.manageProfileBadgesContainer.visibility = View.GONE
 
     binding.manageProfileAvatar.setOnClickListener {
       if (!viewModel.isRegisteredAndUpToDate) {

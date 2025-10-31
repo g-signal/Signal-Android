@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//e/code/Signal-Android/app/src/main/java/**)",
+      "Read(//e/code/Signal-Android/app/src/main/res/values/**)",
+      "Read(//e/code/Signal-Android/app/src/main/res/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

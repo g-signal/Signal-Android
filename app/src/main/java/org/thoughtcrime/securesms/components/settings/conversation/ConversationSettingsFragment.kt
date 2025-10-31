@@ -263,9 +263,9 @@ class ConversationSettingsFragment : DSLSettingsFragment(
           .withFixedSize(ViewUtil.dpToPx(80))
           .load(state.recipient)
 
-        if (!state.recipient.isSelf) {
-          toolbarBadge.setBadgeFromRecipient(state.recipient)
-        }
+        // if (!state.recipient.isSelf) {
+        //   toolbarBadge.setBadgeFromRecipient(state.recipient)
+        // }
 
         state.withRecipientSettingsState {
           toolbarTitle.text = if (state.recipient.isSelf) getString(R.string.note_to_self) else state.recipient.getDisplayName(requireContext())
@@ -607,16 +607,16 @@ class ConversationSettingsFragment : DSLSettingsFragment(
           }
         }
 
-        if (!state.recipient.isReleaseNotes && !state.recipient.isSelf) {
-          clickPref(
-            title = DSLSettingsText.from(R.string.ConversationSettingsFragment__view_safety_number),
-            icon = DSLSettingsIcon.from(R.drawable.symbol_safety_number_24),
-            isEnabled = !state.isDeprecatedOrUnregistered,
-            onClick = {
-              VerifyIdentityActivity.startOrShowExchangeMessagesDialog(requireActivity(), recipientState.identityRecord)
-            }
-          )
-        }
+        // if (!state.recipient.isReleaseNotes && !state.recipient.isSelf) {
+        //   clickPref(
+        //     title = DSLSettingsText.from(R.string.ConversationSettingsFragment__view_safety_number),
+        //     icon = DSLSettingsIcon.from(R.drawable.symbol_safety_number_24),
+        //     isEnabled = !state.isDeprecatedOrUnregistered,
+        //     onClick = {
+        //       VerifyIdentityActivity.startOrShowExchangeMessagesDialog(requireActivity(), recipientState.identityRecord)
+        //     }
+        //   )
+        // }
       }
 
       if (state.sharedMedia.isNotEmpty()) {
@@ -675,19 +675,19 @@ class ConversationSettingsFragment : DSLSettingsFragment(
       }
 
       state.withRecipientSettingsState { recipientSettingsState ->
-        if (state.recipient.badges.isNotEmpty() && !state.recipient.isSelf) {
-          dividerPref()
+        // if (state.recipient.badges.isNotEmpty() && !state.recipient.isSelf) {
+        //   dividerPref()
 
-          sectionHeaderPref(R.string.ManageProfileFragment_badges)
+        //   sectionHeaderPref(R.string.ManageProfileFragment_badges)
 
-          displayBadges(requireContext(), state.recipient.badges)
+        //   displayBadges(requireContext(), state.recipient.badges)
 
-          textPref(
-            summary = DSLSettingsText.from(
-              R.string.ConversationSettingsFragment__get_badges
-            )
-          )
-        }
+        //   textPref(
+        //     summary = DSLSettingsText.from(
+        //       R.string.ConversationSettingsFragment__get_badges
+        //     )
+        //   )
+        // }
 
         if (recipientSettingsState.selfHasGroups && !state.recipient.isReleaseNotes) {
           dividerPref()
