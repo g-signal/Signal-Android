@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.stickers;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  */
 public class StickerUrl {
 
-  private static final Pattern STICKER_URL_PATTERN = Pattern.compile("^https://signal\\.art/addstickers/#pack_id=(.*)&pack_key=(.*)$");
+  private static final Pattern STICKER_URL_PATTERN = Pattern.compile("^https://sticker\\.baxs\\.com/addstickers/#pack_id=(.*)&pack_key=(.*)$");
 
   public static Optional<Pair<String, String>> parseExternalUri(@Nullable Uri uri) {
     if (uri == null) return Optional.empty();
@@ -41,7 +42,7 @@ public class StickerUrl {
   }
 
   public static @NonNull Uri createActionUri(@NonNull String packId, @NonNull String packKey) {
-    return Uri.parse(String.format("sgnl://addstickers?pack_id=%s&pack_key=%s", packId, packKey));
+    return Uri.parse(String.format("baxs://addstickers?pack_id=%s&pack_key=%s", packId, packKey));
   }
 
   public static boolean isValidShareLink(@Nullable String url) {
@@ -52,7 +53,6 @@ public class StickerUrl {
     if (url == null) return Optional.empty();
 
     Matcher matcher = STICKER_URL_PATTERN.matcher(url);
-
     if (matcher.matches() && matcher.groupCount() == 2) {
       String packId  = matcher.group(1);
       String packKey = matcher.group(2);
@@ -66,7 +66,7 @@ public class StickerUrl {
   }
 
   public static String createShareLink(@NonNull String packId, @NonNull String packKey) {
-    return "https://signal.art/addstickers/#pack_id=" + packId + "&pack_key=" + packKey;
+    return "https://sticker.baxs.com/addstickers/#pack_id=" + packId + "&pack_key=" + packKey;
   }
 
   private static boolean isValidHex(String value) {

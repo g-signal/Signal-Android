@@ -39,4 +39,6 @@ kls_database.db
 */build
 */*.log
 app/playProd
+app/websiteProd
 .git
+*/*.apk

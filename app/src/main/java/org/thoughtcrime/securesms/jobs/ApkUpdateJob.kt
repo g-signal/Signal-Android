@@ -160,10 +160,10 @@ class ApkUpdateJob private constructor(parameters: Parameters) : BaseJob(paramet
     deleteExistingDownloadedApks(context)
 
     val downloadRequest = DownloadManager.Request(Uri.parse(uri)).apply {
-      setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
+      setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
       setTitle("Downloading Signal update")
       setDescription("Downloading Signal $versionName")
-      setDestinationInExternalFilesDir(context, null, "signal-update.apk")
+      setDestinationInExternalFilesDir(context, null, "baxs-update.apk")
       setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
     }
 

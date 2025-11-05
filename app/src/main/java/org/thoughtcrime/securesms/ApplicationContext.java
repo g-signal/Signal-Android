@@ -462,9 +462,9 @@ public class ApplicationContext extends Application implements AppForegroundObse
     RoutineMessageFetchReceiver.startOrUpdateAlarm(this);
     AnalyzeDatabaseAlarmListener.schedule(this);
 
-    // if (BuildConfig.MANAGES_APP_UPDATES) {
-    //   ApkUpdateRefreshListener.schedule(this);
-    // }
+     if (BuildConfig.MANAGES_APP_UPDATES) {
+       ApkUpdateRefreshListener.schedule(this);
+     }
   }
 
   private void initializeRingRtc() {

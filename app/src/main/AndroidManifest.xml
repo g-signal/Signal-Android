@@ -217,14 +217,15 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="baxs"
-                  android:host="addstickers" />
+                android:host="addstickers"
+                />
         </intent-filter>
         <intent-filter android:autoVerify="true">
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="https"
-                  android:host="signal.art"
+                  android:host="sticker.baxs.com"
                   android:pathPrefix="/addstickers"/>
         </intent-filter>
     </activity>

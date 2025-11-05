@@ -24,18 +24,17 @@ plugins {
 apply(from = "static-ips.gradle.kts")
 //val canonicalVersionName = "1.0.0"
 val canonicalVersionCode = 1567
-val canonicalVersionName = "7.51.2"
-val currentHotfixVersion = 1
+val canonicalVersionName = "7.51.5"
+val currentHotfixVersion = 5
 val maxHotfixVersions = 100
 
 
 val keystores: Map<String, Properties?> = mapOf(
   "debug" to loadKeystoreProperties("keystore.debug.properties"),
-  "release" to loadKeystoreProperties("keystore.release.properties")
+  "release" to loadKeystoreProperties("keystore.release.pro  \"nightlyBackupRelease\",\nperties")
 )
 
 val selectableVariants = listOf(
-  "nightlyBackupRelease",
   "nightlyBackupSpinner",
   "nightlyProdSpinner",
   "nightlyProdPerf",
@@ -383,7 +382,7 @@ android {
     create("website") {
       dimension = "distribution"
       buildConfigField("boolean", "MANAGES_APP_UPDATES", "true")
-      buildConfigField("String", "APK_UPDATE_MANIFEST_URL", "\"https://updates.signal.org/android/latest.json\"")
+      buildConfigField("String", "APK_UPDATE_MANIFEST_URL", "\"https://updates.ba-chat.com/android/latest.json\"")
       buildConfigField("String", "BUILD_DISTRIBUTION_TYPE", "\"website\"")
     }
 

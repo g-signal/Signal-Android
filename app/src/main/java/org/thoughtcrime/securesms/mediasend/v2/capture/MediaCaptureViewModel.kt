@@ -68,7 +68,7 @@ class MediaCaptureViewModel(private val repository: MediaCaptureRepository) : Vi
 
     disposables += qrData
       .throttleFirst(5, TimeUnit.SECONDS)
-      .filter { it.startsWith("sgnl://linkdevice") }
+      .filter { it.startsWith("baxs://linkdevice") }
       .subscribe { data ->
         internalEvents.onNext(MediaCaptureEvent.DeviceLinkScannedFromQrCode)
       }
@@ -76,7 +76,7 @@ class MediaCaptureViewModel(private val repository: MediaCaptureRepository) : Vi
     if (SignalStore.account.isRegistered) {
       disposables += qrData
         .throttleFirst(5, TimeUnit.SECONDS)
-        .filter { it.startsWith("sgnl://rereg") && QuickRegistrationRepository.isValidReRegistrationQr(it) }
+        .filter { it.startsWith("baxs://rereg") && QuickRegistrationRepository.isValidReRegistrationQr(it) }
         .subscribe { data ->
           internalEvents.onNext(MediaCaptureEvent.ReregistrationScannedFromQrCode(data))
         }
