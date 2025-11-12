@@ -280,8 +280,6 @@ private fun AppSettingsContent(
           )
         }
 
-        // 隐藏关联设备入口
-        /*
         item {
           Rows.TextRow(
             text = stringResource(R.string.preferences__linked_devices),
@@ -292,7 +290,6 @@ private fun AppSettingsContent(
             enabled = isRegisteredAndUpToDate
           )
         }
-        */
 
         // 隐藏捐赠入口
         /*
