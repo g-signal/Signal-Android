@@ -626,6 +626,7 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="https" />
+            <data android:pathPrefix="/call" />
             <data android:host="link.baxs.com" />
         </intent-filter>
         <intent-filter>
