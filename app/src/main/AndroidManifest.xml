@@ -626,14 +626,14 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="https" />
-            <data android:host="signal.link" />
+            <data android:host="link.baxs.com" />
         </intent-filter>
         <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="baxs" />
-            <data android:host="signal.link" />
+            <data android:host="link.baxs.com" />
         </intent-filter>
     </activity>
 
