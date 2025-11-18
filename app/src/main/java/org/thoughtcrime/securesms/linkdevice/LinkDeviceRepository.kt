@@ -117,7 +117,7 @@ object LinkDeviceRepository {
       return false
     }
 
-    if (uri.scheme != "sgnl") {
+    if (uri.scheme != "baxs") {
       return false
     }
 
