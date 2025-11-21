@@ -25,7 +25,7 @@ object UsernameUtil {
   const val MAX_DISCRIMINATOR_LENGTH = 9
   private val FULL_PATTERN = Pattern.compile(String.format(Locale.US, "^[a-zA-Z_][a-zA-Z0-9_]{%d,%d}$", MIN_NICKNAME_LENGTH - 1, MAX_NICKNAME_LENGTH - 1), Pattern.CASE_INSENSITIVE)
   private val DIGIT_START_PATTERN = Pattern.compile("^[0-9].*$")
-  private const val BASE_URL_SCHEMELESS = "signal.me/#eu/"
+  private const val BASE_URL_SCHEMELESS = "me.baxs.com/#eu/"
   private const val BASE_URL = "https://$BASE_URL_SCHEMELESS"
 
   private val SEARCH_PATTERN = Pattern.compile(

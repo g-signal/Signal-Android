@@ -281,6 +281,7 @@ import org.thoughtcrime.securesms.notifications.v2.ConversationId
 import org.thoughtcrime.securesms.payments.preferences.PaymentsActivity
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.profiles.manage.EditProfileActivity
+import org.thoughtcrime.securesms.profiles.manage.UsernameRepository
 import org.thoughtcrime.securesms.profiles.spoofing.ReviewCardDialogFragment
 import org.thoughtcrime.securesms.providers.BlobProvider
 import org.thoughtcrime.securesms.ratelimit.RecaptchaProofBottomSheetFragment
@@ -324,6 +325,7 @@ import org.thoughtcrime.securesms.util.MessageUtil
 import org.thoughtcrime.securesms.util.PlayStoreUtil
 import org.thoughtcrime.securesms.util.RemoteConfig
 import org.thoughtcrime.securesms.util.SignalLocalMetrics
+import org.thoughtcrime.securesms.util.SignalMeUtil
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.thoughtcrime.securesms.util.ViewUtil
 import org.thoughtcrime.securesms.util.WindowUtil
@@ -3149,8 +3151,23 @@ class ConversationFragment :
     override fun onScheduledIndicatorClicked(view: View, conversationMessage: ConversationMessage) = Unit
 
     override fun onUrlClicked(url: String): Boolean {
-      return CommunicationActions.handlePotentialGroupLinkUrl(requireActivity(), url) ||
-        CommunicationActions.handlePotentialProxyLinkUrl(requireActivity(), url)
+      if (CommunicationActions.handlePotentialGroupLinkUrl(requireActivity(), url)) {
+        return true
+      }
+
+      if (CommunicationActions.handlePotentialProxyLinkUrl(requireActivity(), url)) {
+        return true
+      }
+
+      // Handle Signal.me / baxs.com username and phone number links
+      val hasE164 = SignalMeUtil.parseE164FromLink(url) != null
+      val hasUsernameLink = UsernameRepository.parseLink(url) != null
+      if (hasE164 || hasUsernameLink) {
+        CommunicationActions.handlePotentialSignalMeUrl(requireActivity(), url)
+        return true
+      }
+
+      return false
     }
 
     override fun onViewGiftBadgeClicked(messageRecord: MessageRecord) {

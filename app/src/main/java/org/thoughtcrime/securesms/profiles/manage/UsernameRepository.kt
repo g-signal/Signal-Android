@@ -78,9 +78,9 @@ import java.util.UUID
 object UsernameRepository {
   private val TAG = Log.tag(UsernameRepository::class.java)
 
-  private val URL_REGEX = """(https://)?signal.me/?#eu/([a-zA-Z0-9+\-_/]+)""".toRegex()
+  private val URL_REGEX = """(https://|baxs://)?me\.baxs\.com/?#eu/([a-zA-Z0-9+\-_/]+)""".toRegex()
 
-  private const val BASE_URL = "https://signal.me/#eu/"
+  private const val BASE_URL = "https://me.baxs.com/#eu/"
   private const val USERNAME_SYNC_ERROR_THRESHOLD = 3
 
   private val accountManager: SignalServiceAccountManager get() = AppDependencies.signalServiceAccountManager
