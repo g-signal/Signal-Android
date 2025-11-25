@@ -24,8 +24,8 @@ plugins {
 apply(from = "static-ips.gradle.kts")
 //val canonicalVersionName = "1.0.0"
 val canonicalVersionCode = 1567
-val canonicalVersionName = "7.51.5"
-val currentHotfixVersion = 5
+val canonicalVersionName = "7.51.6"
+val currentHotfixVersion = 6
 val maxHotfixVersions = 100
 
 
@@ -481,6 +481,7 @@ android {
             throw AssertionError("Hotfix version is too large!")
           }
         }
+        output.outputFileName = output.outputFileName.replace("Signal", "BA")
       }
   }
 
