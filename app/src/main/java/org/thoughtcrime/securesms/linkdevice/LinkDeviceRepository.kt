@@ -208,17 +208,23 @@ object LinkDeviceRepository {
 
     val startTime = System.currentTimeMillis()
     var timeRemaining = maxWaitTime.inWholeMilliseconds
+    var attemptCount = 0
 
     while (timeRemaining > 0) {
-      Log.d(TAG, "[waitForDeviceToBeLinked] Willing to wait for $timeRemaining ms...")
+      attemptCount++
+      // Limit each request to 25 seconds to avoid WebSocket keepalive timeout (30s)
+      val requestTimeout = minOf(timeRemaining, 25_000L).milliseconds
+
+      Log.d(TAG, "[waitForDeviceToBeLinked] Attempt $attemptCount: Willing to wait for ${requestTimeout.inWholeSeconds}s (${timeRemaining}ms remaining)...")
+
       val result = SignalNetwork.linkDevice.waitForLinkedDevice(
         token = token,
-        timeout = timeRemaining.milliseconds
+        timeout = requestTimeout
       )
 
       when (result) {
         is NetworkResult.Success -> {
-          Log.d(TAG, "[waitForDeviceToBeLinked] Sucessfully found device after waiting ${System.currentTimeMillis() - startTime} ms.")
+          Log.d(TAG, "[waitForDeviceToBeLinked] Successfully found device after waiting ${System.currentTimeMillis() - startTime} ms (${attemptCount} attempts).")
           return result.result
         }
         is NetworkResult.ApplicationError -> {
@@ -226,19 +232,27 @@ object LinkDeviceRepository {
           throw result.throwable
         }
         is NetworkResult.NetworkError -> {
-          Log.w(TAG, "[waitForDeviceToBeLinked] Hit a network error while waiting for linking. Will try to wait again.", result.exception)
+          Log.w(TAG, "[waitForDeviceToBeLinked] Hit a network error while waiting for linking (attempt $attemptCount). Will try to wait again.", result.exception)
+          // Add a short delay before retrying to avoid hammering the server
+          Thread.sleep(1000)
         }
         is NetworkResult.StatusCodeError -> {
           when (result.code) {
+            204 -> {
+              // No device linked yet, but request succeeded - continue waiting
+              Log.d(TAG, "[waitForDeviceToBeLinked] No device yet (204), continuing to wait...")
+            }
             400 -> {
               Log.w(TAG, "[waitForDeviceToBeLinked] Invalid token/timeout!")
               return null
             }
             429 -> {
               Log.w(TAG, "[waitForDeviceToBeLinked] Hit a rate-limit. Will try to wait again.")
+              Thread.sleep(2000)
             }
             else -> {
               Log.w(TAG, "[waitForDeviceToBeLinked] Hit an unknown status code of ${result.code}. Will try to wait again.")
+              Thread.sleep(1000)
             }
           }
         }
@@ -247,7 +261,7 @@ object LinkDeviceRepository {
       timeRemaining = maxWaitTime.inWholeMilliseconds - (System.currentTimeMillis() - startTime)
     }
 
-    Log.w(TAG, "[waitForDeviceToBeLinked] No linked device found in ${System.currentTimeMillis() - startTime} ms. Bailing!")
+    Log.w(TAG, "[waitForDeviceToBeLinked] No linked device found in ${System.currentTimeMillis() - startTime} ms after $attemptCount attempts. Bailing!")
     return null
   }
 
