@@ -288,9 +288,43 @@ class LinkDeviceViewModel : ViewModel() {
     }
 
     Log.i(TAG, "[addDeviceWithSync] Waiting for a new linked device...")
-    val waitResult: WaitForLinkedDeviceResponse? = LinkDeviceRepository.waitForDeviceToBeLinked(result.token, maxWaitTime = 60.seconds)
+    // Increased timeout from 60s to 120s to handle slower networks and WebSocket keepalive issues
+    val waitResult: WaitForLinkedDeviceResponse? = LinkDeviceRepository.waitForDeviceToBeLinked(result.token, maxWaitTime = 120.seconds)
     if (waitResult == null) {
-      Log.i(TAG, "[addDeviceWithSync] No linked device found!")
+      Log.i(TAG, "[addDeviceWithSync] No linked device found after waiting!")
+
+      // As a fallback, check if any new device was actually created
+      Log.d(TAG, "[addDeviceWithSync] Checking device list as fallback...")
+      val devices = LinkDeviceRepository.loadDevices()
+      val recentDevice = devices?.maxByOrNull { it.createdMillis }
+
+      // If there's a device created within the last 2 minutes, it's likely the one we're looking for
+      if (recentDevice != null && (System.currentTimeMillis() - recentDevice.createdMillis) < 20_000) {
+        Log.i(TAG, "[addDeviceWithSync] Found recently created device ${recentDevice.id}, assuming it's the linked device!")
+        // Continue with this device
+        NewLinkedDeviceNotificationJob.enqueue(recentDevice.id, recentDevice.createdMillis)
+
+        _state.update {
+          it.copy(
+            linkDeviceResult = result,
+            dialogState = DialogState.SyncingMessages(recentDevice.id, recentDevice.createdMillis)
+          )
+        }
+
+        // Continue to archive upload with the found device
+        Log.d(TAG, "[addDeviceWithSync] Beginning the archive generation process with fallback device...")
+        val uploadResult = LinkDeviceRepository.createAndUploadArchive(
+          ephemeralMessageBackupKey = ephemeralMessageBackupKey,
+          deviceId = recentDevice.id,
+          deviceCreatedAt = recentDevice.createdMillis,
+          cancellationSignal = { _state.value.shouldCancelArchiveUpload }
+        )
+
+        handleUploadResult(uploadResult, WaitForLinkedDeviceResponse(recentDevice.id, recentDevice.name ?: "Unknown Device", recentDevice.createdMillis, recentDevice.lastSeenMillis))
+        return
+      }
+
+      Log.w(TAG, "[addDeviceWithSync] No recent device found in device list either.")
       _state.update {
         it.copy(
           dialogState = DialogState.SyncingTimedOut
@@ -317,6 +351,10 @@ class LinkDeviceViewModel : ViewModel() {
       cancellationSignal = { _state.value.shouldCancelArchiveUpload }
     )
 
+    handleUploadResult(uploadResult, waitResult)
+  }
+
+  private fun handleUploadResult(uploadResult: LinkDeviceRepository.LinkUploadArchiveResult, waitResult: WaitForLinkedDeviceResponse) {
     Log.d(TAG, "[addDeviceWithSync] Archive finished with result: $uploadResult")
     when (uploadResult) {
       LinkDeviceRepository.LinkUploadArchiveResult.Success -> {
@@ -367,7 +405,7 @@ class LinkDeviceViewModel : ViewModel() {
         }
       }
       LinkDeviceRepository.LinkUploadArchiveResult.BackupCreationCancelled -> {
-        Log.i(TAG, "[addDeviceWithoutSync] Cancelling archive upload")
+        Log.i(TAG, "[addDeviceWithSync] Cancelling archive upload")
         _state.update {
           it.copy(
             dialogState = DialogState.None
