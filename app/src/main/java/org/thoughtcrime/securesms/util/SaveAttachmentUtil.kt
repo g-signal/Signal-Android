@@ -121,7 +121,7 @@ object SaveAttachmentUtil {
     val mimeTypeMap = MimeTypeMap.getSingleton()
     val extension = mimeTypeMap.getExtensionFromMimeType(contentType) ?: "attach"
     val dateFormatter = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS")
-    val base = "signal-${dateFormatter.format(timestamp)}"
+    val base = "ba-${dateFormatter.format(timestamp)}"
 
     return "$base.$extension"
   }
