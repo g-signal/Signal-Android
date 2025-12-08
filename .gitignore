@@ -42,3 +42,4 @@ app/playProd
 app/websiteProd
 .git
 */*.apk
+*.so
