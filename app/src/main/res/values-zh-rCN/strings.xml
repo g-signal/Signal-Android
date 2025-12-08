@@ -2043,7 +2043,7 @@
     <!-- Update message shown in chat after you block a person -->
     <string name="MessageRecord_you_blocked_this_person">您已屏蔽此用户</string>
     <!-- Update message shown in chat after you unblock a person -->
-    <string name="MessageRecord_you_unblocked_this_person">你屏蔽了此用户</string>
+    <string name="MessageRecord_you_unblocked_this_person">您已取消屏蔽此用户</string>
     <!-- Update message shown in chat after you block a group -->
     <string name="MessageRecord_you_blocked_this_group">你已屏蔽此群组</string>
     <!-- Update message shown in chat after you unblock a group -->
