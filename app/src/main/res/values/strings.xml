@@ -8,7 +8,7 @@
 <resources>
     <string name="app_name" translatable="false">B&amp;A</string>
 
-    <string name="install_url" translatable="false">https://signal.org/install</string>
+    <string name="install_url" translatable="false">https://ba-chat.com/download/</string>
     <string name="donate_url" translatable="false">https://signal.org/donate</string>
     <string name="backup_support_url" translatable="false">https://support.signal.org/hc/articles/360007059752</string>
     <string name="backup_failed_support_url" translatable="false">https://support.signal.org/hc/articles/8768161836954</string>
