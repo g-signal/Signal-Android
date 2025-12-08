@@ -680,7 +680,7 @@
     <!-- Title of tip 0 -->
     <string name="SafetyTips_tip0_title">假名和虚假账户</string>
     <!-- Message of tip 0 -->
-    <string name="SafetyTips_tip0_message">Signal 绝不会联系您获取您的注册码或 PIN 码。请谨慎甄别假冒仿冒账户提出的请求。昵称是账户持有人自行选择的，未经过验证。</string>
+    <string name="SafetyTips_tip0_message">B&amp;A 绝不会联系您获取您的注册码或 PIN 码。请谨慎甄别假冒仿冒账户提出的请求。昵称是账户持有人自行选择的，未经过验证。</string>
     <!-- Title of tip 1 -->
     <string name="SafetyTips_tip1_title">加密货币或金钱骗局</string>
     <!-- Message of tip 1 -->
