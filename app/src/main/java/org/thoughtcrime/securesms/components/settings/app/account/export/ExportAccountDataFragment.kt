@@ -120,18 +120,19 @@ class ExportAccountDataFragment : ComposeFragment() {
             )
           }
 
-          item {
-            val learnMore = stringResource(R.string.ExportAccountDataFragment__learn_more)
-            val explanation = stringResource(R.string.ExportAccountDataFragment__export_explanation, learnMore)
-            Texts.LinkifiedText(
-              textWithUrlSpans = SpanUtil.urlSubsequence(explanation, learnMore, stringResource(R.string.export_account_data_url)),
-              onUrlClick = { url ->
-                CommunicationActions.openBrowserLink(requireContext(), url)
-              },
-              modifier = Modifier.padding(top = 12.dp, start = 32.dp, end = 32.dp, bottom = 20.dp),
-              style = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
-            )
-          }
+          // 隐藏了解详情入口
+          // item {
+          //   val learnMore = stringResource(R.string.ExportAccountDataFragment__learn_more)
+          //   val explanation = stringResource(R.string.ExportAccountDataFragment__export_explanation, learnMore)
+          //   Texts.LinkifiedText(
+          //     textWithUrlSpans = SpanUtil.urlSubsequence(explanation, learnMore, stringResource(R.string.export_account_data_url)),
+          //     onUrlClick = { url ->
+          //       CommunicationActions.openBrowserLink(requireContext(), url)
+          //     },
+          //     modifier = Modifier.padding(top = 12.dp, start = 32.dp, end = 32.dp, bottom = 20.dp),
+          //     style = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
+          //   )
+          // }
 
           item {
             ExportReportOptions(exportAsJson = state.exportAsJson)
