@@ -212,7 +212,7 @@ public class CreateProfileFragment extends LoggingFragment {
                                                                          viewModel.setFamilyName(s.toString());
                                                                        }));
       binding.groupDescriptionText.setVisibility(View.GONE);
-      binding.profileDescriptionText.setLearnMoreVisible(true);
+      binding.profileDescriptionText.setLearnMoreVisible(false);
       binding.profileDescriptionText.setLinkColor(ContextCompat.getColor(requireContext(), R.color.signal_colorPrimary));
       binding.profileDescriptionText.setOnLinkClickListener(v -> CommunicationActions.openBrowserLink(requireContext(), getString(R.string.EditProfileFragment__support_link)));
 
