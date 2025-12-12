@@ -1028,7 +1028,7 @@
     <string name="LinkDeviceFragment__signal_messages_are_synchronized">B&amp;A messages are synchronized with B&amp;A on your mobile phone after it is linked. Your previous message history will not appear.</string>
     <!-- Bottom sheet description explaining that for non-desktop/iPad devices, they should go to %s to download Signal where %s is Signal\'s website -->
     <string name="LinkDeviceFragment__on_other_device_visit_signal">On the device you want to link, visit %s to install B&amp;A</string>
-    <string name="LinkDeviceFragment__signal_download_url" translatable="false">B&amp;A.org/download</string>
+    <string name="LinkDeviceFragment__signal_download_url" translatable="false">ba-chat.com/download</string>
     <!-- Header title listing out current linked devices -->
     <string name="LinkDeviceFragment__my_linked_devices">My linked devices</string>
     <!-- Dialog confirmation to unlink a device -->
