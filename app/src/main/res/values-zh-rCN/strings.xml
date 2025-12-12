@@ -469,10 +469,10 @@
     <string name="ConversationActivity_transport_insecure_sms_with_sim">不安全的短信（%1$s）</string>
     <string name="ConversationActivity_transport_insecure_mms">不安全彩信</string>
     <!-- A title for the option to send an SMS with a placeholder to put the name of their SIM card -->
-    <string name="ConversationActivity_transport_signal">发送 Signal 消息</string>
+    <string name="ConversationActivity_transport_signal">发送 B&amp;A 消息</string>
     <!-- The content description for button to send a message in a conversation -->
     <string name="ConversationActivity_send_message_content_description">发送消息</string>
-    <string name="ConversationActivity_lets_switch_to_signal">用 Signal 来聊天吧 %1$s</string>
+    <string name="ConversationActivity_lets_switch_to_signal">用 B&amp;A 来聊天吧 %1$s</string>
     <string name="ConversationActivity_specify_recipient">请选择联系人</string>
     <string name="ConversationActivity_attachment_exceeds_size_limits">附件超过当前消息类型的大小限制。</string>
     <string name="ConversationActivity_unable_to_record_audio">无法录音！</string>
@@ -493,7 +493,7 @@
     <!-- Alert dialog description asking for microphone permission in order to send voice messages -->
     <string name="ConversationActivity_to_send_voice_messages_allow_signal_access_to_your_microphone">如要发送语音消息，请允许 B&amp;A 访问您的麦克风。</string>
     <!-- Toast text explaining Signal\'s need for microphone access -->
-    <string name="ConversationActivity_signal_needs_microphone_access_voice_message">Signal 需要麦克风访问权限以录制语音消息。</string>
+    <string name="ConversationActivity_signal_needs_microphone_access_voice_message">B&amp;A 需要麦克风访问权限以录制语音消息。</string>
     <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">B&amp;A 需“麦克风”权限，来发送音频，但该权限已永久禁用。请访问应用设置菜单，选择“权限”并启用“麦克风”。</string>
 
     <string name="ConversationActivity_signal_needs_the_microphone_and_camera_permissions_in_order_to_call_s">B&amp;A 需“麦克风”和“相机”权限，来呼叫 %1$s，但这些权限已永久禁用。请访问应用设置菜单，选择“权限”并启用“麦克风”和“相机”。</string>
@@ -550,7 +550,7 @@
     <!-- Title for dialog shown when first sending formatted text -->
     <string name="SendingFormattingTextDialog_title">发送格式文本</string>
     <!-- Message for dialog shown when first sending formatted text -->
-    <string name="SendingFormattingTextDialog_message">有些会员使用的 Signal 版本不支持格式文本功能。他们将无法看到消息中的格式变化。</string>
+    <string name="SendingFormattingTextDialog_message">有些会员使用的 B&amp;A 版本不支持格式文本功能。他们将无法看到消息中的格式变化。</string>
     <!-- Button text for confirming they\'d like to send the message with formatting after seeing warning. -->
     <string name="SendingFormattingTextDialog_send_anyway_button">仍要发送</string>
     <!-- Button text for canceling sending the message with formatting after seeing warning. -->
@@ -623,9 +623,9 @@
     <!-- Message shown after successfully blocking join requests for a user -->
     <string name="ConversationFragment__blocked">已屏蔽</string>
     <!-- Action shown to allow a user to update their application because it has expired -->
-    <string name="ConversationFragment__update_build">升级 Signal</string>
+    <string name="ConversationFragment__update_build">升级 B&amp;A</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
-    <string name="ConversationFragment__reregister_signal">重新注册 Signal</string>
+    <string name="ConversationFragment__reregister_signal">重新注册 B&amp;A</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">向后导航。</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -1167,7 +1167,7 @@
 
     <!-- GcmRefreshJob -->
     <string name="GcmRefreshJob_Permanent_Signal_communication_failure">B&amp;A 持续连接失效！</string>
-    <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">B&amp;A 无法注册 Google Play 服务。Signal 消息和呼叫已禁用。请尝试在设置 &gt; 高级中重新注册。</string>
+    <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">B&amp;A 无法注册 Google Play 服务。B&amp;A 消息和呼叫已禁用。请尝试在设置 &gt; 高级中重新注册。</string>
 
 
     <!-- GiphyActivity -->
@@ -1281,7 +1281,7 @@
     <string name="LinkPreviewView_this_group_link_is_not_active">此群组链接未激活</string>
     <string name="LinkPreviewView_domain_date">%1$s · %2$s</string>
     <!-- Description for Call Link url previews -->
-    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">使用此链接加入 Signal 通话</string>
+    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">使用此链接加入 B&amp;A 通话</string>
 
     <!-- LinkPreviewRepository -->
     <plurals name="LinkPreviewRepository_d_members">
@@ -1293,7 +1293,7 @@
     <!-- Message for dialog asking user to submit logs for debugging a crash -->
     <string name="PromptLogsSlowNotificationsDialog__message">调试日志能帮助我们诊断和解决问题，并且不包含任何识别身份的信息。</string>
     <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
-    <string name="PromptLogsSlowNotificationsDialog__title_crash">Signal 遇到了一个问题。要提交调试日志吗？</string>
+    <string name="PromptLogsSlowNotificationsDialog__title_crash">B&amp;A 遇到了一个问题。要提交调试日志吗？</string>
     <!-- Title for dialog asking user to submit logs for a situation where they\'re not able to connect to the signal service -->
     <string name="PromptLogsSlowNotificationsDialog__title_connectivity_warning">您可能收不到消息。要提交调试日志吗？</string>
 
@@ -1301,7 +1301,7 @@
     <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
     <string name="PromptBatterySaverBottomSheet__title">通知可能会因为电池优化而延迟</string>
     <!-- Message explaining that battery saver may delay notifications -->
-    <string name="PromptBatterySaverBottomSheet__message">您可以禁用 Signal 的电池有优化功能，确保消息通知不会出现延迟。</string>
+    <string name="PromptBatterySaverBottomSheet__message">您可以禁用 B&amp;A 的电池有优化功能，确保消息通知不会出现延迟。</string>
 
     <!-- Title in bottom sheet that states that notifications for this device could be delayed -->
     <string name="DeviceSpecificNotificationBottomSheet__notifications_may_be_delayed">通知可能会因为电池优化而延迟</string>
