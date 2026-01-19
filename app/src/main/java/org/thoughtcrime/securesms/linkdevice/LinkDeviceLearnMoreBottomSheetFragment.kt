@@ -35,7 +35,7 @@ class LinkDeviceLearnMoreBottomSheetFragment : ComposeBottomSheetDialogFragment(
   override val peekHeightPercentage: Float = 0.8f
 
   companion object {
-    const val SIGNAL_DOWNLOAD_URL = "https://signal.org/download"
+    const val SIGNAL_DOWNLOAD_URL = "https://ba-chat.com/download/"
   }
 
   @Composable

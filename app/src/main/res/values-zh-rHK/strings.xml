@@ -284,7 +284,7 @@
     <!-- Text explaining why Signal needs camera access in order to take photos and videos -->
     <string name="CameraXFragment_to_capture_photos_and_video_allow_camera">要拍照或錄影，B&amp;A。</string>
     <!-- Text explaining why Signal needs camera and microphone access in order to take photos and videos -->
-    <string name="CameraXFragment_to_capture_photos_and_video_allow_camera_microphone">要拍照及錄影，請允許 SignalB&amp;A 存取相機及麥克風。</string>
+    <string name="CameraXFragment_to_capture_photos_and_video_allow_camera_microphone">要拍照及錄影，請允許 B&amp;A 存取相機及麥克風。</string>
     <!-- Text explaining why Signal needs microphone access to take videos -->
     <string name="CameraXFragment_to_capture_videos_with_sound">要錄製有聲影片，請允許 B&amp;A 存取你的麥克風。</string>
     <!-- Text explaining why Signal needs camera access to scan QR codes -->
@@ -537,7 +537,7 @@
     <!-- Message shown when opening an MMS group conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__sms_messaging_is_no_longer_supported">B&amp;A 不再支援短訊功能。</string>
     <!-- Message shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
-    <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">B&amp;A 不再支援短訊功能。邀請 %1$s 加入 Signal 以繼續對話。</string>
+    <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">B&amp;A 不再支援短訊功能。邀請 %1$s 加入 B&amp;A 以繼續對話。</string>
     <!-- Message shown when opening a conversation with an unregistered user who used to be on Signal -->
     <string name="ConversationActivity__this_person_is_no_longer_using_signal">此人不再使用 B&amp;A。邀請他們加入 B&amp;A 以繼續對話。</string>
     <!-- Action button shown when opening an SMS conversation with SMS disabled and there are no exported messages -->

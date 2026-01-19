@@ -393,7 +393,7 @@ public class ConversationListFragment extends MainFragment implements Conversati
       onSearchQueryUpdated(query);
     }
 
-    RatingManager.showRatingDialogIfNecessary(requireContext());
+//    RatingManager.showRatingDialogIfNecessary(requireContext());
 
     chatListBackHandler = new ChatListBackHandler(false);
     requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), chatListBackHandler);

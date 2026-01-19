@@ -170,6 +170,9 @@ class EditProfileFragment : LoggingFragment() {
         )
       }
     }
+
+    // 隐藏个人资料说明中的"了解更多"链接
+    binding.groupDescriptionText.setLearnMoreVisible(false)
   }
 
   private fun initializeViewModel() {
