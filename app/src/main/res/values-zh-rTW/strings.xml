@@ -537,7 +537,7 @@
     <!-- Message shown when opening an MMS group conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__sms_messaging_is_no_longer_supported">B&amp;A 不再支援短訊功能。</string>
     <!-- Message shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
-    <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">B&amp;A 不再支援短訊功能。邀請 %1$s 加入 Signal 以繼續對話。</string>
+    <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">B&amp;A 不再支援短訊功能。邀請 %1$s 加入 B&amp;A 以繼續對話。</string>
     <!-- Message shown when opening a conversation with an unregistered user who used to be on Signal -->
     <string name="ConversationActivity__this_person_is_no_longer_using_signal">此人不再使用 B&amp;A 。邀請他們加入 B&amp;A 以繼續對話。</string>
     <!-- Action button shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
@@ -2158,7 +2158,7 @@
     <string name="OutdatedBuildReminder_update_now">立即更新</string>
     <string name="OutdatedBuildReminder_your_version_of_signal_will_expire_today">此版本的 B&amp;A  將於今天到期。請更新到最新版本。</string>
     <plurals name="OutdatedBuildReminder_your_version_of_signal_will_expire_in_n_days">
-        <item quantity="other">此版本的Signal將在%1$d天內過期。請更新到最新版本。</item>
+        <item quantity="other">此版本的B&amp;A將在%1$d天內過期。請更新到最新版本。</item>
     </plurals>
 
     <!-- PassphrasePromptActivity -->

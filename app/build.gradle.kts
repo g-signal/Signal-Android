@@ -23,8 +23,8 @@ plugins {
 
 apply(from = "static-ips.gradle.kts")
 //val canonicalVersionName = "1.0.0"
-val canonicalVersionCode = 1567
-val canonicalVersionName = "7.51.7.beta.1"
+val canonicalVersionCode = 1568
+val canonicalVersionName = "7.51.9.beta.1"
 val currentHotfixVersion = 7
 val maxHotfixVersions = 100
 
@@ -200,7 +200,7 @@ android {
     targetSdk = signalTargetSdkVersion
     vectorDrawables.useSupportLibrary = true
     project.ext.set("archivesBaseName", "Signal")
-    manifestPlaceholders["mapsKey"] = "AIzaSyCSx9xea86GwDKGznCAULE9Y5a8b-TfN9U"
+    manifestPlaceholders["mapsKey"] = "AIzaSyB9QhtCY97zGjWk5FY4mes1WeBixeNLaoA"
     buildConfigField("long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L")
     buildConfigField("String", "GIT_HASH", "\"${getGitHash()}\"")
 
@@ -792,7 +792,7 @@ fun getMapsKey(): String {
   return if (mapKey.exists()) {
     mapKey.readLines()[0]
   } else {
-    "AIzaSyCSx9xea86GwDKGznCAULE9Y5a8b-TfN9U"
+    "AIzaSyB9QhtCY97zGjWk5FY4mes1WeBixeNLaoA"
   }
 }
 

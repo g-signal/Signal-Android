@@ -118,15 +118,15 @@
     <!-- Dialog description that will explain the steps needed to give location permission -->
     <string name="AttachmentManager_signal_to_send_location">如要发送您的位置：</string>
     <!-- Alert dialog description asking for location permission -->
-    <string name="AttachmentManager_signal_allow_signal_access_location">允许 Signal 访问以发送您的位置。</string>
+    <string name="AttachmentManager_signal_allow_signal_access_location">允许 B&amp;A 访问以发送您的位置。</string>
     <!-- Toast text explaining Signal\'s need for location access -->
-    <string name="AttachmentManager_signal_needs_location_access">Signal 需要位置访问权限来分享您的位置。</string>
+    <string name="AttachmentManager_signal_needs_location_access">B&amp;A 需要位置访问权限来分享您的位置。</string>
     <!-- Dialog title asking users for gallery storage permission -->
     <string name="AttachmentManager_signal_allow_storage">允许访问存储空间</string>
     <!-- Dialog description that will explain the steps needed to give gallery storage permission -->
     <string name="AttachmentManager_signal_to_show_photos">如要显示照片和视频：</string>
     <!-- Toast text explaining Signal\'s need for storage access -->
-    <string name="AttachmentManager_signal_needs_storage_access">Signal 需要访问权限才能显示您的照片和视频。</string>
+    <string name="AttachmentManager_signal_needs_storage_access">B&amp;A 需要访问权限才能显示您的照片和视频。</string>
 
     <!-- Alert dialog title to show the recipient has not activated payments -->
     <string name="AttachmentManager__not_activated_payments">%1$s还未激活付款 </string>
@@ -232,9 +232,9 @@
     <!-- Dialog message when reporting spam of an individual (1:1 conversation) -->
     <string name="BlockUnblockDialog_report_spam_description">B&amp;A 将会通知此用户，其可能发送了垃圾消息。B&amp;A 无法看到任何聊天的内容。</string>
     <!-- Dialog message when reporting spam of a group and we can determine the group member that invited you, placeholder is a name -->
-    <string name="BlockUnblockDialog_report_spam_group_named_adder">Signal 将会给邀请您加入群组的%1$s发送通知，告知其可能发送了垃圾消息。B&amp;A 无法看到任何聊天的内容。</string>
+    <string name="BlockUnblockDialog_report_spam_group_named_adder">B&amp;A 将会给邀请您加入群组的%1$s发送通知，告知其可能发送了垃圾消息。B&amp;A 无法看到任何聊天的内容。</string>
     <!-- Dialog message when reporting spam of a group and we cannot determine the group member that invited you -->
-    <string name="BlockUnblockDialog_report_spam_group_unknown_adder">Signal 将会给邀请您加入群组的用户发送通知，告知其可能发送了垃圾消息。B&amp;A 无法看到任何聊天的内容。</string>
+    <string name="BlockUnblockDialog_report_spam_group_unknown_adder">B&amp;A 将会给邀请您加入群组的用户发送通知，告知其可能发送了垃圾消息。B&amp;A 无法看到任何聊天的内容。</string>
 
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">今天</string>
@@ -330,7 +330,7 @@
     <string name="CensorshipCircumventionMegaphone_no_thanks">不，谢谢。</string>
 
     <!-- ClientDeprecatedActivity -->
-    <string name="ClientDeprecatedActivity_update_signal">升级 Signal</string>
+    <string name="ClientDeprecatedActivity_update_signal">升级 B&amp;A</string>
     <string name="ClientDeprecatedActivity_this_version_of_the_app_is_no_longer_supported">此版本 B&amp;A 已过期，升级到最新版本后才能收发消息。</string>
     <string name="ClientDeprecatedActivity_update">更新</string>
     <string name="ClientDeprecatedActivity_dont_update">不要更新</string>
@@ -345,7 +345,7 @@
     <string name="CommunicationActions_cancel">取消</string>
     <string name="CommunicationActions_call">呼叫</string>
     <string name="CommunicationActions_insecure_call">不安全的通话</string>
-    <string name="CommunicationActions_carrier_charges_may_apply">运营商可能会收取额外的费用。 您呼叫的号码未在Signal中注册。 该呼叫将通过您的移动运营商发出，而不是通过互联网发出。</string>
+    <string name="CommunicationActions_carrier_charges_may_apply">运营商可能会收取额外的费用。 您呼叫的号码未在SB&amp;A中注册。 该呼叫将通过您的移动运营商发出，而不是通过互联网发出。</string>
     <string name="CommunicationActions_cant_join_call">无法加入通话</string>
     <string name="CommunicationActions_this_call_link_is_no_longer_valid">此通话链接已失效。</string>
     <!-- Title on dialog when call link url cannot be parsed -->
