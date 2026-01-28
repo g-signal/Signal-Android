@@ -43,3 +43,4 @@ app/websiteProd
 .git
 */*.apk
 *.so
+gradle.properties
