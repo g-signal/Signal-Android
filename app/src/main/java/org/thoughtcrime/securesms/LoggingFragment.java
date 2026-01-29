@@ -14,7 +14,7 @@ import org.signal.core.util.logging.Log;
  */
 public abstract class LoggingFragment extends Fragment {
 
-  private static final String TAG = Log.tag(LoggingFragment.class);
+  public static final String TAG = Log.tag(LoggingFragment.class);
 
   public LoggingFragment() { }
 
