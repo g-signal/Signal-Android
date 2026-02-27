@@ -3,6 +3,7 @@ captures/
 project.properties
 keystore.debug.properties
 keystore.staging.properties
+keystore.release.properties
 debug.keystore
 nightly-url.txt
 .project
