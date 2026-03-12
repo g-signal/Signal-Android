@@ -222,12 +222,13 @@ android {
     buildConfigField("String", "SIGNAL_CDSI_URL", "\"https://cdsi.ba-chat.com\"")
     buildConfigField("String", "SIGNAL_SERVICE_STATUS_URL", "\"uptime.ba-chat.com\"")
     buildConfigField("String", "SIGNAL_SVR2_URL", "\"https://svr2.ba-chat.com\"")
+
     buildConfigField("String", "SIGNAL_SFU_URL", "\"https://sfu.ba-chat.com\"")
     buildConfigField("String", "SIGNAL_STAGING_SFU_URL", "\"https://sfu.ba-chat.com\"")
+    buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\"}")
 
 
     buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_NAMES", "new String[]{\"Test\", \"Staging\", \"Development\"}")
-    buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\"}")
     buildConfigField("String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\"")
     buildConfigField("int", "CONTENT_PROXY_PORT", "443")
     buildConfigField("String[]", "SIGNAL_SERVICE_IPS", rootProject.extra["service_ips"] as String)
@@ -425,14 +426,20 @@ android {
 //      applicationIdSuffix = ".staging"
       buildConfigField("String", "SIGNAL_URL", "\"https://chat.imba-test.com\"")
       buildConfigField("String", "STORAGE_URL", "\"https://storage.imba-test.com\"")
-      buildConfigField("String", "SIGNAL_CDN_URL", "\"http://cdn.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_CDN_URL", "\"https://cdn.imba-test.com\"")
       buildConfigField("String", "SIGNAL_CDN2_URL", "\"https://cdn2.imba-test.com\"")
       buildConfigField("String", "SIGNAL_CDN3_URL", "\"https://cdn3.imba-test.com\"")
       buildConfigField("String", "SIGNAL_CDSI_URL", "\"https://cdsi.imba-test.com\"")
       buildConfigField("String", "SIGNAL_SVR2_URL", "\"https://svr2.imba-test.com\"")
-      buildConfigField("String", "SVR2_MRENCLAVE_LEGACY_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
+      buildConfigField("String", "SIGNAL_SFU_URL", "\"https://sfu.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_STAGING_SFU_URL", "\"https://sfu.imba-test.com\"")
+      buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.imba-test.com\", \"https://sfu.imba-test.com\", \"https://sfu.imba-test.com\"}")
+
+
+      buildConfigField("String", "SVR2_MRENCLAVE", "\"97858810df5aaecaa10048fc56931badce985e5b260ca623993a363b8f5d760e\"")
       buildConfigField("String", "SVR2_MRENCLAVE_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
-      buildConfigField("String", "SVR2_MRENCLAVE", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
+      buildConfigField("String", "SVR2_MRENCLAVE_LEGACY_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
+
       buildConfigField("String", "UNIDENTIFIED_SENDER_TRUST_ROOT", "\"BX4nQt7OxWnkqgcYeYyIA1XX43ZfPTEfusNoYTV5NJlj\"")
       buildConfigField("String", "ZKGROUP_SERVER_PUBLIC_PARAMS", "\"AHbJ9KmFfwzDoqJhN6Vouyqdv5B9jqpZZBC1Nj4CRPdRur1cvdvE38qtK+a7fMy/m3SR0oK3PJ5UozxVvuUE6zQcQ50e8e/1dVceVfh80g1WPRpQu5c6MJnrKDkTPifMQ7wd87L7PmgijxKaDD+zz3k9IRLtdrTjCoimFtvt7uoZpNB2ufr6vr2b7VgOEvD9BqPtPErEw9LejE6sHFDhfy/anH9IU7s/Sc4veQBbYgJlaGY7wewt1xSC5k3uxnyQVSYjSh0aYbaSas9LquAFb0fLezOkLZLoFTvj/CbQ6to0dikNvCwVwCQOBQ5sfc8sPwT0Sik59lej6g8NU54DI3XeTjFXOSPpH0XGIVG5jHrIEKCjkc74RqsLaG846m3/cqQm3nHhVffEMAVx6yXAQU9sYiDZpYBJS2R1XiqGWtl2HNfBJwaKvvJ96SOIYOhMNMYm0SU023g2M4/RVhL8WQqyPlzyoZfTk2OvFCRcweQ14GlTzzBJLdYXUEh7Gi/KFdbjaA9Lg8bxlA8OzeyarzAenNU/CrIHCqLNU5re8l08+t7CXF8KftkwdcWjkKIfKDKHrZTNNBRxz1cRcPKhQzgC5I9YW2WsTaeCkMExzOxMA8HvzQv9mZDuNDS7Re8lZ3rGkzyQpKC8QBh7vlVd/qy6JZVCeAJxWO/HRTtj9GsbGt90ioDy4n3byEBg9QXksAyCYTdQvIv3nzzVcpcrZwLsz+z83QBpsdmqPfgwb9BYdZqPt4bSheUZZRU87r/IL+xG2N6QZPFS8vAknjJ+XUk8NvhXU53oT02Omq9EOrtc6LVNgG9BfT/c/lo+WTJfE5WUdGE7Xp13Qnss9Ej8PTiqzabyS+fu98QPcqoNxIyKv6bvcw3Uggofe0tNaumuFg==\"")
       buildConfigField("String", "GENERIC_SERVER_PUBLIC_PARAMS", "\"ADKN7E6cEU87eJMvv69wLvPBwFKJq3JZkAKxWahgwd4jAiHjn31mbvn3eUhAKN2W5ub2C+wj6L6EIr2XZNvoIwO47X5IEjEnCpRrMofYfriKQIDIbFFSyft7PaUT50GbHHJ+Fw+NMVCz1VxNb8HBjIgtqqqj2+OUbUBERqL52mok7qajiPtrwMeTA0iCXDAxUPyGYFfWoa+yrfWJdUJ+byd4lIwfIQnFuF07Fo5VIkK17+QTPMUeyMNB+BZRlCs9asAsM+eOv3H4YOXomc2/Dm0YpwcoThQ5MOo2gJI+tcU/\"")
