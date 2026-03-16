@@ -436,7 +436,7 @@ android {
       buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.imba-test.com\", \"https://sfu.imba-test.com\", \"https://sfu.imba-test.com\"}")
 
 
-      buildConfigField("String", "SVR2_MRENCLAVE", "\"97858810df5aaecaa10048fc56931badce985e5b260ca623993a363b8f5d760e\"")
+      buildConfigField("String", "SVR2_MRENCLAVE", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
       buildConfigField("String", "SVR2_MRENCLAVE_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
       buildConfigField("String", "SVR2_MRENCLAVE_LEGACY_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
 
