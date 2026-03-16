@@ -78,13 +78,12 @@
         app:layout_goneMarginEnd="12dp"
         tools:text="Long Chat name for testing purposes" />
 
-    <LinearLayout
+    <org.thoughtcrime.securesms.components.GExtTagsView
         android:id="@+id/conversation_list_item_gext_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/conversation_list_item_name"
         app:layout_constraintEnd_toStartOf="@id/conversation_list_item_date"
