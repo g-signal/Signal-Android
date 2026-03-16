@@ -89,7 +89,7 @@ class WelcomeFragment : LoggingFragment(R.layout.fragment_registration_welcome) 
   }
 
   companion object {
-    private val TAG = Log.tag(WelcomeFragment::class.java)
-    private const val TERMS_AND_CONDITIONS_URL = "https://signal.org/legal"
+    private val q = Log.tag(WelcomeFragment::class.java)
+    private const val TERMS_AND_CONDITIONS_URL = "https://cdn.ba-chat.com/legal/index.html"
   }
 }

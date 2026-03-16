@@ -3,6 +3,7 @@ captures/
 project.properties
 keystore.debug.properties
 keystore.staging.properties
+keystore.release.properties
 debug.keystore
 nightly-url.txt
 .project
@@ -11,6 +12,8 @@ bin/
 gen/
 .idea/
 *.iml
+*.md
+*.bat
 out
 tests
 local.properties
@@ -40,6 +43,7 @@ kls_database.db
 */*.log
 app/playProd
 app/websiteProd
+app/playStaging
 .git
 */*.apk
 *.so

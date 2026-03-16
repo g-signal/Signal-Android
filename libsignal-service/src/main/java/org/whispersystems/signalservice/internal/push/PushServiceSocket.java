@@ -637,6 +637,8 @@ public class PushServiceSocket {
                                                 .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
                                                 .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
                                                 .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .hostnameVerifier((hostname, session) -> true)
+                                                .connectionSpecs(Util.immutableList(ConnectionSpec.RESTRICTED_TLS, ConnectionSpec.CLEARTEXT))
                                                 .build();
     Log.e("url=3", path);
     Log.e("url=3", connectionHolder.getUrl());
@@ -714,6 +716,8 @@ public class PushServiceSocket {
                                                 .newBuilder()
                                                 .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
                                                 .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .hostnameVerifier((hostname, session) -> true)
+                                                .connectionSpecs(Util.immutableList(ConnectionSpec.RESTRICTED_TLS, ConnectionSpec.CLEARTEXT))
                                                 .build();
 
     Request.Builder request = new Request.Builder().url(connectionHolder.getUrl() + "/" + path).head();
@@ -774,7 +778,9 @@ public class PushServiceSocket {
                                                 .newBuilder()
                                                 .connectTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
                                                 .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                                                .hostnameVerifier((hostname, session) -> true)
                                                 .readTimeout(soTimeoutMillis, TimeUnit.MILLISECONDS)
+                                                .connectionSpecs(Util.immutableList(ConnectionSpec.RESTRICTED_TLS, ConnectionSpec.CLEARTEXT))
                                                 .build();
 
     DigestingRequestBody file = new DigestingRequestBody(data, outputStreamFactory, contentType, length, incremental, progressListener, cancelationSignal, 0);

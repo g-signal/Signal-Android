@@ -30,8 +30,8 @@ val maxHotfixVersions = 100
 
 
 val keystores: Map<String, Properties?> = mapOf(
-  "debug" to loadKeystoreProperties("keystore.debug.properties"),
-  "release" to loadKeystoreProperties("keystore.release.pro  \"nightlyBackupRelease\",\nperties")
+  "debug" to loadKeystoreProperties("D:/project/signal/key/keystore.release.properties"),
+  "release" to loadKeystoreProperties("D:/project/signal/key/keystore.release.properties")
 )
 
 val selectableVariants = listOf(
@@ -106,7 +106,12 @@ android {
 
   keystores["debug"]?.let { properties ->
     signingConfigs.getByName("debug").apply {
-      storeFile = file("${project.rootDir}/${properties.getProperty("storeFile")}")
+      val storeFilePath = properties.getProperty("storeFile")
+      storeFile = if (File(storeFilePath).isAbsolute) {
+        file(storeFilePath)
+      } else {
+        file(storeFilePath)
+      }
       storePassword = properties.getProperty("storePassword")
       keyAlias = properties.getProperty("keyAlias")
       keyPassword = properties.getProperty("keyPassword")
@@ -115,7 +120,12 @@ android {
 
   keystores["release"]?.let { properties ->
     signingConfigs.create("release").apply {
-      storeFile = file("${project.rootDir}/${properties.getProperty("storeFile")}")
+      val storeFilePath = properties.getProperty("storeFile")
+      storeFile = if (File(storeFilePath).isAbsolute) {
+        file(storeFilePath)
+      } else {
+        file(storeFilePath)
+      }
       storePassword = properties.getProperty("storePassword")
       keyAlias = properties.getProperty("keyAlias")
       keyPassword = properties.getProperty("keyPassword")
@@ -212,12 +222,13 @@ android {
     buildConfigField("String", "SIGNAL_CDSI_URL", "\"https://cdsi.ba-chat.com\"")
     buildConfigField("String", "SIGNAL_SERVICE_STATUS_URL", "\"uptime.ba-chat.com\"")
     buildConfigField("String", "SIGNAL_SVR2_URL", "\"https://svr2.ba-chat.com\"")
+
     buildConfigField("String", "SIGNAL_SFU_URL", "\"https://sfu.ba-chat.com\"")
     buildConfigField("String", "SIGNAL_STAGING_SFU_URL", "\"https://sfu.ba-chat.com\"")
+    buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\"}")
 
 
     buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_NAMES", "new String[]{\"Test\", \"Staging\", \"Development\"}")
-    buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\", \"https://sfu.ba-chat.com\"}")
     buildConfigField("String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\"")
     buildConfigField("int", "CONTENT_PROXY_PORT", "443")
     buildConfigField("String[]", "SIGNAL_SERVICE_IPS", rootProject.extra["service_ips"] as String)
@@ -412,29 +423,36 @@ android {
 
     create("staging") {
       dimension = "environment"
-      applicationIdSuffix = ".staging"
-      buildConfigField("String", "SIGNAL_URL", "\"https://chat.ba-chat.com\"")
-      buildConfigField("String", "STORAGE_URL", "\"https://storage.ba-chat.com\"")
-      buildConfigField("String", "SIGNAL_CDN_URL", "\"https://cdn.ba-chat.com\"")
-      buildConfigField("String", "SIGNAL_CDN2_URL", "\"https://cdn2.ba-chat.com\"")
-      buildConfigField("String", "SIGNAL_CDN3_URL", "\"https://cdn3.ba-chat.com\"")
-      buildConfigField("String", "SIGNAL_CDSI_URL", "\"https://cdsi.ba-chat.com\"")
-      buildConfigField("String", "SIGNAL_SVR2_URL", "\"https://svr2.ba-chat.com\"")
-      buildConfigField("String", "SVR2_MRENCLAVE_LEGACY_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
+//      applicationIdSuffix = ".staging"
+      buildConfigField("String", "SIGNAL_URL", "\"https://chat.imba-test.com\"")
+      buildConfigField("String", "STORAGE_URL", "\"https://storage.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_CDN_URL", "\"https://cdn.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_CDN2_URL", "\"https://cdn2.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_CDN3_URL", "\"https://cdn3.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_CDSI_URL", "\"https://cdsi.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_SVR2_URL", "\"https://svr2.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_SFU_URL", "\"https://sfu.imba-test.com\"")
+      buildConfigField("String", "SIGNAL_STAGING_SFU_URL", "\"https://sfu.imba-test.com\"")
+      buildConfigField("String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.imba-test.com\", \"https://sfu.imba-test.com\", \"https://sfu.imba-test.com\"}")
+
+
+      buildConfigField("String", "SVR2_MRENCLAVE", "\"97858810df5aaecaa10048fc56931badce985e5b260ca623993a363b8f5d760e\"")
       buildConfigField("String", "SVR2_MRENCLAVE_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
-      buildConfigField("String", "SVR2_MRENCLAVE", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
-      buildConfigField("String", "UNIDENTIFIED_SENDER_TRUST_ROOT", "\"Bd8hujwt+PY1jMqO5xC/8pmIuxwzwuX7ZjHKoJ2BVL4g\"")
-      buildConfigField("String", "ZKGROUP_SERVER_PUBLIC_PARAMS", "\"AOSwc07bu3ImyxbdBax3eJsIIsjzyXELmZpQj3IUp1wbcGL/eeUU2b3LuYJnA+jbXA5z/VYyAm3shM1Fd6NIkhVMzsF4vkKTvBAEjDpXuYR8cFz5YzNdYum1sOwMVVKedIzQAT9YRr+qHwVZ3bFJM69AifuC8MrbhzvWwHWEZ1dU0LRos1YtWCtXtW3w/KZuEqJWJvf9rA6y708DMt0swBE27QeWRdOJKhRnxhMj7R+6bEh92/jXjtZfY9awQo1mX+wSu4qvXDopKGubupTLBa+DDgs9VG7xCewJPzh/cM5jhN7AS8BN0nwXNwjh9UOR1twZDp0RZ+B6yDBxJbTVN1Wo8szJewewkZ6riE7dGEp3ypTnZ+8/JZoB8xKAvzMEYzaEc6CGGqqtx7O5Wty7GpnumYtBxotao2WHgqbYiB44ENPEFWwPg8XSqM6ZJW5cyi5XAD31ubQ49hQs1asJUUsoWHcru8VIBX9UvN128yoDQcNouTXzeVrK+c9VMtzkLtRNVVGtEzCcmGsSpCg0oMqvXAgZTXCT6KdEnO0CMGIJ5kINHo6yC/1AMu8E9pvDBlfLyt1PQh9up5UxDXgRZUTQDkrnv8eoRWb/wx8perlTQGZV7QmWNN7f3W2B9bKOL26Le/0MfTFue3VDqUN4uGqlzzm4bVwV2nKf4Z5gwlFK9gOn9k6UiZ9aN5/Fm7zXL9btLT79Ly2K3s52ZfiZKnoe5bPAULcJ1MRawuS8XFSPo9soklHqaAhDwqjsHs0RfaxOKAkAIV/4ZQP1Ty5BGRg7XP1ZuaHMNEzQFjBdHdcW5qGR6AJtUOKVJn7+SVErGnw1Tu5KbZ6V+sLc0QTrLzqecKgrb0q77eXCv6r7THP79imh/Turlk1rgRHyqgRiPQ==\"")
-      buildConfigField("String", "GENERIC_SERVER_PUBLIC_PARAMS", "\"ACoSrbFfXNCwT2TOgSXKl+mqxApYYxFvA+fqP9TnhDZlMpxZfzVHKNaYn44P6lJWTT6YIzNHB1S1XeoxG8vT7iVU+AhVsESiC/wAxel3mz8QLsYYUu1WwhGdS9SiCrZbA1hdvWdPR9aevqDckr0reXY2b80Yvx2MXwanJZxty6MyTJhyzeQE62+clBZwPY4sTd/hwn+ye7V0h6yrZ2JXPSSGXKDJsozGVnOmi/JFtAyh0AK6ItRG94omkTid8zhxWSYN5bct4svdQOWhWOZoQT5/1NJOfTGUM5WfX4i+TvtL\"")
-      buildConfigField("String", "BACKUP_SERVER_PUBLIC_PARAMS", "\"ALy0PQXREe4drGk4xClPewbfE3pnFLALZ4mJ7TUFj0lvLAVpI4yQChBt20gxD7PfYZvVK8sGzYQ4G8UhM7sJY3Gw2aNwg3IjheOzY5web/1nVmnxVdt2gIco3+fVBG8jfRotXjJ2IGP/x9ayTqCBeQEc0xGtQZioKZo2PtFIy3oUQgn02z4gpnIXcT5VJu2G9YYC3cfiycEMEd+AZyB22w3qb3YWr2LfDA/aXDcQE/pio4jju5JQQIA2W1QBKNNqDrrlG765zfVBQDFEr8ruAn+gE3QvVKi2k+pH6jl6vdYv\"")
+      buildConfigField("String", "SVR2_MRENCLAVE_LEGACY_LEGACY", "\"b49a2d7aa6a92623713541be3342cc2432cbb4052a9ab83b50aef3375651e68f\"")
+
+      buildConfigField("String", "UNIDENTIFIED_SENDER_TRUST_ROOT", "\"BX4nQt7OxWnkqgcYeYyIA1XX43ZfPTEfusNoYTV5NJlj\"")
+      buildConfigField("String", "ZKGROUP_SERVER_PUBLIC_PARAMS", "\"AHbJ9KmFfwzDoqJhN6Vouyqdv5B9jqpZZBC1Nj4CRPdRur1cvdvE38qtK+a7fMy/m3SR0oK3PJ5UozxVvuUE6zQcQ50e8e/1dVceVfh80g1WPRpQu5c6MJnrKDkTPifMQ7wd87L7PmgijxKaDD+zz3k9IRLtdrTjCoimFtvt7uoZpNB2ufr6vr2b7VgOEvD9BqPtPErEw9LejE6sHFDhfy/anH9IU7s/Sc4veQBbYgJlaGY7wewt1xSC5k3uxnyQVSYjSh0aYbaSas9LquAFb0fLezOkLZLoFTvj/CbQ6to0dikNvCwVwCQOBQ5sfc8sPwT0Sik59lej6g8NU54DI3XeTjFXOSPpH0XGIVG5jHrIEKCjkc74RqsLaG846m3/cqQm3nHhVffEMAVx6yXAQU9sYiDZpYBJS2R1XiqGWtl2HNfBJwaKvvJ96SOIYOhMNMYm0SU023g2M4/RVhL8WQqyPlzyoZfTk2OvFCRcweQ14GlTzzBJLdYXUEh7Gi/KFdbjaA9Lg8bxlA8OzeyarzAenNU/CrIHCqLNU5re8l08+t7CXF8KftkwdcWjkKIfKDKHrZTNNBRxz1cRcPKhQzgC5I9YW2WsTaeCkMExzOxMA8HvzQv9mZDuNDS7Re8lZ3rGkzyQpKC8QBh7vlVd/qy6JZVCeAJxWO/HRTtj9GsbGt90ioDy4n3byEBg9QXksAyCYTdQvIv3nzzVcpcrZwLsz+z83QBpsdmqPfgwb9BYdZqPt4bSheUZZRU87r/IL+xG2N6QZPFS8vAknjJ+XUk8NvhXU53oT02Omq9EOrtc6LVNgG9BfT/c/lo+WTJfE5WUdGE7Xp13Qnss9Ej8PTiqzabyS+fu98QPcqoNxIyKv6bvcw3Uggofe0tNaumuFg==\"")
+      buildConfigField("String", "GENERIC_SERVER_PUBLIC_PARAMS", "\"ADKN7E6cEU87eJMvv69wLvPBwFKJq3JZkAKxWahgwd4jAiHjn31mbvn3eUhAKN2W5ub2C+wj6L6EIr2XZNvoIwO47X5IEjEnCpRrMofYfriKQIDIbFFSyft7PaUT50GbHHJ+Fw+NMVCz1VxNb8HBjIgtqqqj2+OUbUBERqL52mok7qajiPtrwMeTA0iCXDAxUPyGYFfWoa+yrfWJdUJ+byd4lIwfIQnFuF07Fo5VIkK17+QTPMUeyMNB+BZRlCs9asAsM+eOv3H4YOXomc2/Dm0YpwcoThQ5MOo2gJI+tcU/\"")
+      buildConfigField("String", "BACKUP_SERVER_PUBLIC_PARAMS", "\"AIIe881NQpY7o8wTPlTiIlMjUX8gvzqp4MVQb63dvX4JTLDLty9gz3EirUPkgSecfSjwY/eNZwDIcTc5gYzMBSj46Roe1r5wRp6Qemvkade9mXY/VMi4bNZgBX/+k11OU+JbPl5ADt2FCLI0L6MRyFr3ZLesYdEEaztCkxkISChj8g8BhFaRTjb+g4CHrm/d3DWuyyOMJ3VNtt2/qeWsqn/SpVpiHC0QM8sS83b5U4IAe7MiwZ+2nCPdAMqwrZwZcO6l+IRes7Za3SyYEABV+0GhmlmpQtHdcCEiWFb4FvtK\"")
       buildConfigField("String", "MOBILE_COIN_ENVIRONMENT", "\"testnet\"")
-      buildConfigField("String", "SIGNAL_CAPTCHA_URL", "\"https://captcha.ba-chat.com/registration/generate.html\"")
-      buildConfigField("String", "RECAPTCHA_PROOF_URL", "\"https://captcha.ba-chat.com/challenge/generate.html\"")
+      buildConfigField("String", "SIGNAL_CAPTCHA_URL", "\"https://captcha.imba-test.com/registration/generate.html\"")
+      buildConfigField("String", "RECAPTCHA_PROOF_URL", "\"https://captcha.imba-test.com/challenge/generate.html\"")
       buildConfigField("org.signal.libsignal.net.Network.Environment", "LIBSIGNAL_NET_ENV", "org.signal.libsignal.net.Network.Environment.STAGING")
       buildConfigField("int", "LIBSIGNAL_LOG_LEVEL", "org.signal.libsignal.protocol.logging.SignalProtocolLogger.DEBUG")
       buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\"")
       buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\"")
       buildConfigField("boolean", "MESSAGE_BACKUP_RESTORE_ENABLED", "true")
+      buildConfigField("String", "BADGE_STATIC_ROOT", "\"https://updates2.imba-test.com/static/badges/\"")
     }
 
     create("backup") {
@@ -729,7 +747,11 @@ gradle.taskGraph.whenReady {
 }
 
 fun loadKeystoreProperties(filename: String): Properties? {
-  val keystorePropertiesFile = file("${project.rootDir}/$filename")
+  val keystorePropertiesFile = if (File(filename).isAbsolute) {
+    file(filename)
+  } else {
+    file("${project.rootDir}/$filename")
+  }
 
   return if (keystorePropertiesFile.exists()) {
     val keystoreProperties = Properties()
@@ -780,7 +802,7 @@ fun ensureDebugKeystore() {
 }
 
 // Ensure debug keystore exists before loading properties
-ensureDebugKeystore()
+// ensureDebugKeystore()
 
 fun getDateSuffix(): String {
   return SimpleDateFormat("yyyy-MM-dd-HH:mm").format(Date())
