@@ -213,6 +213,8 @@ import org.thoughtcrime.securesms.conversation.v2.items.InteractiveConversationE
 import org.thoughtcrime.securesms.conversation.v2.keyboard.AttachmentKeyboardFragment
 import org.thoughtcrime.securesms.database.AttachmentTable
 import org.thoughtcrime.securesms.database.DraftTable
+import org.thoughtcrime.securesms.database.SignalDatabase
+import org.thoughtcrime.securesms.recipients.GextTag
 import org.thoughtcrime.securesms.database.model.IdentityRecord
 import org.thoughtcrime.securesms.database.model.InMemoryMessageRecord
 import org.thoughtcrime.securesms.database.model.Mention
@@ -1360,6 +1362,21 @@ class ConversationFragment :
     invalidateOptionsMenu()
 
     updateMessageRequestAcceptedState(!viewModel.hasMessageRequestState)
+
+    if (!recipient.isGroup) {
+      Log.d(TAG, "onRecipientChanged: [GExtTags] querying for individual recipientId=${recipient.id}")
+      Single.fromCallable { SignalDatabase.gExtRecipients.getGextTags(recipient.id) }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeBy(onSuccess = { tags ->
+          if (tags.isNotEmpty()) {
+            Log.i(TAG, "onRecipientChanged: [GExtTags] recipientId=${recipient.id} tagCount=${tags.size} tagIds=${tags.map { it.tagId }}")
+          } else {
+            Log.d(TAG, "onRecipientChanged: [GExtTags] recipientId=${recipient.id} no tags found")
+          }
+        })
+        .addTo(disposables)
+    }
   }
 
   @MainThread

@@ -99,21 +99,33 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
 
     val currentTime = System.currentTimeMillis()
     val debounceThreshold = currentTime - PROFILE_FETCH_DEBOUNCE_TIME_MS
-    val recipientsToFetch = recipients.filter { recipient ->
+
+    // 重置所有待拉取 recipient 的 lastProfileFetchTime 为 0，强制绕过防抖
+    val idsWithServiceId = recipients.filter { it.hasServiceId }.map { it.id }.toSet()
+    if (idsWithServiceId.isNotEmpty()) {
+      Log.d(TAG, "onRun: resetting lastProfileFetchTime to 0 for ${idsWithServiceId.size} recipient(s) to bypass debounce")
+      SignalDatabase.recipients.markProfilesFetched(idsWithServiceId, 0L)
+    }
+
+    // DB 已更新，重新 resolve 以获取最新的 lastProfileFetchTime（原缓存对象仍持有旧值）
+    val freshRecipients = recipientIds.map { Recipient.live(it).refresh().resolve() }
+    Log.d(TAG, "onRun: re-resolved ${freshRecipients.size} recipient(s) after reset")
+
+    val recipientsToFetch = freshRecipients.filter { recipient ->
       recipient.hasServiceId && recipient.lastProfileFetchTime < debounceThreshold
     }
 
     if (recipientsToFetch.isEmpty()) {
-      Log.i(TAG, "All ${recipients.size} recipients have been fetched recently (within ${PROFILE_FETCH_DEBOUNCE_TIME_MS}ms). Skipping network requests.")
+      Log.i(TAG, "All ${freshRecipients.size} recipients have been fetched recently (within ${PROFILE_FETCH_DEBOUNCE_TIME_MS}ms). Skipping network requests.")
       return
     }
 
-    if (recipientsToFetch.size < recipients.size) {
-      Log.i(TAG, "Debouncing: Fetching ${recipientsToFetch.size} of ${recipients.size} recipients (${recipients.size - recipientsToFetch.size} were fetched recently)")
+    if (recipientsToFetch.size < freshRecipients.size) {
+      Log.i(TAG, "Debouncing: Fetching ${recipientsToFetch.size} of ${freshRecipients.size} recipients (${freshRecipients.size - recipientsToFetch.size} were fetched recently)")
     }
 
     val fetchingRecipientIds = recipientsToFetch.map { it.id }.toSet()
-    val recipientsById: Map<RecipientId, Recipient> = recipients.associateBy { it.id }
+    val recipientsById: Map<RecipientId, Recipient> = freshRecipients.associateBy { it.id }
 
     val requests: List<ProfileFetchRequest<RecipientId>> = recipientsToFetch
       .map { recipient ->
@@ -203,7 +215,7 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
 
     val keyCount = response.successes.mapNotNull { recipientsById[it.id] }.mapNotNull { it.profileKey }.count()
 
-    Log.d(TAG, "Started with ${recipients.size} recipient(s). Of those, ${recipientsToFetch.size} were outside the cache period. Found ${response.successes.size} profile(s), and had keys for $keyCount of them. Will retry ${response.retryableFailures.size}.")
+    Log.d(TAG, "Started with ${freshRecipients.size} recipient(s). Of those, ${recipientsToFetch.size} were outside the cache period. Found ${response.successes.size} profile(s), and had keys for $keyCount of them. Will retry ${response.retryableFailures.size}.")
     stopwatch.stop(TAG)
 
     recipientIds.clear()

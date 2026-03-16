@@ -30,6 +30,7 @@ import android.util.AttributeSet;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -59,6 +60,8 @@ import org.thoughtcrime.securesms.components.AlertView;
 import org.thoughtcrime.securesms.components.AvatarImageView;
 import org.thoughtcrime.securesms.components.DeliveryStatusView;
 import org.thoughtcrime.securesms.components.FromTextView;
+import org.thoughtcrime.securesms.components.GExtImageTagView;
+import org.thoughtcrime.securesms.components.GExtTextTagView;
 import org.thoughtcrime.securesms.components.TypingIndicatorView;
 import org.thoughtcrime.securesms.components.emoji.EmojiStrings;
 import org.thoughtcrime.securesms.components.emoji.EmojiTextView;
@@ -66,6 +69,7 @@ import org.thoughtcrime.securesms.contacts.paged.ContactSearchData;
 import org.thoughtcrime.securesms.conversation.MessageStyler;
 import org.thoughtcrime.securesms.conversationlist.model.ConversationSet;
 import org.thoughtcrime.securesms.database.MessageTypes;
+import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.database.ThreadTable;
 import org.thoughtcrime.securesms.database.model.LiveUpdateMessage;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -77,6 +81,7 @@ import org.thoughtcrime.securesms.mms.DecryptableUri;
 import org.thoughtcrime.securesms.recipients.LiveRecipient;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
+import org.thoughtcrime.securesms.recipients.GextTag;
 import org.thoughtcrime.securesms.search.MessageResult;
 import org.thoughtcrime.securesms.util.ContextUtil;
 import org.thoughtcrime.securesms.util.DateUtils;
@@ -141,9 +146,11 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
   private int                     unreadCount;
   private AvatarImageView         contactPhotoImage;
   private SearchUtil.StyleFactory searchStyleFactory;
+  private LinearLayout            gextTagsContainer;
 
   private LiveData<SpannableString> displayBody;
-  private Disposable                joinMembersDisposable = Disposable.empty();
+  private Disposable                joinMembersDisposable  = Disposable.empty();
+  private Disposable                gextTagsDisposable     = Disposable.empty();
   private Runnable                  updateDateView = null;
 
   public ConversationListItem(Context context) {
@@ -171,6 +178,7 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     this.uncheckedView           = findViewById(R.id.conversation_list_item_unchecked);
     this.checkedView             = findViewById(R.id.conversation_list_item_checked);
     this.unreadMentions          = findViewById(R.id.conversation_list_item_unread_mentions_indicator);
+    this.gextTagsContainer       = findViewById(R.id.conversation_list_item_gext_tags);
     this.thumbSize               = (int) DimensionUnit.SP.toPixels(16f);
     this.thumbTarget             = new GlideLiveDataTarget(thumbSize, thumbSize);
     this.searchStyleFactory      = () -> new CharacterStyle[] { new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.signal_colorOnSurface)), SpanUtil.getBoldSpan() };
@@ -240,6 +248,31 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     observeRecipient(lifecycleOwner, thread.getRecipient().live());
     observeDisplayBody(null, null);
     joinMembersDisposable.dispose();
+
+    gextTagsContainer.removeAllViews();
+    gextTagsContainer.setVisibility(View.GONE);
+    gextTagsDisposable.dispose();
+
+    if (!thread.getRecipient().isGroup()) {
+      RecipientId gextRecipientId = thread.getRecipient().getId();
+      Log.d(TAG, "bindThread: [GExtTags] querying for individual recipientId=" + gextRecipientId);
+      gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+              tags -> {
+                if (!tags.isEmpty()) {
+                  Log.i(TAG, "bindThread: [GExtTags] recipientId=" + gextRecipientId
+                      + " tagCount=" + tags.size()
+                      + " tagIds=" + tags.stream().map(GextTag::getTagId).collect(Collectors.toList()));
+                } else {
+                  Log.d(TAG, "bindThread: [GExtTags] recipientId=" + gextRecipientId + " no tags found");
+                }
+                renderGextTags(tags);
+              },
+              error -> Log.w(TAG, "bindThread: [GExtTags] failed to load tags for recipientId=" + gextRecipientId, error)
+            );
+    }
 
     SpannableStringBuilder suffix = null;
     if (appendSystemContactIcon && recipient.get().isSystemContact() && !recipient.get().getShowVerified()) {
@@ -393,6 +426,9 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
 
     observeDisplayBody(null, null);
     joinMembersDisposable.dispose();
+    gextTagsDisposable.dispose();
+    gextTagsContainer.removeAllViews();
+    gextTagsContainer.setVisibility(View.GONE);
     updateDateView = null;
   }
 
@@ -821,5 +857,39 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     if (typingThreads != null) {
       updateTypingIndicator(typingThreads);
     }
+  }
+
+  private void renderGextTags(@NonNull List<GextTag> tags) {
+    gextTagsContainer.removeAllViews();
+    if (tags.isEmpty()) {
+      gextTagsContainer.setVisibility(View.GONE);
+      return;
+    }
+    gextTagsContainer.setVisibility(View.VISIBLE);
+    int tagSpacing = (int) DimensionUnit.DP.toPixels(4f);
+    int added = 0;
+    for (GextTag tag : tags) {
+      View tagView = null;
+      if (tag.getTagType() == 1) {
+        GExtImageTagView imageTag = new GExtImageTagView(getContext());
+        if (imageTag.bind(tag,(int) fromView.getTextSize())) tagView = imageTag;
+      } else {
+          String text = tag.getText();
+        if (text != null && !text.isEmpty()) {
+          GExtTextTagView textTag = new GExtTextTagView(getContext());
+          textTag.bind(tag, fromView.getTextSize()*0.75f,(int) fromView.getTextSize());
+          tagView = textTag;
+        }
+      }
+      if (tagView == null) continue;
+      LinearLayout.LayoutParams lp = tagView.getLayoutParams() instanceof LinearLayout.LayoutParams
+          ? (LinearLayout.LayoutParams) tagView.getLayoutParams()
+          : new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+      if (added > 0) lp.setMarginStart(tagSpacing);
+      tagView.setLayoutParams(lp);
+      gextTagsContainer.addView(tagView);
+      added++;
+    }
+    if (added == 0) gextTagsContainer.setVisibility(View.GONE);
   }
 }

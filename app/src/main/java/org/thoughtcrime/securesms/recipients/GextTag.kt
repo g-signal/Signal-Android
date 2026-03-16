@@ -13,5 +13,5 @@ data class GextTag(
   @JsonProperty("cssBorderWidth") val cssBorderWidth: Int = 0,
   @JsonProperty("cssBorderRadius") val cssBorderRadius: Int = 0,
   @JsonProperty("cssBorderColor") val cssBorderColor: String? = null,
-  @JsonProperty("cssBorderStyle") val cssBorderStyle: String? = null
+  @JsonProperty("cssBorderStyle") val cssBorderStyle: String? = null,
 )
