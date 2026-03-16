@@ -17,9 +17,12 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.RequestManager;
 
+import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.avatar.view.AvatarView;
 import org.thoughtcrime.securesms.badges.BadgeImageView;
+import org.thoughtcrime.securesms.components.GExtTagsView;
+import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.database.model.StoryViewState;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.util.ContextUtil;
@@ -27,9 +30,15 @@ import org.thoughtcrime.securesms.util.DrawableUtil;
 import org.thoughtcrime.securesms.util.ExpirationUtil;
 import org.thoughtcrime.securesms.util.ViewUtil;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class ConversationTitleView extends ConstraintLayout {
 
-  private static final String STATE_ROOT = "root";
+  private static final String TAG       = Log.tag(ConversationTitleView.class);
+  private static final String STATE_ROOT    = "root";
   private static final String STATE_IS_SELF = "is_self";
 
   private AvatarView      avatar;
@@ -41,7 +50,10 @@ public class ConversationTitleView extends ConstraintLayout {
   private View            verifiedSubtitle;
   private View            expirationBadgeContainer;
   private TextView        expirationBadgeTime;
+  private GExtTagsView    gextTagsView;
   private boolean         isSelf;
+
+  private Disposable gextTagsDisposable = Disposable.empty();
 
   public ConversationTitleView(Context context) {
     this(context, null);
@@ -64,9 +76,17 @@ public class ConversationTitleView extends ConstraintLayout {
     this.avatar                   = findViewById(R.id.contact_photo_image);
     this.expirationBadgeContainer = findViewById(R.id.expiration_badge_container);
     this.expirationBadgeTime      = findViewById(R.id.expiration_badge);
+    this.gextTagsView             = findViewById(R.id.conversation_title_gext_tags);
 
     ViewUtil.setTextViewGravityStart(this.title, getContext());
     ViewUtil.setTextViewGravityStart(this.subtitle, getContext());
+
+    addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
+      @Override public void onViewAttachedToWindow(@NonNull View v) {}
+      @Override public void onViewDetachedFromWindow(@NonNull View v) {
+        gextTagsDisposable.dispose();
+      }
+    });
   }
 
   @Override
@@ -106,6 +126,9 @@ public class ConversationTitleView extends ConstraintLayout {
 
   public void setTitle(@NonNull RequestManager requestManager, @Nullable Recipient recipient) {
     isSelf = recipient != null && recipient.isSelf();
+
+    gextTagsView.clear();
+    gextTagsDisposable.dispose();
 
     this.subtitleContainer.setVisibility(View.VISIBLE);
 
@@ -213,6 +236,16 @@ public class ConversationTitleView extends ConstraintLayout {
     this.title.setText(displayName);
     this.subtitle.setText(null);
     updateSubtitleVisibility();
+      if (!recipient.isGroup()) {
+          gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(recipient.getId()))
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(
+                          tags -> gextTagsView.bind(tags, (int) title.getTextSize()),
+                          error -> Log.w(TAG, "setIndividualRecipientTitle: failed to load tags for " + recipient.getId(), error)
+                  );
+      }
+
   }
 
   private void updateVerifiedSubtitleVisibility() {
