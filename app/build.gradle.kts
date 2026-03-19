@@ -423,7 +423,7 @@ android {
 
     create("staging") {
       dimension = "environment"
-//      applicationIdSuffix = ".staging"
+      applicationIdSuffix = ".staging"
       buildConfigField("String", "SIGNAL_URL", "\"https://chat.imba-test.com\"")
       buildConfigField("String", "STORAGE_URL", "\"https://storage.imba-test.com\"")
       buildConfigField("String", "SIGNAL_CDN_URL", "\"https://cdn.imba-test.com\"")

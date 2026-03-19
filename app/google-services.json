@@ -28,7 +28,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:360483801060:android:220b86cbebcb4c49b6a9f1",
         "android_client_info": {
-          "package_name": "group.ba.voiceapp"
+          "package_name": "com.baxs.bachat.staging"
         }
       },
       "oauth_client": [],
