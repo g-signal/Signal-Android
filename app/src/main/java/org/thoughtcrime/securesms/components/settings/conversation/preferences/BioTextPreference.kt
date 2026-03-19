@@ -186,7 +186,7 @@ object BioTextPreference {
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(
-            { tags -> gextTagsView.bind(tags, headline.textSize.toInt()*2/3) },
+            { tags -> gextTagsView.bind(tags, (headline.textSize * 2 / 3).toInt()) },
             { error -> Log.w(TAG, "bind: failed to load tags for ${model.recipient.id}", error) }
           )
       }

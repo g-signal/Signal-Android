@@ -72,15 +72,18 @@
         android:textColor="@color/signal_colorOnSurface"
         app:layout_constraintBottom_toTopOf="@id/conversation_list_item_summary"
         app:layout_constraintEnd_toStartOf="@id/conversation_list_item_gext_tags"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@id/conversation_list_item_avatar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_default="wrap"
         app:layout_goneMarginEnd="12dp"
         tools:text="Long Chat name for testing purposes" />
 
     <org.thoughtcrime.securesms.components.GExtTagsView
         android:id="@+id/conversation_list_item_gext_tags"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:gravity="center_vertical"
@@ -89,6 +92,7 @@
         app:layout_constraintEnd_toStartOf="@id/conversation_list_item_date"
         app:layout_constraintStart_toEndOf="@id/conversation_list_item_name"
         app:layout_constraintTop_toTopOf="@id/conversation_list_item_name"
+        app:layout_constraintWidth_default="wrap"
         tools:visibility="visible" />
 
     <org.thoughtcrime.securesms.components.AlertView

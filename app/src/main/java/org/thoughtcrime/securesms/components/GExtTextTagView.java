@@ -38,12 +38,12 @@ public class GExtTextTagView extends AppCompatTextView {
     setText(tag.getText());
     setSingleLine(true);
       Log.d("GExtTextTagView","textSize"+textSize);
-    setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+    setTextSize(TypedValue.COMPLEX_UNIT_PX, new Float(0.9*textSize).intValue());
     setGravity(Gravity.CENTER);
 
 //    int paddingH = (int) DimensionUnit.DP.toPixels(6f);
 //    int paddingV = (int) DimensionUnit.DP.toPixels(2f);
-    setPadding(5, 0, 5, 0);
+    setPadding((int) DimensionUnit.DP.toPixels(4f), 0, (int) DimensionUnit.DP.toPixels(4f), 0);
 
     if (tag.getCssColor() != null) {
       try {
@@ -64,7 +64,7 @@ public class GExtTextTagView extends AppCompatTextView {
     if (tag.getCssBorderRadius() > 0) {
       bg.setCornerRadius(DimensionUnit.DP.toPixels((float) tag.getCssBorderRadius()));
     }
-    if (tag.getCssBorderWidth() > 0 && tag.getCssBorderColor() != null && "solid".equals(tag.getCssBorderStyle())) {
+    if (tag.getCssBorderWidth() > 0 && tag.getCssBorderColor() != null) {
       try {
         int borderColor = Color.parseColor(tag.getCssBorderColor());
         int borderWidth = (int) DimensionUnit.DP.toPixels((float) tag.getCssBorderWidth());
