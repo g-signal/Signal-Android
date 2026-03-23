@@ -2197,7 +2197,7 @@
 
     <!-- PinRestoreLockedFragment -->
     <string name="PinRestoreLockedFragment_create_your_pin">建立您的 PIN 碼</string>
-    <string name="PinRestoreLockedFragment_youve_run_out_of_pin_guesses">您已耗盡了 PIN 碼猜測，但您仍可建立一個新的 PIN 碼以存取您的 SiB&amp;Agnal 帳戶。為確保您的私隱和安全性，還原您的帳戶時將不包括任何已儲存的個人資料或設定。</string>
+    <string name="PinRestoreLockedFragment_youve_run_out_of_pin_guesses">您已耗盡了 PIN 碼猜測，但您仍可建立一個新的 PIN 碼以存取您的 B&amp;A 帳戶。為確保您的私隱和安全性，還原您的帳戶時將不包括任何已儲存的個人資料或設定。</string>
     <string name="PinRestoreLockedFragment_create_new_pin">建立新的 PIN 碼</string>
   <!-- Removed by excludeNonTranslatables <string name="PinRestoreLockedFragment_learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 

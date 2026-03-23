@@ -135,10 +135,10 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     }
     stopwatch.split("responses")
 
-    Log.d(TAG, "onRun: fetchProfiles completed. successes=${response.successes.size}, retryableFailures=${response.retryableFailures.size}, unregistered=${response.unregistered.size}")
+//    Log.d(TAG, "onRun: fetchProfiles completed. successes=${response.successes.size}, retryableFailures=${response.retryableFailures.size}, unregistered=${response.unregistered.size}")
     response.successes.forEach { pair ->
       val gextTags = pair.profileWithCredential.profile.gextTags
-      Log.d(TAG, "onRun: profile response for recipientId=${pair.id}, gextTags=${if (gextTags == null) "null" else "${gextTags.size} tag(s): ${gextTags.map { it.tagId }}"}")
+//      Log.d(TAG, "onRun: profile response for recipientId=${pair.id}, gextTags=${if (gextTags == null) "null" else "${gextTags.size} tag(s): ${gextTags.map { it.tagId }}"}")
     }
 
     val localRecords = SignalDatabase.recipients.getExistingRecords(fetchingRecipientIds)
@@ -290,7 +290,7 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
 
   private fun process(recipient: Recipient, profileAndCredential: SignalServiceProfileWithCredential) {
     val (profile, expiringCredential) = profileAndCredential
-    Log.d(TAG, "process: start for recipientId=${recipient.id}, gextTags=${if (profile.gextTags == null) "null" else "${profile.gextTags.size} tag(s)"}")
+//    Log.d(TAG, "process: start for recipientId=${recipient.id}, gextTags=${if (profile.gextTags == null) "null" else "${profile.gextTags.size} tag(s)"}")
     val recipientProfileKey = ProfileKeyUtil.profileKeyOrNull(recipient.profileKey)
     val wroteNewProfileName = setProfileName(recipient, profile.name)
 
@@ -339,7 +339,7 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
   )
 
   private fun setGextTags(recipient: Recipient, serviceGextTags: List<SignalServiceProfile.GextTag>?) {
-    Log.d(TAG, "setGextTags: enter for recipientId=${recipient.id}")
+//    Log.d(TAG, "setGextTags: enter for recipientId=${recipient.id}")
 
     if (serviceGextTags == null) {
       Log.d(TAG, "setGextTags: profile returned null gextTags for ${recipient.id}, skipping")
@@ -352,23 +352,23 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
       return
     }
 
-    Log.d(TAG, "setGextTags: received ${serviceGextTags.size} tag(s) from profile for recipient=${recipient.id}, aci=$aci")
+//    Log.d(TAG, "setGextTags: received ${serviceGextTags.size} tag(s) from profile for recipient=${recipient.id}, aci=$aci")
 
     val tags = serviceGextTags.mapIndexed { index, tag ->
-      Log.d(TAG, "setGextTags: mapping tag[$index] tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}, cssBackgroundColor=${tag.cssBackgroundColor}, cssColor=${tag.cssColor}, cssOpacity=${tag.cssOpacity}, cssBorderWidth=${tag.cssBorderWidth}, cssBorderRadius=${tag.cssBorderRadius}, cssBorderColor=${tag.cssBorderColor}, cssBorderStyle=${tag.cssBorderStyle}, hasImg=${tag.imgBase64 != null}")
+//      Log.d(TAG, "setGextTags: mapping tag[$index] tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}, cssBackgroundColor=${tag.cssBackgroundColor}, cssColor=${tag.cssColor}, cssOpacity=${tag.cssOpacity}, cssBorderWidth=${tag.cssBorderWidth}, cssBorderRadius=${tag.cssBorderRadius}, cssBorderColor=${tag.cssBorderColor}, cssBorderStyle=${tag.cssBorderStyle}, hasImg=${tag.imgBase64 != null}")
       mapToGextTag(tag)
     }
 
-    Log.d(TAG, "setGextTags: calling GExtRecipientTable.setGextTags for recipientId=${recipient.id}, aci=$aci, tagCount=${tags.size}")
+//    Log.d(TAG, "setGextTags: calling GExtRecipientTable.setGextTags for recipientId=${recipient.id}, aci=$aci, tagCount=${tags.size}")
     SignalDatabase.gExtRecipients.setGextTags(recipient.id, aci, tags)
 
     // 回读验证
-    Log.d(TAG, "setGextTags: reading back from DB to verify for recipientId=${recipient.id}")
+//    Log.d(TAG, "setGextTags: reading back from DB to verify for recipientId=${recipient.id}")
     val stored = SignalDatabase.gExtRecipients.getGextTags(recipient.id)
     if (stored.size == tags.size) {
-      Log.i(TAG, "setGextTags: [VERIFY OK] recipientId=${recipient.id} stored=${stored.size} tag(s), tagIds=${stored.map { it.tagId }}")
+//      Log.i(TAG, "setGextTags: [VERIFY OK] recipientId=${recipient.id} stored=${stored.size} tag(s), tagIds=${stored.map { it.tagId }}")
     } else {
-      Log.w(TAG, "setGextTags: [VERIFY MISMATCH] recipientId=${recipient.id} expected=${tags.size} stored=${stored.size}")
+//      Log.w(TAG, "setGextTags: [VERIFY MISMATCH] recipientId=${recipient.id} expected=${tags.size} stored=${stored.size}")
     }
   }
 
