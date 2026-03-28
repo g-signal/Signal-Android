@@ -59,6 +59,7 @@ import org.thoughtcrime.securesms.components.AlertView;
 import org.thoughtcrime.securesms.components.AvatarImageView;
 import org.thoughtcrime.securesms.components.DeliveryStatusView;
 import org.thoughtcrime.securesms.components.FromTextView;
+import org.thoughtcrime.securesms.components.GExtTagsView;
 import org.thoughtcrime.securesms.components.TypingIndicatorView;
 import org.thoughtcrime.securesms.components.emoji.EmojiStrings;
 import org.thoughtcrime.securesms.components.emoji.EmojiTextView;
@@ -66,6 +67,7 @@ import org.thoughtcrime.securesms.contacts.paged.ContactSearchData;
 import org.thoughtcrime.securesms.conversation.MessageStyler;
 import org.thoughtcrime.securesms.conversationlist.model.ConversationSet;
 import org.thoughtcrime.securesms.database.MessageTypes;
+import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.database.ThreadTable;
 import org.thoughtcrime.securesms.database.model.LiveUpdateMessage;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -77,6 +79,7 @@ import org.thoughtcrime.securesms.mms.DecryptableUri;
 import org.thoughtcrime.securesms.recipients.LiveRecipient;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
+import org.thoughtcrime.securesms.recipients.GextTag;
 import org.thoughtcrime.securesms.search.MessageResult;
 import org.thoughtcrime.securesms.util.ContextUtil;
 import org.thoughtcrime.securesms.util.DateUtils;
@@ -141,9 +144,11 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
   private int                     unreadCount;
   private AvatarImageView         contactPhotoImage;
   private SearchUtil.StyleFactory searchStyleFactory;
+  private GExtTagsView            gextTagsView;
 
   private LiveData<SpannableString> displayBody;
-  private Disposable                joinMembersDisposable = Disposable.empty();
+  private Disposable                joinMembersDisposable  = Disposable.empty();
+  private Disposable                gextTagsDisposable     = Disposable.empty();
   private Runnable                  updateDateView = null;
 
   public ConversationListItem(Context context) {
@@ -171,6 +176,7 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     this.uncheckedView           = findViewById(R.id.conversation_list_item_unchecked);
     this.checkedView             = findViewById(R.id.conversation_list_item_checked);
     this.unreadMentions          = findViewById(R.id.conversation_list_item_unread_mentions_indicator);
+    this.gextTagsView            = findViewById(R.id.conversation_list_item_gext_tags);
     this.thumbSize               = (int) DimensionUnit.SP.toPixels(16f);
     this.thumbTarget             = new GlideLiveDataTarget(thumbSize, thumbSize);
     this.searchStyleFactory      = () -> new CharacterStyle[] { new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.signal_colorOnSurface)), SpanUtil.getBoldSpan() };
@@ -240,6 +246,21 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     observeRecipient(lifecycleOwner, thread.getRecipient().live());
     observeDisplayBody(null, null);
     joinMembersDisposable.dispose();
+
+    gextTagsView.clear();
+    gextTagsDisposable.dispose();
+
+    if (!thread.getRecipient().isGroup()) {
+      RecipientId gextRecipientId = thread.getRecipient().getId();
+      Log.d(TAG, "bindThread: [GExtTags] querying for individual recipientId=" + gextRecipientId);
+      gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+              tags -> gextTagsView.bind(tags, (int) fromView.getTextSize()),
+              error -> Log.w(TAG, "bindThread: [GExtTags] failed to load tags for recipientId=" + gextRecipientId, error)
+            );
+    }
 
     SpannableStringBuilder suffix = null;
     if (appendSystemContactIcon && recipient.get().isSystemContact() && !recipient.get().getShowVerified()) {
@@ -393,6 +414,8 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
 
     observeDisplayBody(null, null);
     joinMembersDisposable.dispose();
+    gextTagsDisposable.dispose();
+    gextTagsView.clear();
     updateDateView = null;
   }
 
@@ -822,4 +845,5 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
       updateTypingIndicator(typingThreads);
     }
   }
+
 }

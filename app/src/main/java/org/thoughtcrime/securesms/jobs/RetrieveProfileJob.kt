@@ -31,6 +31,7 @@ import org.thoughtcrime.securesms.net.SignalNetwork
 import org.thoughtcrime.securesms.notifications.v2.ConversationId.Companion.forConversation
 import org.thoughtcrime.securesms.profiles.ProfileName
 import org.thoughtcrime.securesms.recipients.Recipient
+import org.thoughtcrime.securesms.recipients.GextTag
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.recipients.RecipientUtil
 import org.thoughtcrime.securesms.transport.RetryLaterException
@@ -133,6 +134,12 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
       }
     }
     stopwatch.split("responses")
+
+//    Log.d(TAG, "onRun: fetchProfiles completed. successes=${response.successes.size}, retryableFailures=${response.retryableFailures.size}, unregistered=${response.unregistered.size}")
+    response.successes.forEach { pair ->
+      val gextTags = pair.profileWithCredential.profile.gextTags
+//      Log.d(TAG, "onRun: profile response for recipientId=${pair.id}, gextTags=${if (gextTags == null) "null" else "${gextTags.size} tag(s): ${gextTags.map { it.tagId }}"}")
+    }
 
     val localRecords = SignalDatabase.recipients.getExistingRecords(fetchingRecipientIds)
     Log.d(TAG, "Fetched ${localRecords.size} existing records.")
@@ -246,6 +253,13 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
       return true
     }
 
+    val storedGextTags = SignalDatabase.gExtRecipients.getGextTags(localRecipientRecord.id)
+    val remoteGextTags = remoteProfile.gextTags?.map { mapToGextTag(it) } ?: emptyList()
+    if (storedGextTags != remoteGextTags) {
+      Log.d(TAG, "isUpdated: gextTags changed for ${localRecipientRecord.id}, stored=${storedGextTags.size} remote=${remoteGextTags.size}")
+      return true
+    }
+
     if (profileKey == null) {
       return false
     }
@@ -276,6 +290,7 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
 
   private fun process(recipient: Recipient, profileAndCredential: SignalServiceProfileWithCredential) {
     val (profile, expiringCredential) = profileAndCredential
+//    Log.d(TAG, "process: start for recipientId=${recipient.id}, gextTags=${if (profile.gextTags == null) "null" else "${profile.gextTags.size} tag(s)"}")
     val recipientProfileKey = ProfileKeyUtil.profileKeyOrNull(recipient.profileKey)
     val wroteNewProfileName = setProfileName(recipient, profile.name)
 
@@ -285,6 +300,7 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     setProfileCapabilities(recipient, profile.capabilities)
     setUnidentifiedAccessMode(recipient, profile.unidentifiedAccess, profile.isUnrestrictedUnidentifiedAccess)
     setPhoneNumberSharingMode(recipient, profile.phoneNumberSharing)
+    setGextTags(recipient, profile.gextTags)
 
     if (recipientProfileKey != null) {
       expiringCredential?. let { credential -> setExpiringProfileKeyCredential(recipient, recipientProfileKey, credential) }
@@ -306,6 +322,54 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     }
 
     SignalDatabase.recipients.setBadges(recipient.id, badges)
+  }
+
+  private fun mapToGextTag(tag: SignalServiceProfile.GextTag): GextTag = GextTag(
+    tagId = tag.tagId ?: "",
+    tagType = tag.tagType,
+    text = tag.text,
+    imgBase64 = tag.imgBase64,
+    cssBackgroundColor = tag.cssBackgroundColor,
+    cssColor = tag.cssColor,
+    cssOpacity = tag.cssOpacity,
+    cssBorderWidth = tag.cssBorderWidth,
+    cssBorderRadius = tag.cssBorderRadius,
+    cssBorderColor = tag.cssBorderColor,
+    cssBorderStyle = tag.cssBorderStyle
+  )
+
+  private fun setGextTags(recipient: Recipient, serviceGextTags: List<SignalServiceProfile.GextTag>?) {
+//    Log.d(TAG, "setGextTags: enter for recipientId=${recipient.id}")
+
+    if (serviceGextTags == null) {
+      Log.d(TAG, "setGextTags: profile returned null gextTags for ${recipient.id}, skipping")
+      return
+    }
+
+    val aci = recipient.aci.orElse(null)?.toString()
+    if (aci == null) {
+      Log.w(TAG, "setGextTags: recipient ${recipient.id} has no ACI, skipping")
+      return
+    }
+
+//    Log.d(TAG, "setGextTags: received ${serviceGextTags.size} tag(s) from profile for recipient=${recipient.id}, aci=$aci")
+
+    val tags = serviceGextTags.mapIndexed { index, tag ->
+//      Log.d(TAG, "setGextTags: mapping tag[$index] tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}, cssBackgroundColor=${tag.cssBackgroundColor}, cssColor=${tag.cssColor}, cssOpacity=${tag.cssOpacity}, cssBorderWidth=${tag.cssBorderWidth}, cssBorderRadius=${tag.cssBorderRadius}, cssBorderColor=${tag.cssBorderColor}, cssBorderStyle=${tag.cssBorderStyle}, hasImg=${tag.imgBase64 != null}")
+      mapToGextTag(tag)
+    }
+
+//    Log.d(TAG, "setGextTags: calling GExtRecipientTable.setGextTags for recipientId=${recipient.id}, aci=$aci, tagCount=${tags.size}")
+    SignalDatabase.gExtRecipients.setGextTags(recipient.id, aci, tags)
+
+    // 回读验证
+//    Log.d(TAG, "setGextTags: reading back from DB to verify for recipientId=${recipient.id}")
+    val stored = SignalDatabase.gExtRecipients.getGextTags(recipient.id)
+    if (stored.size == tags.size) {
+//      Log.i(TAG, "setGextTags: [VERIFY OK] recipientId=${recipient.id} stored=${stored.size} tag(s), tagIds=${stored.map { it.tagId }}")
+    } else {
+//      Log.w(TAG, "setGextTags: [VERIFY MISMATCH] recipientId=${recipient.id} expected=${tags.size} stored=${stored.size}")
+    }
   }
 
   private fun setExpiringProfileKeyCredential(

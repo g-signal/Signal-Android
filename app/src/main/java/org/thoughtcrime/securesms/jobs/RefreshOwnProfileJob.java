@@ -14,6 +14,7 @@ import org.signal.libsignal.zkgroup.profiles.ProfileKey;
 import org.thoughtcrime.securesms.badges.BadgeRepository;
 import org.thoughtcrime.securesms.badges.Badges;
 import org.thoughtcrime.securesms.badges.models.Badge;
+import org.thoughtcrime.securesms.recipients.GextTag;
 import org.thoughtcrime.securesms.components.settings.app.subscription.InAppPaymentsRepository;
 import org.thoughtcrime.securesms.crypto.ProfileKeyUtil;
 import org.thoughtcrime.securesms.database.RecipientTable;
@@ -43,6 +44,7 @@ import org.whispersystems.signalservice.internal.ServiceResponse;
 import org.whispersystems.signalservice.internal.push.WhoAmIResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -143,6 +145,7 @@ public class RefreshOwnProfileJob extends BaseJob {
     setProfileAvatar(profile.getAvatar());
     setProfileCapabilities(profile.getCapabilities());
     setProfileBadges(profile.getBadges());
+    setGextTags(profile.getGextTags());
     ensureUnidentifiedAccessCorrect(profile.getUnidentifiedAccess(), profile.isUnrestrictedUnidentifiedAccess());
     ensurePhoneNumberSharingIsCorrect(profile.getPhoneNumberSharing());
 
@@ -152,6 +155,55 @@ public class RefreshOwnProfileJob extends BaseJob {
     StoryOnboardingDownloadJob.Companion.enqueueIfNeeded();
 
     checkUsernameIsInSync();
+  }
+
+  private void setGextTags(@Nullable List<SignalServiceProfile.GextTag> serviceGextTags) {
+//    Log.d(TAG, "setGextTags: enter for self");
+
+    if (serviceGextTags == null) {
+//      Log.d(TAG, "setGextTags: profile returned null gextTags for self, skipping");
+      return;
+    }
+
+    Recipient self = Recipient.self();
+    String    aci  = self.getAci().map(Object::toString).orElse(null);
+    if (aci == null) {
+//      Log.w(TAG, "setGextTags: self has no ACI, skipping");
+      return;
+    }
+
+//    Log.d(TAG, "setGextTags: received " + serviceGextTags.size() + " tag(s) from profile for self, aci=" + aci);
+
+    List<GextTag> tags = new ArrayList<>(serviceGextTags.size());
+    for (int i = 0; i < serviceGextTags.size(); i++) {
+      SignalServiceProfile.GextTag tag = serviceGextTags.get(i);
+//      Log.d(TAG, "setGextTags: mapping tag[" + i + "] tagId=" + tag.getTagId() + ", tagType=" + tag.getTagType() + ", text=" + tag.getText());
+      tags.add(new GextTag(
+          tag.getTagId() != null ? tag.getTagId() : "",
+          tag.getTagType(),
+          tag.getText(),
+          tag.getImgBase64(),
+          tag.getCssBackgroundColor(),
+          tag.getCssColor(),
+          tag.getCssOpacity(),
+          tag.getCssBorderWidth(),
+          tag.getCssBorderRadius(),
+          tag.getCssBorderColor(),
+          tag.getCssBorderStyle()
+      ));
+    }
+
+//    Log.d(TAG, "setGextTags: calling GExtRecipientTable.setGextTags for self, aci=" + aci + ", tagCount=" + tags.size());
+    SignalDatabase.gExtRecipients().setGextTags(self.getId(), aci, tags);
+
+    // 回读验证
+//    Log.d(TAG, "setGextTags: reading back from DB to verify for self");
+    List<GextTag> stored = SignalDatabase.gExtRecipients().getGextTags(self.getId());
+    if (stored.size() == tags.size()) {
+//      Log.i(TAG, "setGextTags: [VERIFY OK] self stored=" + stored.size() + " tag(s)");
+    } else {
+//      Log.w(TAG, "setGextTags: [VERIFY MISMATCH] self expected=" + tags.size() + " stored=" + stored.size());
+    }
   }
 
   private void setExpiringProfileKeyCredential(@NonNull Recipient recipient,

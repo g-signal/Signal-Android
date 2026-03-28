@@ -49,11 +49,12 @@
         android:layout_height="wrap_content"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toEndOf="@id/contact_photo_container"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/conversation_title_gext_tags"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/subtitle_container"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0"
+        app:layout_goneMarginEnd="0dp"
         android:layout_marginStart="16dp"
         android:drawablePadding="3dp"
         android:ellipsize="end"
@@ -62,6 +63,19 @@
         android:transitionName="recipient_name"
         tools:ignore="UnusedAttribute"
         tools:text="J. Jonah Jameson" />
+
+    <org.thoughtcrime.securesms.components.GExtTagsView
+        android:id="@+id/conversation_title_gext_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="@id/title"
+        tools:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/subtitle_container"

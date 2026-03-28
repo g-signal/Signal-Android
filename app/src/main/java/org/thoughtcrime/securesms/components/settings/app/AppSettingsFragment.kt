@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.components.settings.app
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.IdRes
@@ -12,33 +13,34 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
@@ -67,6 +69,7 @@ import org.thoughtcrime.securesms.banner.ui.compose.Action
 import org.thoughtcrime.securesms.banner.ui.compose.DefaultBanner
 import org.thoughtcrime.securesms.banner.ui.compose.Importance
 import org.thoughtcrime.securesms.components.compose.TextWithBetaLabel
+import org.thoughtcrime.securesms.components.GExtTagsView
 import org.thoughtcrime.securesms.components.emoji.Emojifier
 import org.thoughtcrime.securesms.components.settings.app.subscription.BadgeImageMedium
 import org.thoughtcrime.securesms.components.settings.app.subscription.InAppPaymentsRepository
@@ -74,6 +77,7 @@ import org.thoughtcrime.securesms.components.settings.app.subscription.completed
 import org.thoughtcrime.securesms.compose.ComposeFragment
 import org.thoughtcrime.securesms.compose.StatusBarColorNestedScrollConnection
 import org.thoughtcrime.securesms.database.model.InAppPaymentSubscriberRecord
+import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.profiles.ProfileName
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.util.CommunicationActions
@@ -136,6 +140,13 @@ class AppSettingsFragment : ComposeFragment(), Callbacks {
     super.onResume()
     viewModel.refresh()
     viewModel.refreshDeprecatedOrUnregistered()
+
+    // 输出 ACI
+    val self = viewModel.self.value
+    if (self != null) {
+      val aci = self.recipient.aci
+      Log.d("AppSettingsFragment", "ACI: $aci")
+    }
   }
 
   override fun copyDonorBadgeSubscriberIdToClipboard() {
@@ -568,6 +579,13 @@ private fun BioRow(
   callbacks: Callbacks
 ) {
   val hasUsername by rememberUpdatedState(self.username.isNotBlank())
+  var gextTags by remember(self.recipient.id) { mutableStateOf(emptyList<org.thoughtcrime.securesms.recipients.GextTag>()) }
+
+  LaunchedEffect(self.recipient.id) {
+    gextTags = withContext(Dispatchers.IO) {
+      SignalDatabase.gExtRecipients.getGextTags(self.recipient.id)
+    }
+  }
 
   Row(
     verticalAlignment = Alignment.CenterVertically,
@@ -610,6 +628,15 @@ private fun BioRow(
           style = MaterialTheme.typography.titleLarge
         )
       }
+
+      val density = LocalDensity.current
+      val fontSizePx = with(density) { MaterialTheme.typography.titleLarge.fontSize.toPx() }.toInt()
+      val tags = gextTags
+      AndroidView(
+        factory = { ctx -> GExtTagsView(ctx) },
+        update = { view -> view.bind(tags, 2*fontSizePx/3) },
+        modifier = if (tags.isNotEmpty()) Modifier.padding(top = 4.dp) else Modifier
+      )
 
       val prettyPhoneNumber = if (LocalInspectionMode.current) {
         self.e164

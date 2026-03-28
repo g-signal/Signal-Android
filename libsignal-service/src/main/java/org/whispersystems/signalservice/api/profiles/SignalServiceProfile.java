@@ -64,6 +64,9 @@ public class SignalServiceProfile {
   private List<Badge> badges;
 
   @JsonProperty
+  private List<GextTag> gextTags;
+
+  @JsonProperty
   private String phoneNumberSharing;
 
   @JsonIgnore
@@ -113,6 +116,10 @@ public class SignalServiceProfile {
 
   public List<Badge> getBadges() {
     return badges;
+  }
+
+  public List<GextTag> getGextTags() {
+    return gextTags;
   }
 
   public ServiceId getServiceId() {
@@ -221,5 +228,52 @@ public class SignalServiceProfile {
       Log.w(TAG, e);
       return null;
     }
+  }
+
+  public static class GextTag {
+    @JsonProperty
+    private String tagId;
+
+    @JsonProperty
+    private int tagType;
+
+    @JsonProperty
+    private String text;
+
+    @JsonProperty
+    private String imgBase64;
+
+    @JsonProperty
+    private String cssBackgroundColor;
+
+    @JsonProperty
+    private String cssColor;
+
+    @JsonProperty
+    private float cssOpacity;
+
+    @JsonProperty
+    private int cssBorderWidth;
+
+    @JsonProperty
+    private int cssBorderRadius;
+
+    @JsonProperty
+    private String cssBorderColor;
+
+    @JsonProperty
+    private String cssBorderStyle;
+
+    public String getTagId() { return tagId; }
+    public int getTagType() { return tagType; }
+    public String getText() { return text; }
+    public String getImgBase64() { return imgBase64; }
+    public String getCssBackgroundColor() { return cssBackgroundColor; }
+    public String getCssColor() { return cssColor; }
+    public float getCssOpacity() { return cssOpacity; }
+    public int getCssBorderWidth() { return cssBorderWidth; }
+    public int getCssBorderRadius() { return cssBorderRadius; }
+    public String getCssBorderColor() { return cssBorderColor; }
+    public String getCssBorderStyle() { return cssBorderStyle; }
   }
 }

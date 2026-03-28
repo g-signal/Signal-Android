@@ -7,8 +7,15 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.R
+import org.thoughtcrime.securesms.components.GExtTagsView
 import org.thoughtcrime.securesms.components.settings.PreferenceModel
+import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.fonts.SignalSymbols
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.util.ContextUtil
@@ -24,6 +31,8 @@ import org.thoughtcrime.securesms.util.adapter.mapping.MappingViewHolder
  */
 object BioTextPreference {
 
+  private val TAG = Log.tag(BioTextPreference::class.java)
+
   fun register(adapter: MappingAdapter) {
     adapter.registerFactory(RecipientModel::class.java, LayoutFactory(::RecipientViewHolder, R.layout.conversation_settings_bio_preference_item))
     adapter.registerFactory(GroupModel::class.java, LayoutFactory(::GroupViewHolder, R.layout.conversation_settings_bio_preference_item))
@@ -38,7 +47,7 @@ object BioTextPreference {
   }
 
   class RecipientModel(
-    private val recipient: Recipient,
+    val recipient: Recipient,
     override val onHeadlineClickListener: (() -> Unit)?
   ) : BioTextPreferenceModel<RecipientModel>() {
 
@@ -135,9 +144,10 @@ object BioTextPreference {
 
   private abstract class BioTextViewHolder<T : BioTextPreferenceModel<T>>(itemView: View) : MappingViewHolder<T>(itemView) {
 
-    private val headline: TextView = itemView.findViewById(R.id.bio_preference_headline)
+    protected val headline: TextView = itemView.findViewById(R.id.bio_preference_headline)
     private val subhead1: TextView = itemView.findViewById(R.id.bio_preference_subhead_1)
     protected val subhead2: TextView = itemView.findViewById(R.id.bio_preference_subhead_2)
+    protected val gextTagsView: GExtTagsView = itemView.findViewById(R.id.bio_preference_gext_tags)
 
     override fun bind(model: T) {
       headline.text = model.getHeadlineText(context)
@@ -160,8 +170,26 @@ object BioTextPreference {
   }
 
   private class RecipientViewHolder(itemView: View) : BioTextViewHolder<RecipientModel>(itemView) {
+
+    private var gextTagsDisposable: Disposable = Disposable.empty()
+
     override fun bind(model: RecipientModel) {
       super.bind(model)
+
+      gextTagsDisposable.dispose()
+      gextTagsView.clear()
+
+      if (!model.recipient.isSelf && model.recipient.isIndividual) {
+        gextTagsDisposable = Single.fromCallable {
+          SignalDatabase.gExtRecipients.getGextTags(model.recipient.id)
+        }
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(
+            { tags -> gextTagsView.bind(tags, (headline.textSize * 2 / 3).toInt()) },
+            { error -> Log.w(TAG, "bind: failed to load tags for ${model.recipient.id}", error) }
+          )
+      }
 
       val phoneNumber = model.getSubhead2Text()
       if (!phoneNumber.isNullOrEmpty()) {

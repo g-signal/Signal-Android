@@ -124,12 +124,26 @@ class ProfileApi(
     val converter = ProfileAndCredentialResponseConverter(clientZkProfileOperations, profileRequestContext)
 
     return if (sealedSenderAccess == null) {
-      NetworkResult.fromWebSocket(converter) { authWebSocket.request(request) }
+      NetworkResult.fromWebSocket(converter) {
+        authWebSocket.request(request).doOnSuccess { response ->
+          Log.d(TAG, "getVersionedProfileAndCredential: [RAW] aci=$aci status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+        }
+      }
     } else {
-      NetworkResult.fromWebSocket(converter) { unauthWebSocket.request(request, sealedSenderAccess) }
+      NetworkResult.fromWebSocket(converter) {
+        unauthWebSocket.request(request, sealedSenderAccess).doOnSuccess { response ->
+          Log.d(TAG, "getVersionedProfileAndCredential(unauth): [RAW] aci=$aci status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+        }
+      }
         .fallback(
           predicate = { it is NetworkResult.StatusCodeError && it.code == 401 },
-          fallback = { NetworkResult.fromWebSocket(converter) { authWebSocket.request(request) } }
+          fallback = {
+            NetworkResult.fromWebSocket(converter) {
+              authWebSocket.request(request).doOnSuccess { response ->
+                Log.d(TAG, "getVersionedProfileAndCredential(auth-fallback): [RAW] aci=$aci status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+              }
+            }
+          }
         )
     }
   }
@@ -150,12 +164,26 @@ class ProfileApi(
     val converter = NetworkResult.DefaultWebSocketConverter(SignalServiceProfile::class)
 
     return if (sealedSenderAccess == null) {
-      NetworkResult.fromWebSocket(converter) { authWebSocket.request(request) }
+      NetworkResult.fromWebSocket(converter) {
+        authWebSocket.request(request).doOnSuccess { response ->
+          Log.d(TAG, "getVersionedProfile: [RAW] aci=$aci status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+        }
+      }
     } else {
-      NetworkResult.fromWebSocket(converter) { unauthWebSocket.request(request, sealedSenderAccess) }
+      NetworkResult.fromWebSocket(converter) {
+        unauthWebSocket.request(request, sealedSenderAccess).doOnSuccess { response ->
+          Log.d(TAG, "getVersionedProfile(unauth): [RAW] aci=$aci status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+        }
+      }
         .fallback(
           predicate = { it is NetworkResult.StatusCodeError && it.code == 401 },
-          fallback = { NetworkResult.fromWebSocket(converter) { authWebSocket.request(request) } }
+          fallback = {
+            NetworkResult.fromWebSocket(converter) {
+              authWebSocket.request(request).doOnSuccess { response ->
+                Log.d(TAG, "getVersionedProfile(auth-fallback): [RAW] aci=$aci status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+              }
+            }
+          }
         )
     }
   }
@@ -173,12 +201,26 @@ class ProfileApi(
     val converter = NetworkResult.DefaultWebSocketConverter(SignalServiceProfile::class)
 
     return if (sealedSenderAccess == null) {
-      NetworkResult.fromWebSocket(converter) { authWebSocket.request(request) }
+      NetworkResult.fromWebSocket(converter) {
+        authWebSocket.request(request).doOnSuccess { response ->
+          Log.d(TAG, "getUnversionedProfile: [RAW] serviceId=$serviceId status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+        }
+      }
     } else {
-      NetworkResult.fromWebSocket(converter) { unauthWebSocket.request(request, sealedSenderAccess) }
+      NetworkResult.fromWebSocket(converter) {
+        unauthWebSocket.request(request, sealedSenderAccess).doOnSuccess { response ->
+          Log.d(TAG, "getUnversionedProfile(unauth): [RAW] serviceId=$serviceId status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+        }
+      }
         .fallback(
           predicate = { it is NetworkResult.StatusCodeError && it.code == 401 },
-          fallback = { NetworkResult.fromWebSocket(converter) { authWebSocket.request(request) } }
+          fallback = {
+            NetworkResult.fromWebSocket(converter) {
+              authWebSocket.request(request).doOnSuccess { response ->
+                Log.d(TAG, "getUnversionedProfile(auth-fallback): [RAW] serviceId=$serviceId status=${response.status} unidentified=${response.isUnidentified} headers=${response.headers} body=${response.body?.take(4096)}")
+              }
+            }
+          }
         )
     }
   }
