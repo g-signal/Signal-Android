@@ -8,11 +8,22 @@ import org.thoughtcrime.securesms.recipients.GextTag
 import org.whispersystems.signalservice.api.NetworkResult
 import org.whispersystems.signalservice.api.groupsv2.GroupLinkNotActiveException
 import org.whispersystems.signalservice.api.push.exceptions.AuthorizationFailedException
+import java.util.concurrent.ConcurrentHashMap
 
 object GExtGroupHelper {
   private val TAG  = "GExtGroupHelper"
 
+  private const val FETCH_COOLDOWN_MS = 300_000L // 300 秒内同一 groupId 不重复请求
+  private val lastFetchTime = ConcurrentHashMap<String, Long>()
+
   fun fetchAndStoreGroupTags(groupId: String) {
+    val now = System.currentTimeMillis()
+    val last = lastFetchTime[groupId] ?: 0L
+    if (now - last < FETCH_COOLDOWN_MS) {
+      Log.d(TAG, "fetchAndStoreGroupTags: skipping groupId=$groupId, last fetch ${now - last}ms ago")
+      return
+    }
+    lastFetchTime[groupId] = now
     try {
       val serverGroupId = groupId.substringAfter("!")
       val result = SignalNetwork.gExtGroup.getGroupProfile(serverGroupId)
@@ -58,16 +69,20 @@ object GExtGroupHelper {
         }
         is NetworkResult.StatusCodeError -> {
           Log.w(TAG, "Failed to fetch group tags: HTTP ${result.code}")
+          lastFetchTime.remove(groupId)
         }
         is NetworkResult.NetworkError -> {
           Log.w(TAG, "Network error fetching group tags", result.exception)
+          lastFetchTime.remove(groupId)
         }
         is NetworkResult.ApplicationError -> {
           Log.w(TAG, "Application error fetching group tags", result.throwable)
+          lastFetchTime.remove(groupId)
         }
       }
     } catch (e: Exception) {
       Log.w(TAG, "Exception fetching group tags for $groupId", e)
+      lastFetchTime.remove(groupId)
     }
   }
 }
