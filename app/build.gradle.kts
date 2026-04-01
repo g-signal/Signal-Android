@@ -25,7 +25,7 @@ apply(from = "static-ips.gradle.kts")
 //val canonicalVersionName = "1.0.0"
 val canonicalVersionCode = 1569
 val canonicalVersionName = "7.51.12"
-val currentHotfixVersion = 1
+val currentHotfixVersion = 2
 val maxHotfixVersions = 100
 
 
