@@ -546,7 +546,6 @@ public class PushServiceSocket {
 
   public GExtGroupProfileResponse getGExtGroupProfile(String groupId) throws IOException {
     String response = makeServiceRequest("/v1/gext/group/profile/" + groupId, "GET", null);
-    System.out.println("[GExtGroupApi] raw response: " + response);
     return JsonUtil.fromJson(response, GExtGroupProfileResponse.class);
   }
 

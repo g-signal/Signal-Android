@@ -18,9 +18,9 @@ object GExtGroupHelper {
       val result = SignalNetwork.gExtGroup.getGroupProfile(serverGroupId)
       when (result) {
         is NetworkResult.Success -> {
-          Log.i(TAG, "Network response for group $groupId: ${result.result.extTags.size} tags received")
+          //Log.i(TAG, "Network response for group $groupId: ${result.result.extTags.size} tags received")
           result.result.extTags.forEachIndexed { index, tag ->
-            Log.i(TAG, "Tag[$index]: tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}")
+          //Log.i(TAG, "Tag[$index]: tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}")
           }
           val tags = result.result.extTags.map { serverTag ->
             GextTag(
@@ -41,20 +41,20 @@ object GExtGroupHelper {
           AppDependencies.databaseObserver.notifyGroupTagsChanged(groupId)
           Log.i(TAG, "Successfully fetched and stored ${tags.size} tags for group $groupId")
 
-          val db = SignalDatabase.rawDatabase
-          db.query("gext_groups", null, "group_id = ?", arrayOf(groupId), null, null, null).use { cursor ->
-            System.out.println("[GExtGroupHelper] DB query for groupId=$groupId, found=${cursor.count} row(s)")
-            if (cursor.moveToFirst()) {
-              for (i in 0 until cursor.columnCount) {
-                val colName = cursor.getColumnName(i)
-                val value = when (colName) {
-                  "tags" -> cursor.getBlob(i)?.let { "BLOB(${it.size} bytes)" } ?: "NULL"
-                  else -> cursor.getString(i)
-                }
-                System.out.println("[GExtGroupHelper] DB col[$i] $colName = $value")
-              }
-            }
-          }
+//          val db = SignalDatabase.rawDatabase
+//          db.query("gext_groups", null, "group_id = ?", arrayOf(groupId), null, null, null).use { cursor ->
+//            System.out.println("[GExtGroupHelper] DB query for groupId=$groupId, found=${cursor.count} row(s)")
+//            if (cursor.moveToFirst()) {
+//              for (i in 0 until cursor.columnCount) {
+//                val colName = cursor.getColumnName(i)
+//                val value = when (colName) {
+//                  "tags" -> cursor.getBlob(i)?.let { "BLOB(${it.size} bytes)" } ?: "NULL"
+//                  else -> cursor.getString(i)
+//                }
+//                System.out.println("[GExtGroupHelper] DB col[$i] $colName = $value")
+//              }
+//            }
+//          }
         }
         is NetworkResult.StatusCodeError -> {
           Log.w(TAG, "Failed to fetch group tags: HTTP ${result.code}")

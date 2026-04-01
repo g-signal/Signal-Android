@@ -34,7 +34,7 @@ class GExtGroupApi(private val pushServiceSocket: PushServiceSocket) {
       is NetworkResult.Success -> {
         Log.i(TAG, "Response Success: tags count=${result.result.extTags.size}")
         result.result.extTags.forEachIndexed { index, tag ->
-          Log.i(TAG, "Tag[$index]: tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}, imgBase64=${tag.imgBase64?.take(20)}..., cssBackgroundColor=${tag.cssBackgroundColor}, cssColor=${tag.cssColor}")
+        //Log.i(TAG, "Tag[$index]: tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}, imgBase64=${tag.imgBase64?.take(20)}..., cssBackgroundColor=${tag.cssBackgroundColor}, cssColor=${tag.cssColor}")
         }
       }
       is NetworkResult.StatusCodeError -> Log.w(TAG, "Response Error: code=${result.code}")
