@@ -79,16 +79,17 @@
         tools:background="@drawable/message_bubble_background_received_alone"
         tools:backgroundTint="@color/signal_colorSurfaceVariant">
 
-        <LinearLayout
+        <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/group_sender_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:layout_marginBottom="-3dp"
-            android:orientation="horizontal"
             android:paddingStart="@dimen/message_bubble_horizontal_padding"
             android:paddingEnd="@dimen/message_bubble_horizontal_padding"
             android:visibility="gone"
+            app:flexWrap="wrap"
+            app:alignItems="center"
             tools:visibility="visible">
 
             <org.thoughtcrime.securesms.components.emoji.EmojiTextView
@@ -109,11 +110,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-        </LinearLayout>
+        </com.google.android.flexbox.FlexboxLayout>
 
         <LinearLayout
             android:id="@+id/story_reacted_label_holder"

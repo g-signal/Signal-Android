@@ -59,7 +59,7 @@ public class GExtTagsView extends LinearLayout {
 
       if (tag.getTagType() == 1) {
         GExtImageTagView imageTag = new GExtImageTagView(getContext());
-        if (imageTag.bind(tag, (int)(height* 0.75f))) tagView = imageTag;
+        if (imageTag.bind(tag, height)) tagView = imageTag;
       } else {
         String text = tag.getText();
         if (text != null && !text.isEmpty()) {

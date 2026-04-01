@@ -566,6 +566,7 @@ dependencies {
   implementation(libs.androidx.compose.runtime.livedata)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.constraintlayout)
+  implementation("com.google.android.flexbox:flexbox:3.0.0")
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
   implementation(libs.androidx.navigation.compose)

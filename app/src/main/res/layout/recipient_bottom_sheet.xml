@@ -125,8 +125,19 @@
             android:layout_marginEnd="@dimen/dsl_settings_gutter"
             android:gravity="center"
             android:textColor="@color/signal_text_secondary"
-            app:layout_constraintTop_toBottomOf="@id/rbs_full_name"
+            app:layout_constraintTop_toBottomOf="@id/rbs_gext_tags"
             tools:text="🕷🕷🕷 Hangin' on the web 🕷🕷🕷" />
+
+        <org.thoughtcrime.securesms.components.GExtTagsView
+            android:id="@+id/rbs_gext_tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/rbs_full_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/rbs_note_to_self_description"

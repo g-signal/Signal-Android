@@ -31,7 +31,12 @@ import org.thoughtcrime.securesms.avatar.view.AvatarView
 import org.thoughtcrime.securesms.badges.BadgeImageView
 import org.thoughtcrime.securesms.badges.view.ViewBadgeBottomSheetDialogFragment
 import org.thoughtcrime.securesms.calls.YouAreAlreadyInACallSnackbar
+import org.thoughtcrime.securesms.components.GExtTagsView
 import org.thoughtcrime.securesms.components.settings.DSLSettingsIcon
+import org.thoughtcrime.securesms.database.SignalDatabase
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.ButtonStripPreference
 import org.thoughtcrime.securesms.conversation.v2.data.AvatarDownloadStateCache
 import org.thoughtcrime.securesms.fonts.SignalSymbols
@@ -116,6 +121,7 @@ class RecipientBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     val avatar: AvatarView = view.findViewById(R.id.rbs_recipient_avatar)
     val fullName: TextView = view.findViewById(R.id.rbs_full_name)
+    val gextTagsView: GExtTagsView = view.findViewById(R.id.rbs_gext_tags)
     val about: TextView = view.findViewById(R.id.rbs_about)
     val nickname: TextView = view.findViewById(R.id.rbs_nickname_button)
     val blockButton: TextView = view.findViewById(R.id.rbs_block_button)
@@ -274,6 +280,19 @@ class RecipientBottomSheetDialogFragment : BottomSheetDialogFragment() {
         about.visible = true
       } else {
         about.visible = false
+      }
+
+      gextTagsView.clear()
+      if (!recipient.isSelf && recipient.isIndividual) {
+        Single.fromCallable {
+          SignalDatabase.gExtRecipients.getGextTags(recipient.id)
+        }
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(
+            { tags -> gextTagsView.bind(tags, fullName.textSize.toInt()) },
+            { error -> Log.w(TAG, "Failed to load tags for ${recipient.id}", error) }
+          )
       }
 
       noteToSelfDescription.visible = recipient.isSelf
