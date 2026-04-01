@@ -90,6 +90,7 @@ import org.thoughtcrime.securesms.util.SignalE164Util;
 import org.thoughtcrime.securesms.util.SpanUtil;
 import org.thoughtcrime.securesms.util.Util;
 import org.thoughtcrime.securesms.util.livedata.LiveDataUtil;
+import org.thoughtcrime.securesms.database.RxDatabaseObserver;
 
 import java.util.List;
 import java.util.Locale;
@@ -97,6 +98,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -254,7 +256,8 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
       RecipientId gextRecipientId = thread.getRecipient().getId();
       Log.d(TAG, "bindThread: [GExtTags] querying for individual recipientId=" + gextRecipientId);
       System.out.println("[ConversationListItem] recipientId=" + gextRecipientId + ", aci=" + thread.getRecipient().requireAci() + ", name=" + thread.getRecipient().getDisplayName(getContext()));
-      gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId))
+      gextTagsDisposable = RxDatabaseObserver.INSTANCE.recipientTags(gextRecipientId)
+            .flatMapSingle(ignored -> Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId)))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -264,7 +267,8 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     } else {
       String groupId = thread.getRecipient().getGroupId().get().toString();
       Log.d(TAG, "bindThread: [GExtTags] querying for group groupId=" + groupId);
-      gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtGroups().getGroupTags(groupId))
+      gextTagsDisposable = RxDatabaseObserver.INSTANCE.groupTags(groupId)
+            .flatMapSingle(ignored -> Single.fromCallable(() -> SignalDatabase.gExtGroups().getGroupTags(groupId)))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

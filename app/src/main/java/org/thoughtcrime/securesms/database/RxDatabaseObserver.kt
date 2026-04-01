@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.core.Emitter
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.thoughtcrime.securesms.dependencies.AppDependencies
+import org.thoughtcrime.securesms.recipients.RecipientId
 import java.util.concurrent.TimeUnit
 
 /**
@@ -26,6 +27,18 @@ object RxDatabaseObserver {
   fun conversation(threadId: Long): Flowable<Unit> {
     return databaseFlowable { listener ->
       AppDependencies.databaseObserver.registerVerboseConversationObserver(threadId, listener)
+    }
+  }
+
+  fun groupTags(groupId: String): Flowable<Unit> {
+    return databaseFlowable { listener ->
+      AppDependencies.databaseObserver.registerGroupTagsObserver(groupId, listener)
+    }
+  }
+
+  fun recipientTags(recipientId: RecipientId): Flowable<Unit> {
+    return databaseFlowable { listener ->
+      AppDependencies.databaseObserver.registerRecipientTagsObserver(recipientId, listener)
     }
   }
 

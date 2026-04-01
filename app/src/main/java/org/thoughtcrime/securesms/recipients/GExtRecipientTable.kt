@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.database.DatabaseTable
 import org.thoughtcrime.securesms.database.SignalDatabase
+import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.util.JsonUtils
 
 class GExtRecipientTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTable(context, databaseHelper) {
@@ -53,6 +54,7 @@ class GExtRecipientTable(context: Context, databaseHelper: SignalDatabase) : Dat
 
     if (rowId >= 0) {
       Log.i(TAG, "setGextTags: [OK] upsert success rowId=$rowId, recipientId=${recipientId.toLong()}, aci=$aci, tagCount=${tags.size}")
+      AppDependencies.databaseObserver.notifyRecipientTagsChanged(recipientId)
     } else {
       Log.w(TAG, "setGextTags: [FAILED] insertWithOnConflict returned rowId=$rowId for recipientId=${recipientId.toLong()}")
     }
