@@ -544,6 +544,12 @@ public class PushServiceSocket {
     return JsonUtil.fromJson(response, RemoteConfigResponse.class);
   }
 
+  public GExtGroupProfileResponse getGExtGroupProfile(String groupId) throws IOException {
+    String response = makeServiceRequest("/v1/gext/group/profile/" + groupId, "GET", null);
+    System.out.println("[GExtGroupApi] raw response: " + response);
+    return JsonUtil.fromJson(response, GExtGroupProfileResponse.class);
+  }
+
   public void cancelInFlightRequests() {
     synchronized (connections) {
       Log.w(TAG, "Canceling: " + connections.size());

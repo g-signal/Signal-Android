@@ -253,12 +253,23 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     if (!thread.getRecipient().isGroup()) {
       RecipientId gextRecipientId = thread.getRecipient().getId();
       Log.d(TAG, "bindThread: [GExtTags] querying for individual recipientId=" + gextRecipientId);
+      System.out.println("[ConversationListItem] recipientId=" + gextRecipientId + ", aci=" + thread.getRecipient().requireAci() + ", name=" + thread.getRecipient().getDisplayName(getContext()));
       gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
               tags -> gextTagsView.bind(tags, (int) fromView.getTextSize()),
               error -> Log.w(TAG, "bindThread: [GExtTags] failed to load tags for recipientId=" + gextRecipientId, error)
+            );
+    } else {
+      String groupId = thread.getRecipient().getGroupId().get().toString();
+      Log.d(TAG, "bindThread: [GExtTags] querying for group groupId=" + groupId);
+      gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtGroups().getGroupTags(groupId))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+              tags -> gextTagsView.bind(tags, (int) fromView.getTextSize()),
+              error -> Log.w(TAG, "bindThread: [GExtTags] failed to load tags for groupId=" + groupId, error)
             );
     }
 

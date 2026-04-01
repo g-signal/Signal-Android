@@ -31,6 +31,7 @@ fun V2ConversationItemMediaIncomingBinding.bridge(): V2ConversationItemMediaBind
   val textBridge = V2ConversationItemTextOnlyBindingBridge(
     root = root,
     senderName = groupMessageSender,
+    senderGextTags = null,
     senderPhoto = contactPhoto,
     senderBadge = badge,
     body = conversationItemBody,
@@ -61,6 +62,7 @@ fun V2ConversationItemMediaOutgoingBinding.bridge(): V2ConversationItemMediaBind
   val textBridge = V2ConversationItemTextOnlyBindingBridge(
     root = root,
     senderName = null,
+    senderGextTags = null,
     senderPhoto = null,
     senderBadge = null,
     body = conversationItemBody,

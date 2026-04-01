@@ -104,6 +104,15 @@
                 tools:text="+14152222222"
                 tools:visibility="visible" />
 
+            <org.thoughtcrime.securesms.components.GExtTagsView
+                android:id="@+id/group_message_sender_gext_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
         <LinearLayout

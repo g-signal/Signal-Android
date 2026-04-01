@@ -29,6 +29,7 @@ import org.whispersystems.signalservice.api.SignalServiceMessageReceiver
 import org.whispersystems.signalservice.api.SignalServiceMessageSender
 import org.whispersystems.signalservice.api.account.AccountApi
 import org.whispersystems.signalservice.api.archive.ArchiveApi
+import org.whispersystems.signalservice.api.groups.GExtGroupApi
 import org.whispersystems.signalservice.api.attachment.AttachmentApi
 import org.whispersystems.signalservice.api.calling.CallingApi
 import org.whispersystems.signalservice.api.cds.CdsApi
@@ -218,6 +219,10 @@ class NetworkDependenciesModule(
 
   val donationsApi: DonationsApi by lazy {
     provider.provideDonationsApi(authWebSocket, unauthWebSocket)
+  }
+
+  val gExtGroupApi: GExtGroupApi by lazy {
+    provider.provideGExtGroupApi(pushServiceSocket)
   }
 
   val okHttpClient: OkHttpClient by lazy {

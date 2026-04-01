@@ -84,4 +84,30 @@ class GExtRecipientTable(context: Context, databaseHelper: SignalDatabase) : Dat
         }
       }
   }
+
+  fun getGextTagsByAci(aci: String): List<GextTag> {
+    Log.d(TAG, "getGextTagsByAci: querying $TABLE_NAME for aci=$aci")
+    return readableDatabase
+      .query(TABLE_NAME, arrayOf(TAGS), "$ACI = ?", arrayOf(aci), null, null, null)
+      .use { cursor ->
+        if (cursor.moveToFirst()) {
+          val blob = cursor.getBlob(0)
+          if (blob == null) {
+            Log.w(TAG, "getGextTagsByAci: BLOB is null for aci=$aci")
+            return emptyList()
+          }
+          try {
+            val result = JsonUtils.getMapper().readValue(blob, TAGS_LIST_TYPE)
+            Log.i(TAG, "getGextTagsByAci: [OK] deserialized ${result.size} tag(s) for aci=$aci")
+            result
+          } catch (e: Exception) {
+            Log.w(TAG, "getGextTagsByAci: deserialization error for aci=$aci", e)
+            emptyList()
+          }
+        } else {
+          Log.d(TAG, "getGextTagsByAci: no row found for aci=$aci")
+          emptyList()
+        }
+      }
+  }
 }

@@ -90,6 +90,7 @@ import org.whispersystems.signalservice.api.calling.CallingApi;
 import org.whispersystems.signalservice.api.cds.CdsApi;
 import org.whispersystems.signalservice.api.certificate.CertificateApi;
 import org.whispersystems.signalservice.api.donations.DonationsApi;
+import org.whispersystems.signalservice.api.groups.GExtGroupApi;
 import org.whispersystems.signalservice.api.groupsv2.ClientZkOperations;
 import org.whispersystems.signalservice.api.groupsv2.GroupsV2Operations;
 import org.whispersystems.signalservice.api.keys.KeysApi;
@@ -574,6 +575,11 @@ public class ApplicationDependencyProvider implements AppDependencies.Provider {
   @Override
   public @NonNull DonationsApi provideDonationsApi(@NonNull SignalWebSocket.AuthenticatedWebSocket authWebSocket, @NonNull SignalWebSocket.UnauthenticatedWebSocket unauthWebSocket) {
     return new DonationsApi(authWebSocket, unauthWebSocket);
+  }
+
+  @Override
+  public @NonNull GExtGroupApi provideGExtGroupApi(@NonNull PushServiceSocket pushServiceSocket) {
+    return new GExtGroupApi(pushServiceSocket);
   }
 
   @VisibleForTesting

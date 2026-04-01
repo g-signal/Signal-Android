@@ -123,7 +123,8 @@ object BioTextPreference {
 
   class GroupModel(
     val groupTitle: String,
-    val groupMembershipDescription: String?
+    val groupMembershipDescription: String?,
+    val groupId: String? = null
   ) : BioTextPreferenceModel<GroupModel>() {
     override fun getHeadlineText(context: Context): CharSequence = groupTitle
 
@@ -134,7 +135,8 @@ object BioTextPreference {
     override fun areContentsTheSame(newItem: GroupModel): Boolean {
       return super.areContentsTheSame(newItem) &&
         groupTitle == newItem.groupTitle &&
-        groupMembershipDescription == newItem.groupMembershipDescription
+        groupMembershipDescription == newItem.groupMembershipDescription &&
+        groupId == newItem.groupId
     }
 
     override fun areItemsTheSame(newItem: GroupModel): Boolean {
@@ -186,7 +188,11 @@ object BioTextPreference {
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(
-            { tags -> gextTagsView.bind(tags, (headline.textSize * 2 / 3).toInt()) },
+            { tags -> gextTagsView.bind(tags, (try {
+              headline.textSize
+            } catch (e: Exception) {
+              TODO("Not yet implemented")
+            }).toInt()) },
             { error -> Log.w(TAG, "bind: failed to load tags for ${model.recipient.id}", error) }
           )
       }
@@ -205,5 +211,28 @@ object BioTextPreference {
     }
   }
 
-  private class GroupViewHolder(itemView: View) : BioTextViewHolder<GroupModel>(itemView)
+  private class GroupViewHolder(itemView: View) : BioTextViewHolder<GroupModel>(itemView) {
+
+    private var gextTagsDisposable: Disposable = Disposable.empty()
+
+    override fun bind(model: GroupModel) {
+      super.bind(model)
+
+      gextTagsDisposable.dispose()
+      gextTagsView.clear()
+
+      val groupId = model.groupId
+      if (!groupId.isNullOrEmpty()) {
+        gextTagsDisposable = Single.fromCallable {
+          SignalDatabase.gExtGroups.getGroupTags(groupId)
+        }
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(
+            { tags -> gextTagsView.bind(tags, (headline.textSize ).toInt()) },
+            { error -> Log.w(TAG, "bind: failed to load tags for group $groupId", error) }
+          )
+      }
+    }
+  }
 }

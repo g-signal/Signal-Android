@@ -572,6 +572,22 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
       binding.senderBadge.visible = shape.isEndingShape
 
       binding.senderName.text = sender.getDisplayName(context)
+      binding.senderGextTags?.clear()
+      if (shape.isStartingShape) {
+        val aci = sender.aci.orElse(null)?.toString()
+        if (aci != null) {
+          android.util.Log.d("ConversationItemV2", "[GExtTags] sender id=${sender.id}, aci=$aci, name=${sender.getDisplayName(context)}")
+          io.reactivex.rxjava3.core.Single.fromCallable<List<org.thoughtcrime.securesms.recipients.GextTag>> {
+            org.thoughtcrime.securesms.database.SignalDatabase.gExtRecipients.getGextTagsByAci(aci)
+          }
+            .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
+            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+            .subscribe(
+              { tags -> binding.senderGextTags?.bind(tags, binding.senderName.textSize.toInt()) },
+              { error -> android.util.Log.w("ConversationItemV2", "Failed to load tags for aci=$aci", error) }
+            )
+        }
+      }
       binding.senderPhoto.setAvatar(conversationContext.requestManager, sender, false)
       binding.senderBadge.setBadgeFromRecipient(sender, conversationContext.requestManager)
       binding.senderPhoto.setOnClickListener {

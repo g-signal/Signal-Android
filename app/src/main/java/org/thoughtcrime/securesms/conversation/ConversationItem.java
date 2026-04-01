@@ -96,6 +96,7 @@ import org.thoughtcrime.securesms.components.QuoteView;
 import org.thoughtcrime.securesms.components.SharedContactView;
 import org.thoughtcrime.securesms.components.ThumbnailView;
 import org.thoughtcrime.securesms.components.emoji.EmojiTextView;
+import org.thoughtcrime.securesms.components.GExtTagsView;
 import org.thoughtcrime.securesms.components.mention.MentionAnnotation;
 import org.thoughtcrime.securesms.contactshare.Contact;
 import org.thoughtcrime.securesms.conversation.clicklisteners.AttachmentCancelClickListener;
@@ -108,6 +109,7 @@ import org.thoughtcrime.securesms.conversation.v2.items.InteractiveConversationE
 import org.thoughtcrime.securesms.conversation.v2.items.V2ConversationItemUtils;
 import org.thoughtcrime.securesms.database.AttachmentTable;
 import org.thoughtcrime.securesms.database.MediaTable;
+import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.Quote;
@@ -163,6 +165,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
@@ -211,6 +217,7 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   @Nullable private ConversationItemFooter     stickerFooter;
   @Nullable private TextView                   groupSender;
   @Nullable private View                       groupSenderHolder;
+  @Nullable private GExtTagsView               groupSenderGextTags;
   private           AvatarImageView            contactPhoto;
   private           AlertView                  alertView;
   private           ReactionsConversationView  reactionsView;
@@ -327,6 +334,7 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
     this.footer                    = findViewById(R.id.conversation_item_footer);
     this.stickerFooter             = findViewById(R.id.conversation_item_sticker_footer);
     this.groupSender               = findViewById(R.id.group_message_sender);
+    this.groupSenderGextTags       = findViewById(R.id.group_message_sender_gext_tags);
     this.alertView                 = findViewById(R.id.indicators_parent);
     this.contactPhoto              = findViewById(R.id.contact_photo);
     this.contactPhotoHolder        = findViewById(R.id.contact_photo_container);
@@ -1873,6 +1881,23 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private void setGroupMessageStatus(MessageRecord messageRecord, Recipient recipient) {
     if (groupThread && !messageRecord.isOutgoing() && groupSender != null) {
       groupSender.setText(recipient.getDisplayName(getContext()));
+
+      if (groupSenderGextTags != null) {
+        groupSenderGextTags.clear();
+        Log.d(TAG, "setGroupMessageStatus: loading tags for recipientId=" + recipient.getId());
+        Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(recipient.getId()))
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(
+                tags -> {
+                  Log.d(TAG, "setGroupMessageStatus: got " + tags.size() + " tags for recipientId=" + recipient.getId());
+                  groupSenderGextTags.bind(tags, (int) groupSender.getTextSize());
+                },
+                error -> Log.w(TAG, "setGroupMessageStatus: failed to load tags for " + recipient.getId(), error)
+              );
+      } else {
+        Log.w(TAG, "setGroupMessageStatus: groupSenderGextTags is null for recipientId=" + recipient.getId());
+      }
     }
   }
 
