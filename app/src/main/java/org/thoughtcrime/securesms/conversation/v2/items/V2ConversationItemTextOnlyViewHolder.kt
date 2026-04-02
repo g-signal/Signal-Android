@@ -81,6 +81,8 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
   }
 
   private var messageId: Long = Long.MAX_VALUE
+  private var lastSenderAci: String? = null
+  private var senderTagsDisposable: io.reactivex.rxjava3.disposables.Disposable? = null
 
   private val projections = ProjectionList()
   private val dispatchTouchEventListener = V2OnDispatchTouchEventListener(conversationContext, binding)
@@ -572,6 +574,35 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
       binding.senderBadge.visible = shape.isEndingShape
 
       binding.senderName.text = sender.getDisplayName(context)
+      if (shape.isStartingShape) {
+        val aci = sender.aci.orElse(null)?.toString()
+        if (aci != null && aci == lastSenderAci) {
+          // same sender already displayed — skip clear + reload to avoid flash
+        } else {
+          lastSenderAci = aci
+          senderTagsDisposable?.dispose()
+          senderTagsDisposable = null
+          binding.senderGextTags?.clear()
+          if (aci != null) {
+            senderTagsDisposable = io.reactivex.rxjava3.core.Single.fromCallable<List<org.thoughtcrime.securesms.recipients.GextTag>> {
+              org.thoughtcrime.securesms.database.SignalDatabase.gExtRecipients.getGextTagsByAci(aci)
+            }
+              .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
+              .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+              .subscribe(
+                { tags -> binding.senderGextTags?.bind(tags, binding.senderName.textSize.toInt()) },
+                { error -> android.util.Log.w("ConversationItemV2", "Failed to load tags for aci=$aci", error) }
+              )
+          }
+        }
+      } else {
+        if (lastSenderAci != null) {
+          lastSenderAci = null
+          senderTagsDisposable?.dispose()
+          senderTagsDisposable = null
+          binding.senderGextTags?.clear()
+        }
+      }
       binding.senderPhoto.setAvatar(conversationContext.requestManager, sender, false)
       binding.senderBadge.setBadgeFromRecipient(sender, conversationContext.requestManager)
       binding.senderPhoto.setOnClickListener {
@@ -588,6 +619,9 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
       binding.senderName.visible = false
       binding.senderPhoto.visible = false
       binding.senderBadge.visible = false
+      lastSenderAci = null
+      senderTagsDisposable?.dispose()
+      senderTagsDisposable = null
     }
   }
 

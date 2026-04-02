@@ -217,6 +217,14 @@ public class ConversationTitleView extends ConstraintLayout {
 
   private void setGroupRecipientTitle(@NonNull Recipient recipient) {
     this.title.setText(recipient.getDisplayName(getContext()));
+    String groupId = recipient.getGroupId().get().toString();
+    gextTagsDisposable = Single.fromCallable(() -> SignalDatabase.gExtGroups().getGroupTags(groupId))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    tags -> gextTagsView.bind(tags, (int) title.getTextSize()),
+                    error -> Log.w(TAG, "setGroupRecipientTitle: failed to load group tags for " + groupId, error)
+            );
   }
 
   private void setSelfTitle() {

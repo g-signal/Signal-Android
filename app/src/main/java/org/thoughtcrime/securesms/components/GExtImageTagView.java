@@ -52,10 +52,13 @@ public class GExtImageTagView extends AppCompatImageView {
       if (bitmap == null) return false;
 
       setImageBitmap(bitmap);
-      setScaleType(ScaleType.CENTER_CROP);
+      setScaleType(ScaleType.FIT_XY);
 
-      int size = (int) DimensionUnit.DP.toPixels(20f);
-      setLayoutParams(new LinearLayout.LayoutParams(wh==0?size:wh, wh==0?size:wh));
+      int height = (wh == 0) ? (int) DimensionUnit.DP.toPixels(20f) : wh;
+      int width  = (bitmap.getHeight() > 0)
+                   ? (int) (height * (float) bitmap.getWidth() / bitmap.getHeight())
+                   : height;
+      setLayoutParams(new LinearLayout.LayoutParams(width, height));
       return true;
     } catch (Exception e) {
       Log.w(TAG, "bind: failed to decode image for tag " + tag.getTagId(), e);

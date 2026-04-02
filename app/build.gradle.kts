@@ -23,9 +23,9 @@ plugins {
 
 apply(from = "static-ips.gradle.kts")
 //val canonicalVersionName = "1.0.0"
-val canonicalVersionCode = 1568
-val canonicalVersionName = "7.51.11-beta.1"
-val currentHotfixVersion = 9
+val canonicalVersionCode = 1569
+val canonicalVersionName = "7.51.12"
+val currentHotfixVersion = 2
 val maxHotfixVersions = 100
 
 
@@ -566,6 +566,7 @@ dependencies {
   implementation(libs.androidx.compose.runtime.livedata)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.constraintlayout)
+  implementation("com.google.android.flexbox:flexbox:3.0.0")
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
   implementation(libs.androidx.navigation.compose)

@@ -12,6 +12,7 @@ import org.whispersystems.signalservice.api.attachment.AttachmentApi
 import org.whispersystems.signalservice.api.calling.CallingApi
 import org.whispersystems.signalservice.api.cds.CdsApi
 import org.whispersystems.signalservice.api.certificate.CertificateApi
+import org.whispersystems.signalservice.api.groups.GExtGroupApi
 import org.whispersystems.signalservice.api.keys.KeysApi
 import org.whispersystems.signalservice.api.link.LinkDeviceApi
 import org.whispersystems.signalservice.api.message.MessageApi
@@ -94,4 +95,7 @@ object SignalNetwork {
   @get:JvmName("username")
   val username: UsernameApi
     get() = AppDependencies.usernameApi
+
+  val gExtGroup: GExtGroupApi
+    get() = AppDependencies.gExtGroupApi
 }

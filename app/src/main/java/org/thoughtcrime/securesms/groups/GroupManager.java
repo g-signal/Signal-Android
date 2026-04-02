@@ -145,6 +145,7 @@ public final class GroupManager {
     try (GroupManagerV2.GroupUpdater updater = new GroupManagerV2(context).updater(groupMasterKey)) {
       updater.updateLocalToServerRevision(revision, timestamp);
     }
+    GExtGroupHelper.INSTANCE.fetchAndStoreGroupTags(GroupId.v2(groupMasterKey).toString());
   }
 
   @WorkerThread
@@ -158,9 +159,12 @@ public final class GroupManager {
                                                         @Nullable String serverGuid)
       throws GroupChangeBusyException, IOException, GroupNotAMemberException
   {
+    GroupUpdateResult result;
     try (GroupManagerV2.GroupUpdater updater = new GroupManagerV2(context).updater(groupMasterKey)) {
-      return updater.updateLocalToServerRevision(revision, timestamp, groupRecord, groupSecretParams, signedGroupChange, serverGuid);
+      result = updater.updateLocalToServerRevision(revision, timestamp, groupRecord, groupSecretParams, signedGroupChange, serverGuid);
     }
+    GExtGroupHelper.INSTANCE.fetchAndStoreGroupTags(GroupId.v2(groupMasterKey).toString());
+    return result;
   }
 
   @WorkerThread
@@ -172,6 +176,7 @@ public final class GroupManager {
     try (GroupManagerV2.GroupUpdater updater = new GroupManagerV2(context).updater(groupMasterKey)) {
       updater.forceSanityUpdateFromServer(timestamp);
     }
+    GExtGroupHelper.INSTANCE.fetchAndStoreGroupTags(GroupId.v2(groupMasterKey).toString());
   }
 
   @WorkerThread

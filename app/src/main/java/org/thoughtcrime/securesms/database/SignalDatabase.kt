@@ -82,6 +82,7 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
   val chatFoldersTable: ChatFolderTables = ChatFolderTables(context, this)
   val backupMediaSnapshotTable: BackupMediaSnapshotTable = BackupMediaSnapshotTable(context, this)
   val gExtRecipientTable: GExtRecipientTable = GExtRecipientTable(context, this)
+  val gExtGroupsTable: GExtGroupsTable = GExtGroupsTable(context, this)
 
   override fun onOpen(db: net.zetetic.database.sqlcipher.SQLiteDatabase) {
     db.setForeignKeyConstraintsEnabled(true)
@@ -151,6 +152,7 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
     executeStatements(db, ChatFolderTables.CREATE_TABLE)
     db.execSQL(BackupMediaSnapshotTable.CREATE_TABLE)
     db.execSQL(GExtRecipientTable.CREATE_TABLE)
+    db.execSQL(GExtGroupsTable.CREATE_TABLE)
 
     executeStatements(db, RecipientTable.CREATE_INDEXS)
     executeStatements(db, MessageTable.CREATE_INDEXS)
@@ -590,5 +592,10 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
     @get:JvmName("gExtRecipients")
     val gExtRecipients: GExtRecipientTable
       get() = instance!!.gExtRecipientTable
+
+    @get:JvmStatic
+    @get:JvmName("gExtGroups")
+    val gExtGroups: GExtGroupsTable
+      get() = instance!!.gExtGroupsTable
   }
 }

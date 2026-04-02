@@ -16,6 +16,7 @@ import org.thoughtcrime.securesms.components.AvatarImageView
 import org.thoughtcrime.securesms.components.DeliveryStatusView
 import org.thoughtcrime.securesms.components.ExpirationTimerView
 import org.thoughtcrime.securesms.components.emoji.EmojiTextView
+import org.thoughtcrime.securesms.components.GExtTagsView
 import org.thoughtcrime.securesms.databinding.V2ConversationItemTextOnlyIncomingBinding
 import org.thoughtcrime.securesms.databinding.V2ConversationItemTextOnlyOutgoingBinding
 import org.thoughtcrime.securesms.reactions.ReactionsConversationView
@@ -29,6 +30,7 @@ import org.thoughtcrime.securesms.reactions.ReactionsConversationView
 data class V2ConversationItemTextOnlyBindingBridge(
   val root: V2ConversationItemLayout,
   val senderName: EmojiTextView?,
+  val senderGextTags: GExtTagsView?,
   val senderPhoto: AvatarImageView?,
   val senderBadge: BadgeImageView?,
   val bodyWrapper: ViewGroup,
@@ -51,6 +53,7 @@ fun V2ConversationItemTextOnlyIncomingBinding.bridge(): V2ConversationItemTextOn
   return V2ConversationItemTextOnlyBindingBridge(
     root = root,
     senderName = groupMessageSender,
+    senderGextTags = groupMessageSenderGextTags,
     senderPhoto = contactPhoto,
     senderBadge = badge,
     body = conversationItemBody,
@@ -74,6 +77,7 @@ fun V2ConversationItemTextOnlyOutgoingBinding.bridge(): V2ConversationItemTextOn
   return V2ConversationItemTextOnlyBindingBridge(
     root = root,
     senderName = null,
+    senderGextTags = null,
     senderPhoto = null,
     senderBadge = null,
     body = conversationItemBody,

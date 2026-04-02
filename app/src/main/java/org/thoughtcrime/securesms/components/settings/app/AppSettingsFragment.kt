@@ -634,7 +634,7 @@ private fun BioRow(
       val tags = gextTags
       AndroidView(
         factory = { ctx -> GExtTagsView(ctx) },
-        update = { view -> view.bind(tags, 2*fontSizePx/3) },
+        update = { view -> view.bind(tags, fontSizePx) },
         modifier = if (tags.isNotEmpty()) Modifier.padding(top = 4.dp) else Modifier
       )
 

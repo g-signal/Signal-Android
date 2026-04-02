@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.database.DatabaseTable
 import org.thoughtcrime.securesms.database.SignalDatabase
+import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.util.JsonUtils
 
 class GExtRecipientTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTable(context, databaseHelper) {
@@ -53,6 +54,7 @@ class GExtRecipientTable(context: Context, databaseHelper: SignalDatabase) : Dat
 
     if (rowId >= 0) {
       Log.i(TAG, "setGextTags: [OK] upsert success rowId=$rowId, recipientId=${recipientId.toLong()}, aci=$aci, tagCount=${tags.size}")
+      AppDependencies.databaseObserver.notifyRecipientTagsChanged(recipientId)
     } else {
       Log.w(TAG, "setGextTags: [FAILED] insertWithOnConflict returned rowId=$rowId for recipientId=${recipientId.toLong()}")
     }
@@ -80,6 +82,32 @@ class GExtRecipientTable(context: Context, databaseHelper: SignalDatabase) : Dat
           }
         } else {
           Log.d(TAG, "getGextTags: no row found for recipientId=${recipientId.toLong()}")
+          emptyList()
+        }
+      }
+  }
+
+  fun getGextTagsByAci(aci: String): List<GextTag> {
+    Log.d(TAG, "getGextTagsByAci: querying $TABLE_NAME for aci=$aci")
+    return readableDatabase
+      .query(TABLE_NAME, arrayOf(TAGS), "$ACI = ?", arrayOf(aci), null, null, null)
+      .use { cursor ->
+        if (cursor.moveToFirst()) {
+          val blob = cursor.getBlob(0)
+          if (blob == null) {
+            Log.w(TAG, "getGextTagsByAci: BLOB is null for aci=$aci")
+            return emptyList()
+          }
+          try {
+            val result = JsonUtils.getMapper().readValue(blob, TAGS_LIST_TYPE)
+            Log.i(TAG, "getGextTagsByAci: [OK] deserialized ${result.size} tag(s) for aci=$aci")
+            result
+          } catch (e: Exception) {
+            Log.w(TAG, "getGextTagsByAci: deserialization error for aci=$aci", e)
+            emptyList()
+          }
+        } else {
+          Log.d(TAG, "getGextTagsByAci: no row found for aci=$aci")
           emptyList()
         }
       }

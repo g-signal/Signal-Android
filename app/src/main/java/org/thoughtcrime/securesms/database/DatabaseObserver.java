@@ -48,6 +48,8 @@ public class DatabaseObserver {
   private static final String KEY_CALL_LINK_UPDATES = "CallLinkUpdates";
   private static final String KEY_IN_APP_PAYMENTS   = "InAppPayments";
   private static final String KEY_CHAT_FOLDER       = "ChatFolder";
+  private static final String KEY_GROUP_TAGS        = "GroupTags:";
+  private static final String KEY_RECIPIENT_TAGS    = "RecipientTags:";
 
   private final Executor    executor;
 
@@ -71,6 +73,8 @@ public class DatabaseObserver {
   private final Map<CallLinkRoomId, Set<Observer>> callLinkObservers;
   private final Set<InAppPaymentObserver>          inAppPaymentObservers;
   private final Set<Observer>                      chatFolderObservers;
+  private final Map<String, Set<Observer>>         groupTagsObservers;
+  private final Map<RecipientId, Set<Observer>>    recipientTagsObservers;
 
   public DatabaseObserver() {
     this.executor                     = new SerialExecutor(SignalExecutors.BOUNDED);
@@ -94,6 +98,8 @@ public class DatabaseObserver {
     this.callLinkObservers            = new HashMap<>();
     this.inAppPaymentObservers        = new HashSet<>();
     this.chatFolderObservers          = new HashSet<>();
+    this.groupTagsObservers           = new HashMap<>();
+    this.recipientTagsObservers       = new HashMap<>();
   }
 
   public void registerConversationListObserver(@NonNull Observer listener) {
@@ -231,6 +237,8 @@ public class DatabaseObserver {
       callUpdateObservers.remove(listener);
       unregisterMapped(callLinkObservers, listener);
       chatFolderObservers.remove(listener);
+      unregisterMapped(groupTagsObservers, listener);
+      unregisterMapped(recipientTagsObservers, listener);
     });
   }
 
@@ -451,6 +459,36 @@ public class DatabaseObserver {
     } catch (InterruptedException e) {
       throw new AssertionError();
     }
+  }
+
+  public void registerGroupTagsObserver(@NonNull String groupId, @NonNull Observer listener) {
+    executor.execute(() -> {
+      registerMapped(groupTagsObservers, groupId, listener);
+    });
+  }
+
+  public void unregisterGroupTagsObserver(@NonNull String groupId, @NonNull Observer listener) {
+    executor.execute(() -> {
+      unregisterMapped(groupTagsObservers, listener);
+    });
+  }
+
+  public void notifyGroupTagsChanged(@NonNull String groupId) {
+    runPostSuccessfulTransaction(KEY_GROUP_TAGS + groupId, () -> {
+      notifyMapped(groupTagsObservers, groupId);
+    });
+  }
+
+  public void registerRecipientTagsObserver(@NonNull RecipientId recipientId, @NonNull Observer listener) {
+    executor.execute(() -> {
+      registerMapped(recipientTagsObservers, recipientId, listener);
+    });
+  }
+
+  public void notifyRecipientTagsChanged(@NonNull RecipientId recipientId) {
+    runPostSuccessfulTransaction(KEY_RECIPIENT_TAGS + recipientId.serialize(), () -> {
+      notifyMapped(recipientTagsObservers, recipientId);
+    });
   }
 
   public interface Observer {

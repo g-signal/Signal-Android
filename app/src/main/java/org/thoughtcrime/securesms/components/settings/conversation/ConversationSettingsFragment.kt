@@ -60,6 +60,7 @@ import org.thoughtcrime.securesms.components.settings.conversation.preferences.B
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.ButtonStripPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.CallPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.GroupDescriptionPreference
+import org.thoughtcrime.securesms.components.settings.conversation.preferences.GroupIdPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.InternalPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.LargeIconClickPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.LegacyGroupPreference
@@ -98,6 +99,7 @@ import org.thoughtcrime.securesms.stories.viewer.AddToGroupStoryDelegate
 import org.thoughtcrime.securesms.stories.viewer.StoryViewerActivity
 import org.thoughtcrime.securesms.util.CommunicationActions
 import org.thoughtcrime.securesms.util.ContextUtil
+import org.thoughtcrime.securesms.util.Util
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.ExpirationUtil
 import org.thoughtcrime.securesms.util.Material3OnScrollHelper
@@ -238,6 +240,7 @@ class ConversationSettingsFragment : DSLSettingsFragment(
     BioTextPreference.register(adapter)
     AvatarPreference.register(adapter)
     ButtonStripPreference.register(adapter)
+    GroupIdPreference.register(adapter)
     LargeIconClickPreference.register(adapter)
     SharedMediaPreference.register(adapter)
     RecipientPreference.register(adapter)
@@ -364,7 +367,8 @@ class ConversationSettingsFragment : DSLSettingsFragment(
         customPref(
           BioTextPreference.GroupModel(
             groupTitle = groupState.groupTitle,
-            groupMembershipDescription = groupMembershipDescription
+            groupMembershipDescription = groupMembershipDescription,
+            groupId = groupState.groupId.toString()
           )
         )
 
@@ -504,6 +508,20 @@ class ConversationSettingsFragment : DSLSettingsFragment(
         textPref(
           icon = DSLSettingsIcon.from(R.drawable.symbol_bell_20),
           title = DSLSettingsText.from(R.string.ReleaseNotes__keep_up_to_date)
+        )
+        dividerPref()
+      }
+
+      state.withGroupSettingsState { groupState ->
+        val displayGroupId = groupState.groupId.toString().substringAfter("!")
+        customPref(
+          GroupIdPreference.Model(
+            groupId = displayGroupId,
+            onCopyClick = {
+              Util.copyToClipboard(requireContext(), displayGroupId)
+              Toast.makeText(requireContext(), R.string.GroupLinkBottomSheet_copied_to_clipboard, Toast.LENGTH_SHORT).show()
+            }
+          )
         )
         dividerPref()
       }
