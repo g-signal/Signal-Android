@@ -79,7 +79,6 @@ import org.thoughtcrime.securesms.mms.DecryptableUri;
 import org.thoughtcrime.securesms.recipients.LiveRecipient;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.thoughtcrime.securesms.recipients.GextTag;
 import org.thoughtcrime.securesms.search.MessageResult;
 import org.thoughtcrime.securesms.util.ContextUtil;
 import org.thoughtcrime.securesms.util.DateUtils;
@@ -98,7 +97,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -860,5 +858,4 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
       updateTypingIndicator(typingThreads);
     }
   }
-
 }
