@@ -309,10 +309,8 @@ android {
         "proguard/proguard-mobilecoin.pro",
         "proguard/proguard-retrolambda.pro",
         "proguard/proguard-okhttp.pro",
-        "proguard/proguard.cfg",
-
-        "proguard/proguard-ez-vcard.pro"
-
+        "proguard/proguard-ez-vcard.pro",
+        "proguard/proguard.cfg"
       )
       testProguardFiles(
         "proguard/proguard-automation.pro",
