@@ -119,7 +119,6 @@ object S3 {
   @JvmStatic
   @Throws(IOException::class)
   fun getObject(endpoint: String): Response {
-
     val request = Request.Builder()
       .get()
       .url(s3Url(endpoint))
@@ -139,8 +138,6 @@ object S3 {
     }
 
     try {
-
-
       getObject(endpoint).use { response ->
         if (!response.isSuccessful) {
           return ServiceResponse.forApplicationError(
@@ -274,7 +271,6 @@ object S3 {
   @VisibleForTesting
   fun s3Url(path: String): URL {
     try {
-      Log.w(TAG, URI("https", "s3.us-west-2.amazonaws.com", path, null).toURL().toString())
       return URI("https", "s3.us-west-2.amazonaws.com", path, null).toURL()
     } catch (e: URISyntaxException) {
       throw IOException(e)

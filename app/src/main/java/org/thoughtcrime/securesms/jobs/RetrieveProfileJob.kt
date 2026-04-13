@@ -135,12 +135,6 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     }
     stopwatch.split("responses")
 
-//    Log.d(TAG, "onRun: fetchProfiles completed. successes=${response.successes.size}, retryableFailures=${response.retryableFailures.size}, unregistered=${response.unregistered.size}")
-    response.successes.forEach { pair ->
-      val gextTags = pair.profileWithCredential.profile.gextTags
-//      Log.d(TAG, "onRun: profile response for recipientId=${pair.id}, gextTags=${if (gextTags == null) "null" else "${gextTags.size} tag(s): ${gextTags.map { it.tagId }}"}")
-    }
-
     val localRecords = SignalDatabase.recipients.getExistingRecords(fetchingRecipientIds)
     Log.d(TAG, "Fetched ${localRecords.size} existing records.")
     stopwatch.split("disk-fetch")
@@ -290,7 +284,6 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
 
   private fun process(recipient: Recipient, profileAndCredential: SignalServiceProfileWithCredential) {
     val (profile, expiringCredential) = profileAndCredential
-//    Log.d(TAG, "process: start for recipientId=${recipient.id}, gextTags=${if (profile.gextTags == null) "null" else "${profile.gextTags.size} tag(s)"}")
     val recipientProfileKey = ProfileKeyUtil.profileKeyOrNull(recipient.profileKey)
     val wroteNewProfileName = setProfileName(recipient, profile.name)
 

@@ -13,7 +13,6 @@ import org.whispersystems.signalservice.api.websocket.WebSocketConnectionState;
 import org.whispersystems.signalservice.internal.configuration.SignalProxy;
 import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration;
 import org.whispersystems.signalservice.internal.configuration.SignalServiceUrl;
-import org.whispersystems.signalservice.internal.push.http.TrustAllCerts;
 import org.whispersystems.signalservice.internal.util.BlacklistingTrustManager;
 import org.whispersystems.signalservice.internal.util.Util;
 
@@ -394,7 +393,6 @@ public class OkHttpWebSocketConnection extends WebSocketListener implements WebS
     try {
       SSLContext     context       = SSLContext.getInstance("TLS");
       TrustManager[] trustManagers = BlacklistingTrustManager.createFor(trustStore);
-//      TrustManager[] trustManagers = new TrustManager[] { new TrustAllCerts() };
       context.init(null, trustManagers, null);
 
       return new Pair<>(context.getSocketFactory(), (X509TrustManager) trustManagers[0]);

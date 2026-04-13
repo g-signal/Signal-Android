@@ -321,7 +321,7 @@ class RegistrationViewModel : ViewModel() {
 
   fun requestSmsCode(context: Context) {
     val e164 = getCurrentE164() ?: return bail { Log.i(TAG, "Phone number was null after confirmation.") }
-    Log.i(TAG, "Phone number was null after confirmation."+e164)
+
     viewModelScope.launch {
       val validSession = getOrCreateValidSession(context) ?: return@launch bail { Log.i(TAG, "Could not create valid session for requesting an SMS code.") }
       requestSmsCodeInternal(context, validSession.sessionId, e164)
