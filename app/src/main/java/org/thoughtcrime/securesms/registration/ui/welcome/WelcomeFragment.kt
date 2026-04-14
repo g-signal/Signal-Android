@@ -34,6 +34,7 @@ import org.thoughtcrime.securesms.util.navigation.safeNavigate
  * First screen that is displayed on the very first app launch.
  */
 class WelcomeFragment : LoggingFragment(R.layout.fragment_registration_welcome) {
+  private val TAG = Log.tag(WelcomeFragment::class.java)
   private val sharedViewModel by activityViewModels<RegistrationViewModel>()
   private val binding: FragmentRegistrationWelcomeBinding by ViewBinderDelegate(FragmentRegistrationWelcomeBinding::bind)
 
