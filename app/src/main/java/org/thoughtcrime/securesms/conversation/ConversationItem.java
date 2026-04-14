@@ -1881,23 +1881,6 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private void setGroupMessageStatus(MessageRecord messageRecord, Recipient recipient) {
     if (groupThread && !messageRecord.isOutgoing() && groupSender != null) {
       groupSender.setText(recipient.getDisplayName(getContext()));
-
-      if (groupSenderGextTags != null) {
-        groupSenderGextTags.clear();
-        Log.d(TAG, "setGroupMessageStatus: loading tags for recipientId=" + recipient.getId());
-        Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(recipient.getId()))
-              .subscribeOn(Schedulers.io())
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(
-                tags -> {
-                  Log.d(TAG, "setGroupMessageStatus: got " + tags.size() + " tags for recipientId=" + recipient.getId());
-                  groupSenderGextTags.bind(tags, (int) groupSender.getTextSize());
-                },
-                error -> Log.w(TAG, "setGroupMessageStatus: failed to load tags for " + recipient.getId(), error)
-              );
-      } else {
-        Log.w(TAG, "setGroupMessageStatus: groupSenderGextTags is null for recipientId=" + recipient.getId());
-      }
     }
   }
 

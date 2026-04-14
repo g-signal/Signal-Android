@@ -74,14 +74,14 @@ If your pull request follows all of the advice above but still has not been merg
 ## How can I contribute?
 There are several other ways to get involved:
 * Help new users learn about Signal.
-  * Redirect support questions to support@baxs.com and the [Signal Support Center](https://support.signal.org/).
-  * Redirect non-bug discussions to the [community forum](https://community.signalusers.org).
-* Improve documentation in the [wiki](https://github.com/signalapp/Signal-Android/wiki).
+  * Redirect support questions to support@baxs.com and the [Signal Support Center](https://ba-chat.com/).
+  * Redirect non-bug discussions to the [community forum](https://ba-chat.com/).
+* Improve documentation in the [wiki](https://ba-chat.com/).
 * Find and mark duplicate issues.
 * Try to reproduce issues and help with troubleshooting.
 * Discover solutions to open issues and post any relevant findings.
 * Test other people's pull requests.
-* [Donate to Signal.](https://signal.org/donate/)
+* [Donate to Signal.](https://ba-chat.com/)
 * Share Signal with your friends and family.
 
 Signal is made for you. Thank you for your feedback and support.

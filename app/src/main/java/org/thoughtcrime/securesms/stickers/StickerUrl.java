@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.stickers;
 
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,6 +52,7 @@ public class StickerUrl {
     if (url == null) return Optional.empty();
 
     Matcher matcher = STICKER_URL_PATTERN.matcher(url);
+
     if (matcher.matches() && matcher.groupCount() == 2) {
       String packId  = matcher.group(1);
       String packKey = matcher.group(2);

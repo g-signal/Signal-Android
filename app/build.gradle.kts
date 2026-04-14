@@ -22,7 +22,7 @@ plugins {
 }
 
 apply(from = "static-ips.gradle.kts")
-//val canonicalVersionName = "1.0.0"
+
 val canonicalVersionCode = 1569
 val canonicalVersionName = "7.51.12"
 val currentHotfixVersion = 2
@@ -35,6 +35,7 @@ val keystores: Map<String, Properties?> = mapOf(
 )
 
 val selectableVariants = listOf(
+  "nightlyBackupRelease",
   "nightlyBackupSpinner",
   "nightlyProdSpinner",
   "nightlyProdPerf",
@@ -87,7 +88,6 @@ ktlint {
 
 android {
   namespace = "org.thoughtcrime.securesms"
-//  namespace = "group.ba.voiceapp"
 
   buildToolsVersion = signalBuildToolsVersion
   compileSdkVersion = signalCompileSdkVersion
@@ -267,6 +267,7 @@ android {
     buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_live_6cmGZopuTsV8novGgJJW9JpC00vLIgtQ1D\"")
     buildConfigField("boolean", "TRACING_ENABLED", "false")
     buildConfigField("boolean", "MESSAGE_BACKUP_RESTORE_ENABLED", "false")
+
     ndk {
       abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
     }
@@ -592,6 +593,7 @@ dependencies {
   implementation(libs.firebase.messaging) {
     exclude(group = "com.google.firebase", module = "firebase-core")
     exclude(group = "com.google.firebase", module = "firebase-analytics")
+    exclude(group = "com.google.firebase", module = "firebase-measurement-connector")
   }
   implementation(libs.google.play.services.maps)
   implementation(libs.google.play.services.auth)
