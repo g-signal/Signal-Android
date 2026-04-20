@@ -253,7 +253,6 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
     if (!thread.getRecipient().isGroup()) {
       RecipientId gextRecipientId = thread.getRecipient().getId();
       Log.d(TAG, "bindThread: [GExtTags] querying for individual recipientId=" + gextRecipientId);
-      System.out.println("[ConversationListItem] recipientId=" + gextRecipientId + ", aci=" + thread.getRecipient().requireAci() + ", name=" + thread.getRecipient().getDisplayName(getContext()));
       gextTagsDisposable = RxDatabaseObserver.INSTANCE.recipientTags(gextRecipientId)
             .flatMapSingle(ignored -> Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId)))
             .subscribeOn(Schedulers.io())
