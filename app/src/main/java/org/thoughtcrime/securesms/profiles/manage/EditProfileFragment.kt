@@ -146,8 +146,10 @@ class EditProfileFragment : LoggingFragment() {
       }
     }
 
+
     // 隐藏徽章入口
     /*
+
     binding.manageProfileBadgesContainer.setOnClickListener { v: View ->
       if (!viewModel.isRegisteredAndUpToDate) {
         onClickWhenUnregisteredOrDeprecated()
@@ -159,6 +161,7 @@ class EditProfileFragment : LoggingFragment() {
     }
     */
     binding.manageProfileBadgesContainer.visibility = View.GONE
+
 
     binding.manageProfileAvatar.setOnClickListener {
       if (!viewModel.isRegisteredAndUpToDate) {
@@ -173,6 +176,7 @@ class EditProfileFragment : LoggingFragment() {
 
     // 隐藏个人资料说明中的"了解更多"链接
     binding.groupDescriptionText.setLearnMoreVisible(false)
+
   }
 
   private fun initializeViewModel() {

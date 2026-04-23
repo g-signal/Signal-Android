@@ -49,7 +49,6 @@ object AvatarPreference {
     }
 
     override fun bind(model: Model) {
-//<<<<<<< HEAD
       // if (model.recipient.isSelf) {
         badge.setBadge(null)
         badge.setOnClickListener(null)
@@ -62,7 +61,6 @@ object AvatarPreference {
       //     }
       //   }
       // }
-
 
       avatar.setStoryRingFromState(model.storyViewState)
       avatar.displayChatAvatar(model.recipient)

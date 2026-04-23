@@ -52,7 +52,6 @@ public class StickerUrl {
     if (url == null) return Optional.empty();
 
     Matcher matcher = STICKER_URL_PATTERN.matcher(url);
-
     if (matcher.matches() && matcher.groupCount() == 2) {
       String packId  = matcher.group(1);
       String packKey = matcher.group(2);

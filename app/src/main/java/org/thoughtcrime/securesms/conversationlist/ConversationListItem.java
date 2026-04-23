@@ -252,7 +252,6 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
 
     if (!thread.getRecipient().isGroup()) {
       RecipientId gextRecipientId = thread.getRecipient().getId();
-      Log.d(TAG, "bindThread: [GExtTags] querying for individual recipientId=" + gextRecipientId);
       gextTagsDisposable = RxDatabaseObserver.INSTANCE.recipientTags(gextRecipientId)
             .flatMapSingle(ignored -> Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId)))
             .subscribeOn(Schedulers.io())
@@ -263,7 +262,6 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
             );
     } else {
       String groupId = thread.getRecipient().getGroupId().get().toString();
-      Log.d(TAG, "bindThread: [GExtTags] querying for group groupId=" + groupId);
       gextTagsDisposable = RxDatabaseObserver.INSTANCE.groupTags(groupId)
             .flatMapSingle(ignored -> Single.fromCallable(() -> SignalDatabase.gExtGroups().getGroupTags(groupId)))
             .subscribeOn(Schedulers.io())
