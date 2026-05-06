@@ -405,7 +405,6 @@ class LinkDeviceViewModel : ViewModel() {
         }
       }
       LinkDeviceRepository.LinkUploadArchiveResult.BackupCreationCancelled -> {
-        Log.i(TAG, "[addDeviceWithSync] Cancelling archive upload")
         _state.update {
           it.copy(
             dialogState = DialogState.None

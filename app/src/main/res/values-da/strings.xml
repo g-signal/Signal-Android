@@ -2680,7 +2680,7 @@
     <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">Du vil modtage et opkald for at bekræfte dette nummer.</string>
     <string name="RegistrationActivity_edit_number">Redigér nummer</string>
     <string name="RegistrationActivity_missing_google_play_services">Mangler Google Play-tjenester</string>
-    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Enheden mangler Google Play-tjenester. Du kan stadig bruge Signal, men denne konfiguration kan resultere i begrænset stabilitet og ydeevne.\n\nHvis du ikke er en superbruger, ikke kører en alternativ Android ROM eller mener, at du ser denne besked ved en fejl, bedes du kontakte support@baxs.com på engelsk for hjælp.</string>
+    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Enheden mangler Google Play-tjenester. Du kan stadig bruge BA, men denne konfiguration kan resultere i begrænset stabilitet og ydeevne.\n\nHvis du ikke er en superbruger, ikke kører en alternativ Android ROM eller mener, at du ser denne besked ved en fejl, bedes du kontakte support@baxs.com på engelsk for hjælp.</string>
     <string name="RegistrationActivity_i_understand">Forstået</string>
     <string name="RegistrationActivity_play_services_error">Play Services fejl</string>
     <string name="RegistrationActivity_google_play_services_is_updating_or_unavailable">Google Play-tjenester opdateres eller er midlertidigt utilgængelig. Prøv venligst igen.</string>
@@ -8457,7 +8457,7 @@
     <!-- Primary action button label without a current selection -->
     <string name="MessageBackupsTypeSelectionScreen__subscribe">Abonner</string>
     <!-- Primary action button label when selecting the free backup tier without a current selection -->
-    <string name="MessageBackupsTypeSelectionScreen__choose_free_plan">Choose free plan</string>
+    <string name="MessageBackupsTypeSelectionScreen__choose_free_plan">Vælg gratis sikkerhedskopiabonnement</string>
     <!-- Primary action button label when selecting the paid backup tier without a current selection -->
     <string name="MessageBackupsTypeSelectionScreen__subscribe_for_x_month">Abonner for %1$s/måned</string>
     <!-- Primary action button label when selecting a backup tier with a current selection -->

@@ -96,7 +96,7 @@ object ContactDiscoveryRefreshV2 {
       newE164s = setOf(e164),
       serviceIds = SignalDatabase.recipients.getAllServiceIdProfileKeyPairs(),
       token = Optional.empty(),
-      timeoutMs = 10_000,
+      timeoutMs = 30_000,
       libsignalNetwork = AppDependencies.libsignalNetwork
     ) {
       Log.i(TAG, "Ignoring token for one-off lookup.")

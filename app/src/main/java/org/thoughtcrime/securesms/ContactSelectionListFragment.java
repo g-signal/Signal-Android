@@ -628,7 +628,7 @@ public final class ContactSelectionListFragment extends LoggingFragment {
       @Override
       protected Boolean doInBackground(Void... voids) {
         try {
-          ContactDiscovery.refreshAll(context, false, 60_000L);
+          ContactDiscovery.refreshAll(context, false);
           return true;
         } catch (IOException e) {
           Log.w(TAG, e);

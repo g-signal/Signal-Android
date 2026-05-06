@@ -91,11 +91,6 @@ public class HelpFragment extends LoggingFragment {
     categorySpinner  = view.findViewById(R.id.help_fragment_category);
     emoji            = new ArrayList<>(Feeling.values().length);
 
-    // 隐藏常见问题和调试日志入口
-    if (faq != null) faq.setVisibility(View.GONE);
-    if (debugLogInfo != null) debugLogInfo.setVisibility(View.GONE);
-    if (includeDebugLogs != null) includeDebugLogs.setVisibility(View.GONE);
-
     for (Feeling feeling : Feeling.values()) {
       EmojiImageView emojiView = view.findViewById(feeling.getViewId());
       emojiView.setImageEmoji(feeling.getEmojiCode());
@@ -116,9 +111,8 @@ public class HelpFragment extends LoggingFragment {
   private void initializeListeners() {
     problem.addTextChangedListener(new AfterTextChanged(e -> helpViewModel.onProblemChanged(e.toString())));
     Stream.of(emoji).forEach(view -> view.setOnClickListener(this::handleEmojiClicked));
-    // 隐藏常见问题和调试日志入口的点击事件
-    // faq.setOnClickListener(v -> launchFaq());
-    // debugLogInfo.setOnClickListener(v -> launchDebugLogInfo());
+    faq.setOnClickListener(v -> launchFaq());
+    debugLogInfo.setOnClickListener(v -> launchDebugLogInfo());
     next.setOnClickListener(v -> submitForm());
     toaster.setOnClickListener(v -> {
       if (helpViewModel.getCategoryIndex() == 0) {
@@ -179,8 +173,7 @@ public class HelpFragment extends LoggingFragment {
     next.setSpinning();
     problem.setEnabled(false);
 
-    // 隐藏调试日志功能，总是传递 false
-    helpViewModel.onSubmitClicked(false).observe(getViewLifecycleOwner(), result -> {
+    helpViewModel.onSubmitClicked(includeDebugLogs.isChecked()).observe(getViewLifecycleOwner(), result -> {
       if (result.getDebugLogUrl().isPresent()) {
         submitFormWithDebugLog(result.getDebugLogUrl().get());
       } else if (result.isError()) {

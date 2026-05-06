@@ -2856,7 +2856,7 @@
     <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">Primit ćete poziv da potvrdite ovaj broj.</string>
     <string name="RegistrationActivity_edit_number">Ispravite broj</string>
     <string name="RegistrationActivity_missing_google_play_services">Nedostaju Google Play Services</string>
-    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Na ovom uređaju nisu instalirani Google Play Services. I dalje ćete moći koristiti Signal, ali ova konfiguracija može dovesti do manje pouzdanosti i lošijih performansi.\n\nAko niste napredni korisnik, ako nemate ručno instaliranu verziju Android ROM-a ili smatrate da je ova poruka greška, molimo kontaktirajte support@baxs.com za pomoć.</string>
+    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Na ovom uređaju nisu instalirani Google Play Services. I dalje ćete moći koristiti BA, ali ova konfiguracija može dovesti do manje pouzdanosti i lošijih performansi.\n\nAko niste napredni korisnik, ako nemate ručno instaliranu verziju Android ROM-a ili smatrate da je ova poruka greška, molimo kontaktirajte support@baxs.com za pomoć.</string>
     <string name="RegistrationActivity_i_understand">Razumijem</string>
     <string name="RegistrationActivity_play_services_error">Play Services greška</string>
     <string name="RegistrationActivity_google_play_services_is_updating_or_unavailable">Google Play Services se ažuriraju ili su privremeno nedostupni. Pokušajte ponovo.</string>
@@ -8817,7 +8817,7 @@
     <!-- Primary action button label without a current selection -->
     <string name="MessageBackupsTypeSelectionScreen__subscribe">Pretplati se</string>
     <!-- Primary action button label when selecting the free backup tier without a current selection -->
-    <string name="MessageBackupsTypeSelectionScreen__choose_free_plan">Choose free plan</string>
+    <string name="MessageBackupsTypeSelectionScreen__choose_free_plan">Odaberi besplatni paket</string>
     <!-- Primary action button label when selecting the paid backup tier without a current selection -->
     <string name="MessageBackupsTypeSelectionScreen__subscribe_for_x_month">Pretplatite se za %1$s mjesečno</string>
     <!-- Primary action button label when selecting a backup tier with a current selection -->

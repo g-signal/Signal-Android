@@ -214,7 +214,6 @@ import org.thoughtcrime.securesms.conversation.v2.keyboard.AttachmentKeyboardFra
 import org.thoughtcrime.securesms.database.AttachmentTable
 import org.thoughtcrime.securesms.database.DraftTable
 import org.thoughtcrime.securesms.database.SignalDatabase
-import org.thoughtcrime.securesms.recipients.GextTag
 import org.thoughtcrime.securesms.database.model.IdentityRecord
 import org.thoughtcrime.securesms.database.model.InMemoryMessageRecord
 import org.thoughtcrime.securesms.database.model.Mention

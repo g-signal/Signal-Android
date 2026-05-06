@@ -79,7 +79,6 @@ import org.thoughtcrime.securesms.mms.DecryptableUri;
 import org.thoughtcrime.securesms.recipients.LiveRecipient;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.thoughtcrime.securesms.recipients.GextTag;
 import org.thoughtcrime.securesms.search.MessageResult;
 import org.thoughtcrime.securesms.util.ContextUtil;
 import org.thoughtcrime.securesms.util.DateUtils;
@@ -98,7 +97,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -254,8 +252,6 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
 
     if (!thread.getRecipient().isGroup()) {
       RecipientId gextRecipientId = thread.getRecipient().getId();
-      Log.d(TAG, "bindThread: [GExtTags] querying for individual recipientId=" + gextRecipientId);
-      System.out.println("[ConversationListItem] recipientId=" + gextRecipientId + ", aci=" + thread.getRecipient().requireAci() + ", name=" + thread.getRecipient().getDisplayName(getContext()));
       gextTagsDisposable = RxDatabaseObserver.INSTANCE.recipientTags(gextRecipientId)
             .flatMapSingle(ignored -> Single.fromCallable(() -> SignalDatabase.gExtRecipients().getGextTags(gextRecipientId)))
             .subscribeOn(Schedulers.io())
@@ -266,7 +262,6 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
             );
     } else {
       String groupId = thread.getRecipient().getGroupId().get().toString();
-      Log.d(TAG, "bindThread: [GExtTags] querying for group groupId=" + groupId);
       gextTagsDisposable = RxDatabaseObserver.INSTANCE.groupTags(groupId)
             .flatMapSingle(ignored -> Single.fromCallable(() -> SignalDatabase.gExtGroups().getGroupTags(groupId)))
             .subscribeOn(Schedulers.io())
@@ -860,5 +855,4 @@ public final class ConversationListItem extends ConstraintLayout implements Bind
       updateTypingIndicator(typingThreads);
     }
   }
-
 }

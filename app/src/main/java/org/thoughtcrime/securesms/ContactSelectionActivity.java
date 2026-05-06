@@ -157,7 +157,7 @@ public abstract class ContactSelectionActivity extends PassphraseRequiredActivit
     @Override
     protected Void doInBackground(Context... params) {
       try {
-        ContactDiscovery.refreshAll(params[0], true, 60_000L);
+        ContactDiscovery.refreshAll(params[0], true);
       } catch (IOException e) {
         Log.w(TAG, e);
       }

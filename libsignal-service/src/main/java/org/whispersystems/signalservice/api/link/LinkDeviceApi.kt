@@ -7,7 +7,6 @@ package org.whispersystems.signalservice.api.link
 
 import okio.ByteString.Companion.toByteString
 import org.signal.core.util.Base64.encodeWithPadding
-import org.signal.core.util.logging.Log
 import org.signal.core.util.urlEncode
 import org.signal.libsignal.protocol.IdentityKeyPair
 import org.signal.libsignal.protocol.ecc.ECPublicKey
@@ -149,8 +148,6 @@ class LinkDeviceApi(
    */
   fun waitForLinkedDevice(token: String, timeout: Duration = 30.seconds): NetworkResult<WaitForLinkedDeviceResponse> {
     val request = WebSocketRequestMessage.get("/v1/devices/wait_for_linked_device/${token.urlEncode()}?timeout=${timeout.inWholeSeconds}")
-    Log.d("wait_for_linked_device", "/v1/devices/wait_for_linked_device/${token.urlEncode()}?timeout=${timeout.inWholeSeconds}")
-
     return NetworkResult
       .fromWebSocketRequest(
         signalWebSocket = authWebSocket,

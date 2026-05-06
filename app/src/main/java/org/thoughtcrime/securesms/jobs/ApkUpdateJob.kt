@@ -161,8 +161,8 @@ class ApkUpdateJob private constructor(parameters: Parameters) : BaseJob(paramet
 
     val downloadRequest = DownloadManager.Request(Uri.parse(uri)).apply {
       setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
-      setTitle("Downloading Signal update")
-      setDescription("Downloading Signal $versionName")
+      setTitle("Downloading B&A update")
+      setDescription("Downloading B&A $versionName")
       setDestinationInExternalFilesDir(context, null, "baxs-update.apk")
       setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
     }

@@ -2680,7 +2680,7 @@
     <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">Recibirás una llamada para verificar este número.</string>
     <string name="RegistrationActivity_edit_number">Editar número</string>
     <string name="RegistrationActivity_missing_google_play_services">Servicios de Google Play no instalados</string>
-    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Este dispositivo no dispone de los Servicios de Google Play. Puedes seguir usando Signal, pero esta configuración puede generar una fiabilidad o un rendimiento limitados.\n\nSi no tienes experiencia como usuario, no estás ejecutando una ROM personalizada de Android, o crees que estás viendo esto por error, contacta con support@baxs.com para solucionar el problema.</string>
+    <string name="RegistrationActivity_this_device_is_missing_google_play_services">Este dispositivo no dispone de los Servicios de Google Play. Puedes seguir usando BA, pero esta configuración puede generar una fiabilidad o un rendimiento limitados.\n\nSi no tienes experiencia como usuario, no estás ejecutando una ROM personalizada de Android, o crees que estás viendo esto por error, contacta con support@baxs.com para solucionar el problema.</string>
     <string name="RegistrationActivity_i_understand">Entendido</string>
     <string name="RegistrationActivity_play_services_error">Error de Servicios de Google Play</string>
     <string name="RegistrationActivity_google_play_services_is_updating_or_unavailable">Servicios de Google Play se está actualizando o está temporalmente no disponible. Inténtalo de nuevo.</string>
@@ -8457,7 +8457,7 @@
     <!-- Primary action button label without a current selection -->
     <string name="MessageBackupsTypeSelectionScreen__subscribe">Subscribirme</string>
     <!-- Primary action button label when selecting the free backup tier without a current selection -->
-    <string name="MessageBackupsTypeSelectionScreen__choose_free_plan">Choose free plan</string>
+    <string name="MessageBackupsTypeSelectionScreen__choose_free_plan">Elegir plan gratuito</string>
     <!-- Primary action button label when selecting the paid backup tier without a current selection -->
     <string name="MessageBackupsTypeSelectionScreen__subscribe_for_x_month">Suscribirme por %1$s/mes</string>
     <!-- Primary action button label when selecting a backup tier with a current selection -->
