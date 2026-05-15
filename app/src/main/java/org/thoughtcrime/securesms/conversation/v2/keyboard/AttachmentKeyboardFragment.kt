@@ -26,7 +26,12 @@ import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.mediasend.Media
 import org.thoughtcrime.securesms.permissions.PermissionCompat
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.database.SignalDatabase
+import org.thoughtcrime.securesms.recipients.GextRobot
 import org.thoughtcrime.securesms.recipients.Recipient
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.Optional
 import java.util.function.Predicate
 
 /**
@@ -127,15 +132,45 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
   }
 
   private fun updatePaymentsAvailable(recipient: Recipient) {
+    // 异步查 robot/msgButtonVisible，结合 payment 规则一起 filter
+    Single.fromCallable<Optional<GextRobot>> {
+      Optional.ofNullable(SignalDatabase.gExtRecipients.getRobot(recipient.id))
+    }
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribeBy(
+        onSuccess = { robotOpt: Optional<GextRobot> ->
+          val robot = robotOpt.orElse(null)
+          val mv = if (robot?.robot == true) robot.msgButtonVisible else null
+          applyButtonFilter(recipient, mv)
+        },
+        onError = {
+          // 查询异常 → 按非机器人降级（默认全显），避免崩溃。
+          applyButtonFilter(recipient, null)
+        }
+      )
+      .addTo(lifecycleDisposable)
+
+    // 先用一次同步规则，避免等异步回来期间按钮闪
+    applyButtonFilter(recipient, null)
+  }
+
+  private fun applyButtonFilter(recipient: Recipient, mv: GextRobot.MsgButtonVisible?) {
     val paymentsValues = SignalStore.payments
-    if (paymentsValues.paymentsAvailability.isSendAllowed &&
+    val paymentAllowed = paymentsValues.paymentsAvailability.isSendAllowed &&
       !recipient.isSelf &&
       !recipient.isGroup &&
       recipient.isRegistered
-    ) {
-      attachmentKeyboardView.filterAttachmentKeyboardButtons(null)
-    } else {
-      attachmentKeyboardView.filterAttachmentKeyboardButtons(removePaymentFilter)
+
+    val predicate = Predicate<AttachmentKeyboardButton> { button ->
+      when (button) {
+        AttachmentKeyboardButton.PAYMENT -> paymentAllowed && (mv == null || mv.payment)
+        AttachmentKeyboardButton.GALLERY -> mv == null || mv.photos
+        AttachmentKeyboardButton.FILE -> mv == null || mv.file
+        AttachmentKeyboardButton.CONTACT -> mv == null || mv.contact
+        AttachmentKeyboardButton.LOCATION -> mv == null || mv.location
+      }
     }
+    attachmentKeyboardView.filterAttachmentKeyboardButtons(predicate)
   }
 }

@@ -31,6 +31,7 @@ import org.thoughtcrime.securesms.net.SignalNetwork
 import org.thoughtcrime.securesms.notifications.v2.ConversationId.Companion.forConversation
 import org.thoughtcrime.securesms.profiles.ProfileName
 import org.thoughtcrime.securesms.recipients.Recipient
+import org.thoughtcrime.securesms.recipients.GextRobot
 import org.thoughtcrime.securesms.recipients.GextTag
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.recipients.RecipientUtil
@@ -49,7 +50,6 @@ import org.whispersystems.signalservice.api.profiles.SignalServiceProfile
 import org.whispersystems.signalservice.api.util.ExpiringProfileCredentialUtil
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration.Companion.minutes
 
 /**
  * Retrieves a users profile and sets the appropriate local fields.
@@ -97,19 +97,15 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
 
     stopwatch.split("resolve-ensure")
 
-    val currentTime = System.currentTimeMillis()
-    val debounceThreshold = currentTime - PROFILE_FETCH_DEBOUNCE_TIME_MS
-    val recipientsToFetch = recipients.filter { recipient ->
-      recipient.hasServiceId && recipient.lastProfileFetchTime < debounceThreshold
-    }
+    val recipientsToFetch = recipients.filter { it.hasServiceId }
 
     if (recipientsToFetch.isEmpty()) {
-      Log.i(TAG, "All ${recipients.size} recipients have been fetched recently (within ${PROFILE_FETCH_DEBOUNCE_TIME_MS}ms). Skipping network requests.")
+      Log.i(TAG, "None of the ${recipients.size} recipients have a service id. Skipping network requests.")
       return
     }
 
     if (recipientsToFetch.size < recipients.size) {
-      Log.i(TAG, "Debouncing: Fetching ${recipientsToFetch.size} of ${recipients.size} recipients (${recipients.size - recipientsToFetch.size} were fetched recently)")
+      Log.i(TAG, "Fetching ${recipientsToFetch.size} of ${recipients.size} recipients (${recipients.size - recipientsToFetch.size} have no service id)")
     }
 
     val fetchingRecipientIds = recipientsToFetch.map { it.id }.toSet()
@@ -134,6 +130,28 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
       }
     }
     stopwatch.split("responses")
+
+    android.util.Log.i(TAG, "[NetResp] successes=${response.successes.size} unregistered=${response.unregistered.size} retryable=${response.retryableFailures.size} retryAfter=${response.retryAfter}")
+    response.successes.forEach { pair ->
+      val p = pair.profileWithCredential.profile
+      android.util.Log.i(
+        TAG,
+        "[NetResp] id=${pair.id} aci=${runCatching { p.serviceId?.toString() }.getOrNull()} " +
+          "identityKey=${if (p.identityKey.isNullOrBlank()) "none" else "len=${p.identityKey.length}"} " +
+          // name/about/phoneNumberSharing are ciphertext — masked
+          "name=${if (p.name.isNullOrBlank()) "null" else "<redacted>"} " +
+          "about=${if (p.about.isNullOrBlank()) "null" else "<redacted>"} " +
+          "avatar=${p.avatar} " +
+          "badges=${p.badges.size} " +
+          "capabilities=${p.capabilities} " +
+          "unrestrictedUD=${p.isUnrestrictedUnidentifiedAccess} " +
+          "phoneNumberSharing=${if (p.phoneNumberSharing.isNullOrBlank()) "null" else "<redacted>"} " +
+          "gextTags=${p.gextTags?.size ?: 0} " +
+          "hasCredential=${pair.profileWithCredential.credential != null}"
+      )
+    }
+    response.unregistered.forEach { Log.i(TAG, "[NetResp] unregistered id=$it") }
+    response.retryableFailures.forEach { Log.i(TAG, "[NetResp] retryable id=$it") }
 
     val localRecords = SignalDatabase.recipients.getExistingRecords(fetchingRecipientIds)
     Log.d(TAG, "Fetched ${localRecords.size} existing records.")
@@ -254,6 +272,17 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
       return true
     }
 
+    // 比对策略：
+    //   remote != null：映射后与本地对比，不同则 changed。
+    //   remote == null && stored != null：服务端撤回，本地需清除 → changed（让 process 走 clearRobot）。
+    //   remote == null && stored == null：保持不变。
+    val remoteGextRobot = remoteProfile.gextRobot?.let { mapToGextRobot(it) }
+    val storedGextRobot = SignalDatabase.gExtRecipients.getRobot(localRecipientRecord.id)
+    if (storedGextRobot != remoteGextRobot) {
+      Log.d(TAG, "isUpdated: gextRobot changed for ${localRecipientRecord.id}, stored=$storedGextRobot remote=$remoteGextRobot")
+      return true
+    }
+
     if (profileKey == null) {
       return false
     }
@@ -283,6 +312,70 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
   }
 
   private fun process(recipient: Recipient, profileAndCredential: SignalServiceProfileWithCredential) {
+    android.util.Log.i(
+      TAG,
+      "process: recipient dump\n" +
+        "  id=${recipient.id}\n" +
+        "  isResolving=${recipient.isResolving}\n" +
+        "  isSelf=${recipient.isSelf}\n" +
+        "  isBlocked=${recipient.isBlocked}\n" +
+        "  isGroup=${recipient.isGroup}\n" +
+        "  isIndividual=${recipient.isIndividual}\n" +
+        "  isReleaseNotes=${recipient.isReleaseNotes}\n" +
+        "  isDistributionList=${recipient.isDistributionList}\n" +
+        "  isHidden=${recipient.isHidden}\n" +
+        "  isSystemContact=${recipient.isSystemContact}\n" +
+        "  isProfileSharing=${recipient.isProfileSharing}\n" +
+        "  registered=${recipient.registered}\n" +
+        "  isRegistered=${recipient.isRegistered}\n" +
+        "  isMaybeRegistered=${recipient.isMaybeRegistered}\n" +
+        "  isUnregistered=${recipient.isUnregistered}\n" +
+        "  aci=${recipient.aci.orElse(null)}\n" +
+        "  pni=${recipient.pni.orElse(null)}\n" +
+        "  serviceId=${recipient.serviceId.orElse(null)}\n" +
+        "  hasAci=${recipient.hasAci}\n" +
+        "  hasPni=${recipient.hasPni}\n" +
+        "  hasServiceId=${recipient.hasServiceId}\n" +
+        "  e164=${recipient.e164.orElse(null)}\n" +
+        "  hasE164=${recipient.hasE164}\n" +
+        "  shouldShowE164=${recipient.shouldShowE164}\n" +
+        "  email=${recipient.email.orElse(null)}\n" +
+        "  username=${recipient.username.orElse(null)}\n" +
+        "  groupId=${recipient.groupId.orElse(null)}\n" +
+        "  distributionListId=${recipient.distributionListId.orElse(null)}\n" +
+        "  profileName=${recipient.profileName}\n" +
+        "  nickname=${recipient.nickname}\n" +
+        "  profileAvatar=${recipient.profileAvatar}\n" +
+        "  profileAvatarFileDetails=${recipient.profileAvatarFileDetails}\n" +
+        "  hasAvatar=${recipient.hasAvatar}\n" +
+        "  avatarColor=${recipient.avatarColor}\n" +
+        "  about=${recipient.about}\n" +
+        "  aboutEmoji=${recipient.aboutEmoji}\n" +
+        "  note=${recipient.note}\n" +
+        "  badges=${recipient.badges.size}\n" +
+        "  profileKey=${if (recipient.profileKey == null) "null" else "len=${recipient.profileKey!!.size}"}\n" +
+        "  expiringProfileKeyCredential=${recipient.expiringProfileKeyCredential != null}\n" +
+        "  lastProfileFetchTime=${recipient.lastProfileFetchTime}\n" +
+        "  storageId=${if (recipient.storageId == null) "null" else "len=${recipient.storageId!!.size}"}\n" +
+        "  contactUri=${recipient.contactUri}\n" +
+        "  muteUntil=${recipient.muteUntil}\n" +
+        "  isMuted=${recipient.isMuted}\n" +
+        "  messageVibrate=${recipient.messageVibrate}\n" +
+        "  callVibrate=${recipient.callVibrate}\n" +
+        "  mentionSetting=${recipient.mentionSetting}\n" +
+        "  expiresInSeconds=${recipient.expiresInSeconds}\n" +
+        "  expireTimerVersion=${recipient.expireTimerVersion}\n" +
+        "  phoneNumberSharing=${recipient.phoneNumberSharing}\n" +
+        "  sealedSenderAccessMode=${recipient.sealedSenderAccessMode}\n" +
+        "  hiddenState=${recipient.hiddenState}\n" +
+        "  needsPniSignature=${recipient.needsPniSignature}\n" +
+        "  hasGroupsInCommon=${recipient.hasGroupsInCommon}\n" +
+        "  storageServiceEncryptionV2Capability=${recipient.storageServiceEncryptionV2Capability}\n" +
+        "  showVerified=${recipient.showVerified}\n" +
+        "  notificationChannel=${recipient.notificationChannel}\n" +
+        "  participantIds=${recipient.participantIds}"
+    )
+
     val (profile, expiringCredential) = profileAndCredential
     val recipientProfileKey = ProfileKeyUtil.profileKeyOrNull(recipient.profileKey)
     val wroteNewProfileName = setProfileName(recipient, profile.name)
@@ -294,6 +387,7 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     setUnidentifiedAccessMode(recipient, profile.unidentifiedAccess, profile.isUnrestrictedUnidentifiedAccess)
     setPhoneNumberSharingMode(recipient, profile.phoneNumberSharing)
     setGextTags(recipient, profile.gextTags)
+    setGextRobot(recipient, profile.gextRobot)
 
     if (recipientProfileKey != null) {
       expiringCredential?. let { credential -> setExpiringProfileKeyCredential(recipient, recipientProfileKey, credential) }
@@ -332,10 +426,10 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
   )
 
   private fun setGextTags(recipient: Recipient, serviceGextTags: List<SignalServiceProfile.GextTag>?) {
-//    Log.d(TAG, "setGextTags: enter for recipientId=${recipient.id}")
-
     if (serviceGextTags == null) {
-      Log.d(TAG, "setGextTags: profile returned null gextTags for ${recipient.id}, skipping")
+      // 服务端不再返回 gextTags，清空本地 tags 列；与 setGextRobot 的策略对齐。
+      Log.d(TAG, "setGextTags: profile returned null gextTags for ${recipient.id}, clearing local tags")
+      SignalDatabase.gExtRecipients.clearGextTags(recipient.id)
       return
     }
 
@@ -345,24 +439,49 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
       return
     }
 
-//    Log.d(TAG, "setGextTags: received ${serviceGextTags.size} tag(s) from profile for recipient=${recipient.id}, aci=$aci")
+    val tags = serviceGextTags.map { mapToGextTag(it) }
 
-    val tags = serviceGextTags.mapIndexed { index, tag ->
-//      Log.d(TAG, "setGextTags: mapping tag[$index] tagId=${tag.tagId}, tagType=${tag.tagType}, text=${tag.text}, cssBackgroundColor=${tag.cssBackgroundColor}, cssColor=${tag.cssColor}, cssOpacity=${tag.cssOpacity}, cssBorderWidth=${tag.cssBorderWidth}, cssBorderRadius=${tag.cssBorderRadius}, cssBorderColor=${tag.cssBorderColor}, cssBorderStyle=${tag.cssBorderStyle}, hasImg=${tag.imgBase64 != null}")
-      mapToGextTag(tag)
-    }
-
-//    Log.d(TAG, "setGextTags: calling GExtRecipientTable.setGextTags for recipientId=${recipient.id}, aci=$aci, tagCount=${tags.size}")
     SignalDatabase.gExtRecipients.setGextTags(recipient.id, aci, tags)
+  }
 
-    // 回读验证
-//    Log.d(TAG, "setGextTags: reading back from DB to verify for recipientId=${recipient.id}")
-    val stored = SignalDatabase.gExtRecipients.getGextTags(recipient.id)
-    if (stored.size == tags.size) {
-//      Log.i(TAG, "setGextTags: [VERIFY OK] recipientId=${recipient.id} stored=${stored.size} tag(s), tagIds=${stored.map { it.tagId }}")
+  private fun mapToGextRobot(remote: SignalServiceProfile.GextRobot): GextRobot {
+    val mv = remote.msgButtonVisible
+    val localMv = if (mv == null) {
+      null
     } else {
-//      Log.w(TAG, "setGextTags: [VERIFY MISMATCH] recipientId=${recipient.id} expected=${tags.size} stored=${stored.size}")
+      GextRobot.MsgButtonVisible(
+        text = mv.isText,
+        sticker = mv.isSticker,
+        camera = mv.isCamera,
+        microphone = mv.isMicrophone,
+        photos = mv.isPhotos,
+        gif = mv.isGif,
+        file = mv.isFile,
+        contact = mv.isContact,
+        location = mv.isLocation,
+        payment = mv.isPayment,
+        poll = mv.isPoll
+      )
     }
+    return GextRobot(robot = remote.isRobot, msgButtonVisible = localMv)
+  }
+
+  private fun setGextRobot(recipient: Recipient, remote: SignalServiceProfile.GextRobot?) {
+    if (remote == null) {
+      // 服务端不再返回 gextRobot，清空本地 robot 字段。
+      Log.d(TAG, "setGextRobot: profile returned null gextRobot for ${recipient.id}, clearing local robot")
+      SignalDatabase.gExtRecipients.clearRobot(recipient.id)
+      return
+    }
+
+    val aci = recipient.aci.orElse(null)?.toString()
+    if (aci == null) {
+      Log.w(TAG, "setGextRobot: recipient ${recipient.id} has no ACI, skipping")
+      return
+    }
+
+    val local = mapToGextRobot(remote)
+    SignalDatabase.gExtRecipients.setRobot(recipient.id, aci, local)
   }
 
   private fun setExpiringProfileKeyCredential(
@@ -591,8 +710,6 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     private const val KEY_RECIPIENTS = "recipients"
     private const val DEDUPE_KEY_RETRIEVE_AVATAR = KEY + "_RETRIEVE_PROFILE_AVATAR"
     private const val QUEUE_PREFIX = "RetrieveProfileJob_"
-
-    private val PROFILE_FETCH_DEBOUNCE_TIME_MS = 5.minutes.inWholeMilliseconds
 
     /**
      * Submits the necessary job to refresh the profile of the requested recipient. Works for any

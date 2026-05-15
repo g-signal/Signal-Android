@@ -142,6 +142,7 @@ import org.thoughtcrime.securesms.database.helpers.migration.V284_SetPlaceholder
 import org.thoughtcrime.securesms.database.helpers.migration.V285_AddEpochToCallLinksTable
 import org.thoughtcrime.securesms.database.helpers.migration.V286_AddGExtRecipientTable
 import org.thoughtcrime.securesms.database.helpers.migration.V287_AddGExtGroupsTable
+import org.thoughtcrime.securesms.database.helpers.migration.V288_AddGExtRecipientTableRobotFiled
 import org.thoughtcrime.securesms.database.SQLiteDatabase as SignalSqliteDatabase
 
 /**
@@ -289,10 +290,11 @@ object SignalDatabaseMigrations {
     284 to V284_SetPlaceholderGroupFlag,
     285 to V285_AddEpochToCallLinksTable,
     286 to V286_AddGExtRecipientTable,
-    287 to V287_AddGExtGroupsTable
+    287 to V287_AddGExtGroupsTable,
+    288 to V288_AddGExtRecipientTableRobotFiled
   )
 
-  const val DATABASE_VERSION = 287
+  const val DATABASE_VERSION = 288
 
   @JvmStatic
   fun migrate(context: Application, db: SignalSqliteDatabase, oldVersion: Int, newVersion: Int) {

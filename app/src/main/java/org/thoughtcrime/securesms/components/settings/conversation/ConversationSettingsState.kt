@@ -23,7 +23,8 @@ data class ConversationSettingsState(
   val displayInternalRecipientDetails: Boolean = false,
   val calls: List<CallPreference.Model> = emptyList(),
   private val sharedMediaLoaded: Boolean = false,
-  private val specificSettingsState: SpecificSettingsState
+  private val specificSettingsState: SpecificSettingsState,
+  val isRobot: Boolean = false
 ) {
 
   val isLoaded: Boolean = recipient != Recipient.UNKNOWN && sharedMediaLoaded && specificSettingsState.isLoaded

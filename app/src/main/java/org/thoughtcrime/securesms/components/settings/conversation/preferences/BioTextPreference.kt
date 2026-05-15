@@ -48,7 +48,8 @@ object BioTextPreference {
 
   class RecipientModel(
     val recipient: Recipient,
-    override val onHeadlineClickListener: (() -> Unit)?
+    override val onHeadlineClickListener: (() -> Unit)?,
+    private val hideChevron: Boolean = false
   ) : BioTextPreferenceModel<RecipientModel>() {
 
     override fun getHeadlineText(context: Context): CharSequence {
@@ -79,7 +80,7 @@ object BioTextPreference {
           append(systemContactGlyph)
         }
 
-        if (recipient.isIndividual && !recipient.isSelf) {
+        if (recipient.isIndividual && !recipient.isSelf && !hideChevron) {
           val isLtr = ViewUtil.isLtr(context)
           val chevronGlyph = SignalSymbols.getSpannedString(
             context,
@@ -113,7 +114,7 @@ object BioTextPreference {
     override fun getSubhead2Text(): String? = null
 
     override fun areContentsTheSame(newItem: RecipientModel): Boolean {
-      return super.areContentsTheSame(newItem) && newItem.recipient.hasSameContent(recipient)
+      return super.areContentsTheSame(newItem) && newItem.recipient.hasSameContent(recipient) && newItem.hideChevron == hideChevron
     }
 
     override fun areItemsTheSame(newItem: RecipientModel): Boolean {

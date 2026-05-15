@@ -345,11 +345,12 @@ class ConversationSettingsFragment : DSLSettingsFragment(
         customPref(
           BioTextPreference.RecipientModel(
             recipient = state.recipient,
-            onHeadlineClickListener = if (state.recipient.isSelf || !state.recipient.isIndividual) {
+            onHeadlineClickListener = if (state.recipient.isSelf || !state.recipient.isIndividual || state.isRobot) {
               null
             } else {
               { AboutSheet.create(state.recipient).show(parentFragmentManager, null) }
-            }
+            },
+            hideChevron = state.isRobot
           )
         )
       }
@@ -555,7 +556,7 @@ class ConversationSettingsFragment : DSLSettingsFragment(
         )
       }
 
-      if (state.recipient.isIndividual && !state.recipient.isSelf) {
+      if (state.recipient.isIndividual && !state.recipient.isSelf && !state.isRobot) {
         clickPref(
           title = DSLSettingsText.from(R.string.NicknameActivity__nickname),
           icon = DSLSettingsIcon.from(R.drawable.symbol_edit_24),
@@ -580,7 +581,7 @@ class ConversationSettingsFragment : DSLSettingsFragment(
         )
       }
 
-      if (!state.recipient.isSelf) {
+      if (!state.recipient.isSelf && !state.isRobot) {
         clickPref(
           title = DSLSettingsText.from(R.string.ConversationSettingsFragment__sounds_and_notifications),
           icon = DSLSettingsIcon.from(R.drawable.symbol_speaker_24),
@@ -707,7 +708,7 @@ class ConversationSettingsFragment : DSLSettingsFragment(
         //   )
         // }
 
-        if (recipientSettingsState.selfHasGroups && !state.recipient.isReleaseNotes) {
+        if (recipientSettingsState.selfHasGroups && !state.recipient.isReleaseNotes && !state.isRobot) {
           dividerPref()
 
           val groupsInCommonCount = recipientSettingsState.allGroupsInCommon.size
