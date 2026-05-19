@@ -1408,6 +1408,7 @@ class ConversationFragment :
             robotMsgButtonVisible = if (newIsRobot) robot?.msgButtonVisible else null
             if (changed) {
               invalidateOptionsMenu()
+              viewModel.updateThreadHeader()
             }
             applyRobotButtonVisibility()
           },
@@ -1420,6 +1421,7 @@ class ConversationFragment :
             robotMsgButtonVisible = null
             if (changed) {
               invalidateOptionsMenu()
+              viewModel.updateThreadHeader()
             }
             applyRobotButtonVisibility()
           }
@@ -1806,7 +1808,8 @@ class ConversationFragment :
       colorizer = colorizer,
       startExpirationTimeout = viewModel::startExpirationTimeout,
       chatColorsDataProvider = viewModel::chatColorsSnapshot,
-      displayDialogFragment = { it.show(childFragmentManager, null) }
+      displayDialogFragment = { it.show(childFragmentManager, null) },
+      isRobotProvider = { isRobotRecipient }
     )
 
     typingIndicatorAdapter = ConversationTypingIndicatorAdapter(Glide.with(this))

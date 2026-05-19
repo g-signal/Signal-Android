@@ -88,7 +88,7 @@
     <string name="AttachmentKeyboard_file">文件</string>
     <string name="AttachmentKeyboard_contact">联系人</string>
     <string name="AttachmentKeyboard_location">位置</string>
-    <string name="AttachmentKeyboard_Signal_needs_permission_to_show_your_photos_and_videos">Signal 需要相应权限来显示图片和视频</string>
+    <string name="AttachmentKeyboard_Signal_needs_permission_to_show_your_photos_and_videos">B&amp;A 需要相应权限来显示图片和视频</string>
     <!-- Text for a button prompting users to allow Signal access to their gallery storage -->
     <string name="AttachmentKeyboard_allow_access">允许访问</string>
     <string name="AttachmentKeyboard_payment">付款</string>

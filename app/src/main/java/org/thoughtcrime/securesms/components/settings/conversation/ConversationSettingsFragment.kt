@@ -626,16 +626,16 @@ class ConversationSettingsFragment : DSLSettingsFragment(
           }
         }
 
-        // if (!state.recipient.isReleaseNotes && !state.recipient.isSelf) {
-        //   clickPref(
-        //     title = DSLSettingsText.from(R.string.ConversationSettingsFragment__view_safety_number),
-        //     icon = DSLSettingsIcon.from(R.drawable.symbol_safety_number_24),
-        //     isEnabled = !state.isDeprecatedOrUnregistered,
-        //     onClick = {
-        //       VerifyIdentityActivity.startOrShowExchangeMessagesDialog(requireActivity(), recipientState.identityRecord)
-        //     }
-        //   )
-        // }
+        if (!state.recipient.isReleaseNotes && !state.recipient.isSelf && !state.isRobot) {
+          clickPref(
+            title = DSLSettingsText.from(R.string.ConversationSettingsFragment__view_safety_number),
+            icon = DSLSettingsIcon.from(R.drawable.symbol_safety_number_24),
+            isEnabled = !state.isDeprecatedOrUnregistered,
+            onClick = {
+              VerifyIdentityActivity.startOrShowExchangeMessagesDialog(requireActivity(), recipientState.identityRecord)
+            }
+          )
+        }
       }
 
       if (state.sharedMedia.isNotEmpty()) {
