@@ -24,7 +24,9 @@ plugins {
 apply(from = "static-ips.gradle.kts")
 
 val canonicalVersionCode = 1569
-val canonicalVersionName = "7.51.14-beta"
+//val canonicalVersionName = "7.51.14-beta"
+val canonicalVersionName = "7.51.14"
+
 val currentHotfixVersion = 3
 val maxHotfixVersions = 100
 
@@ -451,7 +453,7 @@ android {
       buildConfigField("int", "LIBSIGNAL_LOG_LEVEL", "org.signal.libsignal.protocol.logging.SignalProtocolLogger.DEBUG")
       buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\"")
       buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\"")
-      buildConfigField("boolean", "MESSAGE_BACKUP_RESTORE_ENABLED", "true")
+      buildConfigField("boolean", "MESSAGE_BACKUP_RESTORE_ENABLED", "false")
       buildConfigField("String", "BADGE_STATIC_ROOT", "\"https://updates2.imba-test.com/static/badges/\"")
     }
 
