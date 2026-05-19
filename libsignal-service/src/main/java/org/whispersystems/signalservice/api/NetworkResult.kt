@@ -7,7 +7,6 @@ package org.whispersystems.signalservice.api
 
 import io.reactivex.rxjava3.core.Single
 import org.signal.core.util.concurrent.safeBlockingGet
-import org.signal.core.util.logging.Log
 import org.whispersystems.signalservice.api.NetworkResult.ApplicationError
 import org.whispersystems.signalservice.api.NetworkResult.StatusCodeError
 import org.whispersystems.signalservice.api.push.exceptions.MalformedRequestException
@@ -47,7 +46,6 @@ sealed class NetworkResult<T>(
   private val applicationErrorActions: MutableSet<ApplicationErrorAction> = mutableSetOf()
 ) {
   companion object {
-    private val NR_TAG: String = Log.tag(NetworkResult::class)
     /**
      * A convenience method to capture the common case of making a request.
      * Perform the network action in the [fetcher], returning your result.
@@ -439,12 +437,10 @@ sealed class NetworkResult<T>(
     fun convert(response: WebsocketResponse): NetworkResult<T>
 
     fun <T : Any> WebsocketResponse.toStatusCodeError(): NetworkResult<T> {
-      Log.i(NR_TAG, "[RawBody] status=${this.status} body=${this.body}")
       return StatusCodeError(NonSuccessfulResponseCodeException(this.status, "", this.body, this.headers))
     }
 
     fun <T : Any> WebsocketResponse.toSuccess(responseJsonClass: KClass<T>): NetworkResult<T> {
-      Log.i(NR_TAG, "[RawBody] status=${this.status} body=${this.body}")
       return when (responseJsonClass) {
         Unit::class -> Success(responseJsonClass.cast(Unit))
         String::class -> Success(responseJsonClass.cast(this.body))
