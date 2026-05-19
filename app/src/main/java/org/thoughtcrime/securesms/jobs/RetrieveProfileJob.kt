@@ -50,6 +50,7 @@ import org.whispersystems.signalservice.api.profiles.SignalServiceProfile
 import org.whispersystems.signalservice.api.util.ExpiringProfileCredentialUtil
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * Retrieves a users profile and sets the appropriate local fields.
@@ -97,15 +98,19 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
 
     stopwatch.split("resolve-ensure")
 
-    val recipientsToFetch = recipients.filter { it.hasServiceId }
+    val currentTime = System.currentTimeMillis()
+    val debounceThreshold = currentTime - PROFILE_FETCH_DEBOUNCE_TIME_MS
+    val recipientsToFetch = recipients.filter { recipient ->
+      recipient.hasServiceId && recipient.lastProfileFetchTime < debounceThreshold
+    }
 
     if (recipientsToFetch.isEmpty()) {
-      Log.i(TAG, "None of the ${recipients.size} recipients have a service id. Skipping network requests.")
+      Log.i(TAG, "All ${recipients.size} recipients have been fetched recently (within ${PROFILE_FETCH_DEBOUNCE_TIME_MS}ms). Skipping network requests.")
       return
     }
 
     if (recipientsToFetch.size < recipients.size) {
-      Log.i(TAG, "Fetching ${recipientsToFetch.size} of ${recipients.size} recipients (${recipients.size - recipientsToFetch.size} have no service id)")
+      Log.i(TAG, "Debouncing: Fetching ${recipientsToFetch.size} of ${recipients.size} recipients (${recipients.size - recipientsToFetch.size} were fetched recently)")
     }
 
     val fetchingRecipientIds = recipientsToFetch.map { it.id }.toSet()
@@ -134,21 +139,6 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     android.util.Log.i(TAG, "[NetResp] successes=${response.successes.size} unregistered=${response.unregistered.size} retryable=${response.retryableFailures.size} retryAfter=${response.retryAfter}")
     response.successes.forEach { pair ->
       val p = pair.profileWithCredential.profile
-      android.util.Log.i(
-        TAG,
-        "[NetResp] id=${pair.id} aci=${runCatching { p.serviceId?.toString() }.getOrNull()} " +
-          "identityKey=${if (p.identityKey.isNullOrBlank()) "none" else "len=${p.identityKey.length}"} " +
-          // name/about/phoneNumberSharing are ciphertext — masked
-          "name=${if (p.name.isNullOrBlank()) "null" else "<redacted>"} " +
-          "about=${if (p.about.isNullOrBlank()) "null" else "<redacted>"} " +
-          "avatar=${p.avatar} " +
-          "badges=${p.badges.size} " +
-          "capabilities=${p.capabilities} " +
-          "unrestrictedUD=${p.isUnrestrictedUnidentifiedAccess} " +
-          "phoneNumberSharing=${if (p.phoneNumberSharing.isNullOrBlank()) "null" else "<redacted>"} " +
-          "gextTags=${p.gextTags?.size ?: 0} " +
-          "hasCredential=${pair.profileWithCredential.credential != null}"
-      )
     }
     response.unregistered.forEach { Log.i(TAG, "[NetResp] unregistered id=$it") }
     response.retryableFailures.forEach { Log.i(TAG, "[NetResp] retryable id=$it") }
@@ -312,69 +302,7 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
   }
 
   private fun process(recipient: Recipient, profileAndCredential: SignalServiceProfileWithCredential) {
-    android.util.Log.i(
-      TAG,
-      "process: recipient dump\n" +
-        "  id=${recipient.id}\n" +
-        "  isResolving=${recipient.isResolving}\n" +
-        "  isSelf=${recipient.isSelf}\n" +
-        "  isBlocked=${recipient.isBlocked}\n" +
-        "  isGroup=${recipient.isGroup}\n" +
-        "  isIndividual=${recipient.isIndividual}\n" +
-        "  isReleaseNotes=${recipient.isReleaseNotes}\n" +
-        "  isDistributionList=${recipient.isDistributionList}\n" +
-        "  isHidden=${recipient.isHidden}\n" +
-        "  isSystemContact=${recipient.isSystemContact}\n" +
-        "  isProfileSharing=${recipient.isProfileSharing}\n" +
-        "  registered=${recipient.registered}\n" +
-        "  isRegistered=${recipient.isRegistered}\n" +
-        "  isMaybeRegistered=${recipient.isMaybeRegistered}\n" +
-        "  isUnregistered=${recipient.isUnregistered}\n" +
-        "  aci=${recipient.aci.orElse(null)}\n" +
-        "  pni=${recipient.pni.orElse(null)}\n" +
-        "  serviceId=${recipient.serviceId.orElse(null)}\n" +
-        "  hasAci=${recipient.hasAci}\n" +
-        "  hasPni=${recipient.hasPni}\n" +
-        "  hasServiceId=${recipient.hasServiceId}\n" +
-        "  e164=${recipient.e164.orElse(null)}\n" +
-        "  hasE164=${recipient.hasE164}\n" +
-        "  shouldShowE164=${recipient.shouldShowE164}\n" +
-        "  email=${recipient.email.orElse(null)}\n" +
-        "  username=${recipient.username.orElse(null)}\n" +
-        "  groupId=${recipient.groupId.orElse(null)}\n" +
-        "  distributionListId=${recipient.distributionListId.orElse(null)}\n" +
-        "  profileName=${recipient.profileName}\n" +
-        "  nickname=${recipient.nickname}\n" +
-        "  profileAvatar=${recipient.profileAvatar}\n" +
-        "  profileAvatarFileDetails=${recipient.profileAvatarFileDetails}\n" +
-        "  hasAvatar=${recipient.hasAvatar}\n" +
-        "  avatarColor=${recipient.avatarColor}\n" +
-        "  about=${recipient.about}\n" +
-        "  aboutEmoji=${recipient.aboutEmoji}\n" +
-        "  note=${recipient.note}\n" +
-        "  badges=${recipient.badges.size}\n" +
-        "  profileKey=${if (recipient.profileKey == null) "null" else "len=${recipient.profileKey!!.size}"}\n" +
-        "  expiringProfileKeyCredential=${recipient.expiringProfileKeyCredential != null}\n" +
-        "  lastProfileFetchTime=${recipient.lastProfileFetchTime}\n" +
-        "  storageId=${if (recipient.storageId == null) "null" else "len=${recipient.storageId!!.size}"}\n" +
-        "  contactUri=${recipient.contactUri}\n" +
-        "  muteUntil=${recipient.muteUntil}\n" +
-        "  isMuted=${recipient.isMuted}\n" +
-        "  messageVibrate=${recipient.messageVibrate}\n" +
-        "  callVibrate=${recipient.callVibrate}\n" +
-        "  mentionSetting=${recipient.mentionSetting}\n" +
-        "  expiresInSeconds=${recipient.expiresInSeconds}\n" +
-        "  expireTimerVersion=${recipient.expireTimerVersion}\n" +
-        "  phoneNumberSharing=${recipient.phoneNumberSharing}\n" +
-        "  sealedSenderAccessMode=${recipient.sealedSenderAccessMode}\n" +
-        "  hiddenState=${recipient.hiddenState}\n" +
-        "  needsPniSignature=${recipient.needsPniSignature}\n" +
-        "  hasGroupsInCommon=${recipient.hasGroupsInCommon}\n" +
-        "  storageServiceEncryptionV2Capability=${recipient.storageServiceEncryptionV2Capability}\n" +
-        "  showVerified=${recipient.showVerified}\n" +
-        "  notificationChannel=${recipient.notificationChannel}\n" +
-        "  participantIds=${recipient.participantIds}"
-    )
+
 
     val (profile, expiringCredential) = profileAndCredential
     val recipientProfileKey = ProfileKeyUtil.profileKeyOrNull(recipient.profileKey)
@@ -710,6 +638,8 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     private const val KEY_RECIPIENTS = "recipients"
     private const val DEDUPE_KEY_RETRIEVE_AVATAR = KEY + "_RETRIEVE_PROFILE_AVATAR"
     private const val QUEUE_PREFIX = "RetrieveProfileJob_"
+
+    private val PROFILE_FETCH_DEBOUNCE_TIME_MS = 5.minutes.inWholeMilliseconds
 
     /**
      * Submits the necessary job to refresh the profile of the requested recipient. Works for any
