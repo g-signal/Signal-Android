@@ -8703,6 +8703,7 @@
         <item quantity="one">You haven’t completed a backup for %1$d day. Create a backup now.</item>
         <item quantity="other">You haven’t completed a backup for %1$d days. Create a backup now.</item>
     </plurals>
+    <string name="link_ba_platform_account_title">Link BAXS Account</string>
 
     <!-- EOF -->
 </resources>

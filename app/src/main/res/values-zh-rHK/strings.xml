@@ -8515,6 +8515,6 @@
     <plurals name="Notification_you_have_not_completed_a_backup">
         <item quantity="other">你已有 %1$d 天未完成備份。請立即建立備份。</item>
     </plurals>
-
+    <string name="link_ba_platform_account_title">綁定 BAXS 帳號</string>
     <!-- EOF -->
 </resources>
