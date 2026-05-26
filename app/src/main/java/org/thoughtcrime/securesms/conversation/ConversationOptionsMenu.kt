@@ -44,19 +44,22 @@ internal object ConversationOptionsMenu {
 
       menu.clear()
 
-      val (
-        recipient,
-        isPushAvailable,
-        canShowAsBubble,
-        isActiveGroup,
-        isActiveV2Group,
-        isInActiveGroup,
-        hasActiveGroupCall,
-        distributionType,
-        threadId,
-        messageRequestState,
-        isInBubble
-      ) = callback.getSnapshot()
+      val snapshot = callback.getSnapshot()
+      val recipient = snapshot.recipient
+      val isPushAvailable = snapshot.isPushAvailable
+      val canShowAsBubble = snapshot.canShowAsBubble
+      val isActiveGroup = snapshot.isActiveGroup
+      val isActiveV2Group = snapshot.isActiveV2Group
+      val isInActiveGroup = snapshot.isInActiveGroup
+      val hasActiveGroupCall = snapshot.hasActiveGroupCall
+      val distributionType = snapshot.distributionType
+      val threadId = snapshot.threadId
+      val messageRequestState = snapshot.messageRequestState
+      val isInBubble = snapshot.isInBubble
+      val isRobot = snapshot.isRobot
+      val isRobotKnown = snapshot.isRobotKnown
+      /** 仅当确定不是机器人时才显示电话/视频图标。 */
+      val showCallable = isRobotKnown && !isRobot
 
       if (recipient == null) {
         Log.w(TAG, "Recipient is null, no menu")
@@ -93,7 +96,8 @@ internal object ConversationOptionsMenu {
           if (!isActiveV2Group) {
             hideMenuItem(menu, R.id.menu_video_secure)
           }
-        } else if (!isPushAvailable) {
+        } else if (!isPushAvailable || !showCallable) {
+          // robot 状态未查完或是机器人时，先把图标 hide，避免后续 invalidateOptionsMenu 反向闪。
           hideMenuItem(menu, R.id.menu_call_secure)
           hideMenuItem(menu, R.id.menu_video_secure)
         }
@@ -116,7 +120,7 @@ internal object ConversationOptionsMenu {
       }
 
       if (!recipient.isGroup) {
-        if (isPushAvailable) {
+        if (isPushAvailable && showCallable) {
           menuInflater.inflate(R.menu.conversation_callable_secure, menu)
         }
       } else if (recipient.isGroup) {
@@ -159,6 +163,8 @@ internal object ConversationOptionsMenu {
         }
         hideMenuItem(menu, R.id.menu_mute_notifications)
       }
+
+      // robot 隐藏已在 inflate 阶段通过 showCallable 控制，这里不再需要事后 hide。
 
       if (recipient.isReleaseNotes) {
         hideMenuItem(menu, R.id.menu_add_shortcut)
@@ -258,7 +264,10 @@ internal object ConversationOptionsMenu {
     val distributionType: Int,
     val threadId: Long,
     val messageRequestState: MessageRequestState,
-    val isInBubble: Boolean
+    val isInBubble: Boolean,
+    val isRobot: Boolean = false,
+    /** false 表示尚未查清楚 robot 状态：此时不渲染电话/视频图标，避免普通用户看到图标先出现再被 hide。 */
+    val isRobotKnown: Boolean = false
   )
 
   /**

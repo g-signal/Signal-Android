@@ -130,12 +130,16 @@ public class ConversationHeaderView extends ConstraintLayout {
   }
 
   public String setTitle(@NonNull Recipient recipient, @NonNull Runnable onTitleClicked) {
+    return setTitle(recipient, false, onTitleClicked);
+  }
+
+  public String setTitle(@NonNull Recipient recipient, boolean isRobot, @NonNull Runnable onTitleClicked) {
     SpannableStringBuilder title = new SpannableStringBuilder(recipient.isSelf() ? getContext().getString(R.string.note_to_self) : recipient.getDisplayName(getContext()));
     if (recipient.getShowVerified()) {
       SpanUtil.appendCenteredImageSpan(title, ContextUtil.requireDrawable(getContext(), R.drawable.ic_official_28), 28, 28);
     }
 
-    if (recipient.isIndividual() && !recipient.isSelf()) {
+    if (recipient.isIndividual() && !recipient.isSelf() && !isRobot) {
       boolean isLtr = ViewUtil.isLtr(this);
       CharSequence chevron = SignalSymbols.getSpannedString(getContext(), SignalSymbols.Weight.BOLD, isLtr ? SignalSymbols.Glyph.CHEVRON_RIGHT : SignalSymbols.Glyph.CHEVRON_LEFT, R.color.signal_colorOutline);
 
@@ -150,6 +154,7 @@ public class ConversationHeaderView extends ConstraintLayout {
       binding.messageRequestTitle.setOnClickListener(v -> onTitleClicked.run());
     } else {
       binding.messageRequestTitle.setOnClickListener(null);
+      binding.messageRequestTitle.setClickable(false);
     }
 
     binding.messageRequestTitle.setText(title);

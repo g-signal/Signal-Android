@@ -26,6 +26,7 @@ import org.thoughtcrime.securesms.components.settings.conversation.preferences.C
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.LegacyGroupPreference
 import org.thoughtcrime.securesms.database.MediaTable
 import org.thoughtcrime.securesms.database.RecipientTable
+import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.database.model.StoryViewState
 import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.groups.GroupId
@@ -161,17 +162,21 @@ sealed class ConversationSettingsViewModel(
       }
 
       store.update(liveRecipient.liveData) { recipient, state ->
+        // 注意：每次 recipient 变化都会进入这里，要保留 isRobot 已经赋好的值，
+        // 否则会被覆盖回非机器人状态。
+        val isRobot = state.isRobot
         val isAudioAvailable = recipient.isRegistered &&
           !recipient.isGroup &&
           !recipient.isBlocked &&
           !recipient.isSelf &&
-          !recipient.isReleaseNotes
+          !recipient.isReleaseNotes &&
+          !isRobot
 
         state.copy(
           recipient = recipient,
           buttonStripState = ButtonStripPreference.State(
             isMessageAvailable = callMessageIds.isNotEmpty(),
-            isVideoAvailable = recipient.registered == RecipientTable.RegisteredState.REGISTERED && !recipient.isSelf && !recipient.isBlocked && !recipient.isReleaseNotes,
+            isVideoAvailable = recipient.registered == RecipientTable.RegisteredState.REGISTERED && !recipient.isSelf && !recipient.isBlocked && !recipient.isReleaseNotes && !isRobot,
             isAudioAvailable = isAudioAvailable,
             isAudioSecure = recipient.registered == RecipientTable.RegisteredState.REGISTERED,
             isMuted = recipient.isMuted,
@@ -179,10 +184,10 @@ sealed class ConversationSettingsViewModel(
             isSearchAvailable = callMessageIds.isEmpty()
           ),
           disappearingMessagesLifespan = recipient.expiresInSeconds,
-          canModifyBlockedState = !recipient.isSelf && RecipientUtil.isBlockable(recipient),
+          canModifyBlockedState = !recipient.isSelf && !isRobot && RecipientUtil.isBlockable(recipient),
           specificSettingsState = state.requireRecipientSettingsState().copy(
             contactLinkState = when {
-              recipient.isSelf || recipient.isReleaseNotes || recipient.isBlocked -> ContactLinkState.NONE
+              recipient.isSelf || recipient.isReleaseNotes || recipient.isBlocked || isRobot -> ContactLinkState.NONE
               recipient.isSystemContact -> ContactLinkState.OPEN
               recipient.hasE164 && recipient.shouldShowE164 -> ContactLinkState.ADD
               else -> ContactLinkState.NONE
@@ -228,6 +233,37 @@ sealed class ConversationSettingsViewModel(
           store.update { state ->
             state.copy(specificSettingsState = state.requireRecipientSettingsState().copy(identityRecord = identityRecord))
           }
+        }
+      }
+
+      // 查询 robot 状态（极端情况：DB 抛异常时按非机器人降级，不让 store 进入异常路径）
+      SignalExecutors.BOUNDED.execute {
+        val robot = try {
+          SignalDatabase.gExtRecipients.getRobot(recipientId)
+        } catch (t: Throwable) {
+          null
+        }
+        val isRobot = robot?.robot == true
+        store.update { state ->
+          val updatedButtonStrip = if (isRobot) {
+            state.buttonStripState.copy(
+              isVideoAvailable = false,
+              isAudioAvailable = false
+            )
+          } else {
+            state.buttonStripState
+          }
+          val updatedRecipientSettings = if (isRobot) {
+            state.requireRecipientSettingsState().copy(contactLinkState = ContactLinkState.NONE)
+          } else {
+            state.requireRecipientSettingsState()
+          }
+          state.copy(
+            isRobot = isRobot,
+            buttonStripState = updatedButtonStrip,
+            canModifyBlockedState = if (isRobot) false else state.canModifyBlockedState,
+            specificSettingsState = updatedRecipientSettings
+          )
         }
       }
     }

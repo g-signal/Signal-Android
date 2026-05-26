@@ -289,6 +289,7 @@ import org.thoughtcrime.securesms.ratelimit.RecaptchaProofBottomSheetFragment
 import org.thoughtcrime.securesms.ratelimit.RecaptchaRequiredEvent
 import org.thoughtcrime.securesms.reactions.ReactionsBottomSheetDialogFragment
 import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiBottomSheetDialogFragment
+import org.thoughtcrime.securesms.recipients.GextRobot
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientExporter
 import org.thoughtcrime.securesms.recipients.RecipientId
@@ -526,6 +527,10 @@ class ConversationFragment :
   private var actionMode: ActionMode? = null
   private var pinnedShortcutReceiver: BroadcastReceiver? = null
   private var searchMenuItem: MenuItem? = null
+
+  @Volatile private var isRobotRecipient: Boolean = false
+  @Volatile private var isRobotKnown: Boolean = false
+  @Volatile private var robotMsgButtonVisible: GextRobot.MsgButtonVisible? = null
 
   private var isSearchRequested: Boolean = false
     set(value) {
@@ -1358,6 +1363,15 @@ class ConversationFragment :
     presentWallpaper(recipient.wallpaper)
     presentConversationTitle(recipient)
     presentChatColors(recipient.chatColors)
+
+    if (recipient.isGroup) {
+      isRobotKnown = true
+      isRobotRecipient = false
+    } else {
+      isRobotKnown = false
+      isRobotRecipient = false
+    }
+
     invalidateOptionsMenu()
 
     updateMessageRequestAcceptedState(!viewModel.hasMessageRequestState)
@@ -1375,6 +1389,44 @@ class ConversationFragment :
           }
         })
         .addTo(disposables)
+
+      Single.fromCallable<Optional<GextRobot>> { Optional.ofNullable(SignalDatabase.gExtRecipients.getRobot(recipient.id)) }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeBy(
+          onSuccess = { robotOpt: Optional<GextRobot> ->
+            val robot = robotOpt.orElse(null)
+            val newIsRobot = robot?.robot == true
+            if (robot != null) {
+              Log.i(TAG, "onRecipientChanged: [GExtRobot] recipientId=${recipient.id} robot=${robot.robot} msgButtonVisible=${robot.msgButtonVisible}")
+            } else {
+              Log.d(TAG, "onRecipientChanged: [GExtRobot] recipientId=${recipient.id} no robot data")
+            }
+            val changed = isRobotRecipient != newIsRobot || !isRobotKnown
+            isRobotRecipient = newIsRobot
+            isRobotKnown = true
+            robotMsgButtonVisible = if (newIsRobot) robot?.msgButtonVisible else null
+            if (changed) {
+              invalidateOptionsMenu()
+              viewModel.updateThreadHeader()
+            }
+            applyRobotButtonVisibility()
+          },
+          onError = { e ->
+            // DB 异常等极端情况：按非机器人降级，避免崩溃 + 避免电话/视频图标永久消失。
+            Log.w(TAG, "onRecipientChanged: [GExtRobot] query failed for recipientId=${recipient.id}", e)
+            val changed = isRobotRecipient || !isRobotKnown
+            isRobotRecipient = false
+            isRobotKnown = true
+            robotMsgButtonVisible = null
+            if (changed) {
+              invalidateOptionsMenu()
+              viewModel.updateThreadHeader()
+            }
+            applyRobotButtonVisibility()
+          }
+        )
+        .addTo(disposables)
     }
   }
 
@@ -1386,6 +1438,44 @@ class ConversationFragment :
   private fun invalidateOptionsMenu() {
     if (searchMenuItem?.isActionViewExpanded != true || !isSearchRequested) {
       binding.toolbar.invalidateMenu()
+    }
+  }
+
+  /**
+   * 当对方是机器人（GExtRecipientTable.robot.robot==true）且 msgButtonVisible 不为空时，
+   * 按 msgButtonVisible 的字段控制相机/录音/贴纸/GIF 等按钮可见性。其它情况恢复默认（显示）。
+   * 附件键盘里的 GALLERY/FILE/CONTACT/LOCATION 在 AttachmentKeyboardFragment 内自行处理。
+   */
+  private fun applyRobotButtonVisibility() {
+    if (!isAdded || view == null) return
+
+    val mv = robotMsgButtonVisible
+    val applyVisibility: (View?, Boolean) -> Unit = { v, visible ->
+      if (v != null) {
+        v.visibility = if (visible) View.VISIBLE else View.GONE
+      }
+    }
+
+    val cameraVisible = mv == null || mv.camera
+    val microphoneVisible = mv == null || mv.microphone
+
+    inputPanel.findViewById<View?>(R.id.quick_camera_toggle)?.let {
+      applyVisibility(it, cameraVisible)
+    }
+    inputPanel.findViewById<View?>(R.id.recorder_view)?.let {
+      applyVisibility(it, microphoneVisible)
+    }
+
+    // 通过 KeyboardPagerViewModel 控制贴纸/GIF tab + 对应页面，避免 KeyboardPagerFragment
+    // 内部 observe pages() 时把 setVisibility 覆盖回去。
+    val pages = mutableSetOf(KeyboardPage.EMOJI)
+    if (mv == null || mv.sticker) pages += KeyboardPage.STICKER
+    if (mv == null || mv.gif) pages += KeyboardPage.GIF
+    keyboardPagerViewModel.setPages(pages)
+    // 若当前选中页被禁用，回退到 EMOJI
+    val current = keyboardPagerViewModel.page().value
+    if (current != null && !pages.contains(current)) {
+      keyboardPagerViewModel.switchToPage(KeyboardPage.EMOJI)
     }
   }
 
@@ -1718,7 +1808,8 @@ class ConversationFragment :
       colorizer = colorizer,
       startExpirationTimeout = viewModel::startExpirationTimeout,
       chatColorsDataProvider = viewModel::chatColorsSnapshot,
-      displayDialogFragment = { it.show(childFragmentManager, null) }
+      displayDialogFragment = { it.show(childFragmentManager, null) },
+      isRobotProvider = { isRobotRecipient }
     )
 
     typingIndicatorAdapter = ConversationTypingIndicatorAdapter(Glide.with(this))
@@ -3463,7 +3554,9 @@ class ConversationFragment :
         distributionType = args.distributionType,
         threadId = args.threadId,
         messageRequestState = viewModel.messageRequestState,
-        isInBubble = args.conversationScreenType.isInBubble
+        isInBubble = args.conversationScreenType.isInBubble,
+        isRobot = isRobotRecipient,
+        isRobotKnown = isRobotKnown
       )
     }
 
@@ -4426,6 +4519,8 @@ class ConversationFragment :
 
     override fun onInputShown() {
       isEnabled = true
+      // 媒体键盘显示前再应用一次：处理 KeyboardPager 在 robot 查询完成之后才被创建的情况。
+      applyRobotButtonVisibility()
     }
 
     override fun onInputHidden() {

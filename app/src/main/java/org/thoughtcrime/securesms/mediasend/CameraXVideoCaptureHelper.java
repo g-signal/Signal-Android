@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.Size;
-import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -144,7 +143,7 @@ class CameraXVideoCaptureHelper implements CameraButtonView.VideoCaptureListener
                .execute();
   }
 
-  @SuppressLint("RestrictedApi")
+  @SuppressLint({"RestrictedApi", "MissingPermission"})
   private void beginCameraRecording() {
     cameraXModePolicy.setToVideo(cameraController);
     this.cameraController.setZoomRatio(getDefaultVideoZoomRatio());
@@ -166,35 +165,32 @@ class CameraXVideoCaptureHelper implements CameraButtonView.VideoCaptureListener
     Size  videoRecordingSize      = VideoUtil.getVideoRecordingSize();
     float scale                   = getSurfaceScaleForRecording();
     float targetWidthForAnimation = videoRecordingSize.getWidth() * scale;
-    float scaleX                  = targetWidthForAnimation / screenSize.getWidth();
+    float ratioX                  = targetWidthForAnimation / screenSize.getWidth();
 
-    if (scaleX == 1f) {
+    float targetScale;
+    if (ratioX == 1f) {
       float targetHeightForAnimation = videoRecordingSize.getHeight() * scale;
-
       if (screenSize.getHeight() == targetHeightForAnimation) {
         return;
       }
-
-      cameraMetricsAnimator = ValueAnimator.ofFloat(screenSize.getHeight(), targetHeightForAnimation);
+      targetScale = targetHeightForAnimation / screenSize.getHeight();
     } else {
-
       if (screenSize.getWidth() == targetWidthForAnimation) {
         return;
       }
-
-      cameraMetricsAnimator = ValueAnimator.ofFloat(screenSize.getWidth(), targetWidthForAnimation);
+      targetScale = ratioX;
     }
 
-    ViewGroup.LayoutParams params = previewView.getLayoutParams();
+    cameraMetricsAnimator = ValueAnimator.ofFloat(1f, targetScale);
     cameraMetricsAnimator.setInterpolator(new LinearInterpolator());
     cameraMetricsAnimator.setDuration(200);
     cameraMetricsAnimator.addUpdateListener(animation -> {
-      if (scaleX == 1f) {
-        params.height = Math.round((float) animation.getAnimatedValue());
+      float animatedScale = (float) animation.getAnimatedValue();
+      if (ratioX == 1f) {
+        previewView.setScaleY(animatedScale);
       } else {
-        params.width = Math.round((float) animation.getAnimatedValue());
+        previewView.setScaleX(animatedScale);
       }
-      previewView.setLayoutParams(params);
     });
     cameraMetricsAnimator.start();
   }
@@ -226,8 +222,13 @@ class CameraXVideoCaptureHelper implements CameraButtonView.VideoCaptureListener
     activeRecording.close();
     activeRecording = null;
 
-    if (cameraMetricsAnimator != null && cameraMetricsAnimator.isRunning()) {
-      cameraMetricsAnimator.reverse();
+    if (cameraMetricsAnimator != null) {
+      if (cameraMetricsAnimator.isRunning()) {
+        cameraMetricsAnimator.reverse();
+      } else {
+        previewView.setScaleX(1f);
+        previewView.setScaleY(1f);
+      }
     }
 
     updateProgressAnimator.cancel();

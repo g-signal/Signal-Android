@@ -75,7 +75,8 @@ class ConversationAdapterV2(
   private val colorizer: Colorizer,
   private val startExpirationTimeout: (MessageRecord) -> Unit,
   private val chatColorsDataProvider: () -> ChatColorsDrawable.ChatColorsData,
-  private val displayDialogFragment: (DialogFragment) -> Unit
+  private val displayDialogFragment: (DialogFragment) -> Unit,
+  private val isRobotProvider: () -> Boolean = { false }
 ) : PagingMappingAdapter<ConversationElementKey>(), ConversationAdapterBridge, V2ConversationContext {
 
   companion object {
@@ -553,8 +554,11 @@ class ConversationAdapterV2(
       }
 
       conversationBanner.showBackgroundBubble(recipient.hasWallpaper)
-      val title: String = conversationBanner.setTitle(recipient) {
-        displayDialogFragment(AboutSheet.create(recipient))
+      val isRobot = !recipient.isGroup && !isSelf && isRobotProvider()
+      val title: String = conversationBanner.setTitle(recipient, isRobot) {
+        if (!isRobot) {
+          displayDialogFragment(AboutSheet.create(recipient))
+        }
       }
 
       if (recipient.isReleaseNotes) {

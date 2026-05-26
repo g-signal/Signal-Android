@@ -67,6 +67,9 @@ public class SignalServiceProfile {
   private List<GextTag> gextTags;
 
   @JsonProperty
+  private GextRobot gextRobot;
+
+  @JsonProperty
   private String phoneNumberSharing;
 
   @JsonIgnore
@@ -120,6 +123,10 @@ public class SignalServiceProfile {
 
   public List<GextTag> getGextTags() {
     return gextTags;
+  }
+
+  public GextRobot getGextRobot() {
+    return gextRobot;
   }
 
   public ServiceId getServiceId() {
@@ -275,5 +282,42 @@ public class SignalServiceProfile {
     public int getCssBorderRadius() { return cssBorderRadius; }
     public String getCssBorderColor() { return cssBorderColor; }
     public String getCssBorderStyle() { return cssBorderStyle; }
+  }
+
+  public static class GextRobot {
+    @JsonProperty
+    private boolean robot;
+
+    @JsonProperty
+    private MsgButtonVisible msgButtonVisible;
+
+    public boolean isRobot() { return robot; }
+    public MsgButtonVisible getMsgButtonVisible() { return msgButtonVisible; }
+
+    public static class MsgButtonVisible {
+      @JsonProperty private boolean text;
+      @JsonProperty private boolean sticker;
+      @JsonProperty private boolean camera;
+      @JsonProperty private boolean microphone;
+      @JsonProperty private boolean photos;
+      @JsonProperty private boolean gif;
+      @JsonProperty private boolean file;
+      @JsonProperty private boolean contact;
+      @JsonProperty private boolean location;
+      @JsonProperty private boolean payment;
+      @JsonProperty private boolean poll;
+
+      public boolean isText() { return text; }
+      public boolean isSticker() { return sticker; }
+      public boolean isCamera() { return camera; }
+      public boolean isMicrophone() { return microphone; }
+      public boolean isPhotos() { return photos; }
+      public boolean isGif() { return gif; }
+      public boolean isFile() { return file; }
+      public boolean isContact() { return contact; }
+      public boolean isLocation() { return location; }
+      public boolean isPayment() { return payment; }
+      public boolean isPoll() { return poll; }
+    }
   }
 }
