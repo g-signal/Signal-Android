@@ -27,7 +27,7 @@ val canonicalVersionCode = 1569
 //val canonicalVersionName = "7.51.14-beta"
 val canonicalVersionName = "7.51.14"
 
-val currentHotfixVersion = 3
+val currentHotfixVersion = 4
 val maxHotfixVersions = 100
 
 
