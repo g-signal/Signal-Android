@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:360483801060:android:3fa24efde4de223cb6a9f1",
         "android_client_info": {
-          "package_name": "com.baxs.bachat"
+          "package_name": "ai.remitech.remimessager"
         }
       },
       "oauth_client": [],
@@ -28,7 +28,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:360483801060:android:220b86cbebcb4c49b6a9f1",
         "android_client_info": {
-          "package_name": "com.baxs.bachat.staging"
+          "package_name": "ai.remitech.remimessager.staging"
         }
       },
       "oauth_client": [],

@@ -206,7 +206,8 @@ android {
 
   defaultConfig {
 //    applicationId = "group.ba.voiceapp"
-    applicationId = "com.baxs.bachat"
+//    applicationId = "com.baxs.bachat"
+    applicationId = "ai.remitech.remimessager"
     versionCode = (canonicalVersionCode * maxHotfixVersions) + currentHotfixVersion
     versionName = canonicalVersionName
     minSdk = signalMinSdkVersion
