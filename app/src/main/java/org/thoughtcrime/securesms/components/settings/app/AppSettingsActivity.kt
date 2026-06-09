@@ -80,6 +80,7 @@ class AppSettingsActivity : DSLSettingsActivity(), GooglePayComponent {
         StartLocation.BACKUPS_SETTINGS -> AppSettingsFragmentDirections.actionDirectToBackupsSettingsFragment()
         StartLocation.INVITE -> AppSettingsFragmentDirections.actionDirectToInviteFragment()
         StartLocation.MANAGE_STORAGE -> AppSettingsFragmentDirections.actionDirectToStoragePreferenceFragment()
+        StartLocation.LINK_BA_ACCOUNT -> AppSettingsFragmentDirections.actionDirectToLinkBaAccount()
       }
     }
 
@@ -230,6 +231,9 @@ class AppSettingsActivity : DSLSettingsActivity(), GooglePayComponent {
     @JvmStatic
     fun invite(context: Context): Intent = getIntentForStartLocation(context, StartLocation.INVITE)
 
+    @JvmStatic
+    fun linkBaAccount(context: Context): Intent = getIntentForStartLocation(context, StartLocation.LINK_BA_ACCOUNT)
+
     private fun getIntentForStartLocation(context: Context, startLocation: StartLocation): Intent {
       return Intent(context, AppSettingsActivity::class.java)
         .putExtra(ARG_NAV_GRAPH, R.navigation.app_settings_with_change_number)
@@ -259,7 +263,8 @@ class AppSettingsActivity : DSLSettingsActivity(), GooglePayComponent {
     CREATE_CHAT_FOLDER(18),
     BACKUPS_SETTINGS(19),
     INVITE(20),
-    MANAGE_STORAGE(21);
+    MANAGE_STORAGE(21),
+    LINK_BA_ACCOUNT(22);
 
     companion object {
       fun fromCode(code: Int?): StartLocation {

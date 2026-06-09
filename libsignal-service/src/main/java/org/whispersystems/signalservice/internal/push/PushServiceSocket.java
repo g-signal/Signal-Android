@@ -545,6 +545,26 @@ public class PushServiceSocket {
     return JsonUtil.fromJson(response, GExtGroupProfileResponse.class);
   }
 
+  public LinkBaUserInfoResponse getLinkBaUserInfo(String linkId) throws IOException {
+    String response = makeServiceRequest("/v1/gext/linkbapay/link/getBaUserInfo", "POST", JsonUtil.toJson(new LinkBaLinkIdRequest(linkId)));
+    return JsonUtil.fromJson(response, LinkBaUserInfoResponse.class);
+  }
+
+  public LinkBaRequestLinkResponse requestLinkBa(String linkId, String userName, boolean confirmResult) throws IOException {
+    String response = makeServiceRequest("/v1/gext/linkbapay/link/requestLink", "POST", JsonUtil.toJson(new LinkBaRequestLinkRequest(linkId, userName, confirmResult)));
+    return JsonUtil.fromJson(response, LinkBaRequestLinkResponse.class);
+  }
+
+  public LinkBaLinkResultResponse getLinkBaResult(String linkId) throws IOException {
+    String response = makeServiceRequest("/v1/gext/linkbapay/link/getLinkResult", "POST", JsonUtil.toJson(new LinkBaLinkIdRequest(linkId)));
+    return JsonUtil.fromJson(response, LinkBaLinkResultResponse.class);
+  }
+
+  public LinkBaLinkedUserInfoResponse getLinkedBaUserInfo() throws IOException {
+    String response = makeServiceRequest("/v1/gext/linkbapay/link/getLinkedBaUserInfo", "POST", "{}");
+    return JsonUtil.fromJson(response, LinkBaLinkedUserInfoResponse.class);
+  }
+
   public void cancelInFlightRequests() {
     synchronized (connections) {
       Log.w(TAG, "Canceling: " + connections.size());

@@ -101,6 +101,18 @@ class MediaCaptureFragment : Fragment(R.layout.fragment_container), CameraFragme
             .show()
         }
 
+        is MediaCaptureEvent.LinkBaAccountScannedFromQrCode -> {
+          MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.link_ba_platform_confirm_title)
+            .setMessage(R.string.photo_capture_link_ba_qr_code_found_message)
+            .setPositiveButton(R.string.MediaCaptureFragment_device_link_dialog_continue) { _, _ ->
+              startActivity(AppSettingsActivity.linkBaAccount(requireContext()))
+              requireActivity().finish()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+        }
+
         is MediaCaptureEvent.ReregistrationScannedFromQrCode -> {
           startActivity(TransferAccountActivity.intent(requireContext(), event.data))
           requireActivity().finish()

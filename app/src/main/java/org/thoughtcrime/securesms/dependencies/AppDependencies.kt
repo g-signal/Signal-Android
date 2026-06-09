@@ -52,6 +52,7 @@ import org.whispersystems.signalservice.api.cds.CdsApi
 import org.whispersystems.signalservice.api.certificate.CertificateApi
 import org.whispersystems.signalservice.api.donations.DonationsApi
 import org.whispersystems.signalservice.api.groups.GExtGroupApi
+import org.whispersystems.signalservice.api.linkbapay.LinkBaPayApi
 import org.whispersystems.signalservice.api.groupsv2.GroupsV2Operations
 import org.whispersystems.signalservice.api.keys.KeysApi
 import org.whispersystems.signalservice.api.link.LinkDeviceApi
@@ -360,6 +361,9 @@ object AppDependencies {
   val gExtGroupApi: GExtGroupApi
     get() = networkModule.gExtGroupApi
 
+  val linkBaPayApi: LinkBaPayApi
+    get() = networkModule.linkBaPayApi
+
   @JvmStatic
   val okHttpClient: OkHttpClient
     get() = networkModule.okHttpClient
@@ -453,5 +457,6 @@ object AppDependencies {
     fun provideRemoteConfigApi(authWebSocket: SignalWebSocket.AuthenticatedWebSocket, pushServiceSocket: PushServiceSocket): RemoteConfigApi
     fun provideDonationsApi(authWebSocket: SignalWebSocket.AuthenticatedWebSocket, unauthWebSocket: SignalWebSocket.UnauthenticatedWebSocket): DonationsApi
     fun provideGExtGroupApi(pushServiceSocket: PushServiceSocket): GExtGroupApi
+    fun provideLinkBaPayApi(pushServiceSocket: PushServiceSocket): LinkBaPayApi
   }
 }

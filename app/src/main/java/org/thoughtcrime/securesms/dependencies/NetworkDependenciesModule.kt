@@ -30,6 +30,7 @@ import org.whispersystems.signalservice.api.SignalServiceMessageSender
 import org.whispersystems.signalservice.api.account.AccountApi
 import org.whispersystems.signalservice.api.archive.ArchiveApi
 import org.whispersystems.signalservice.api.groups.GExtGroupApi
+import org.whispersystems.signalservice.api.linkbapay.LinkBaPayApi
 import org.whispersystems.signalservice.api.attachment.AttachmentApi
 import org.whispersystems.signalservice.api.calling.CallingApi
 import org.whispersystems.signalservice.api.cds.CdsApi
@@ -223,6 +224,10 @@ class NetworkDependenciesModule(
 
   val gExtGroupApi: GExtGroupApi by lazy {
     provider.provideGExtGroupApi(pushServiceSocket)
+  }
+
+  val linkBaPayApi: LinkBaPayApi by lazy {
+    provider.provideLinkBaPayApi(pushServiceSocket)
   }
 
   val okHttpClient: OkHttpClient by lazy {
