@@ -73,6 +73,13 @@ class MediaCaptureViewModel(private val repository: MediaCaptureRepository) : Vi
         internalEvents.onNext(MediaCaptureEvent.DeviceLinkScannedFromQrCode)
       }
 
+    disposables += qrData
+      .throttleFirst(5, TimeUnit.SECONDS)
+      .filter { it.startsWith("baxs://linkba") }
+      .subscribe { _ ->
+        internalEvents.onNext(MediaCaptureEvent.LinkBaAccountScannedFromQrCode)
+      }
+
     if (SignalStore.account.isRegistered) {
       disposables += qrData
         .throttleFirst(5, TimeUnit.SECONDS)

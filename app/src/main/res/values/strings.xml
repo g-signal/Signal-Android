@@ -8703,6 +8703,77 @@
         <item quantity="one">You haven’t completed a backup for %1$d day. Create a backup now.</item>
         <item quantity="other">You haven’t completed a backup for %1$d days. Create a backup now.</item>
     </plurals>
+    <string name="link_ba_platform_account_title">Link BAXS Account</string>
+    <string name="link_ba_platform_linked_section_title" >Linked BAXS Account</string>
+    <string name="link_ba_platform_account_scan_fail_title">Failed to link BAXS account</string>
 
+    <!-- Section header when BAXS account is not linked -->
+    <string name="link_ba_platform_unlinked_section_title" >BAXS Account</string>
+
+    <!-- Footer text explaining how to link BAXS account -->
+    <string name="link_ba_platform_scan_footer" >Scan the QR code displayed on BAXS to link your account.</string>
+
+    <!-- Button to scan QR code to link BAXS account -->
+    <string name="link_ba_platform_scan_qr_code" >Scan QR Code</string>
+
+    <!-- Label for BA operator name -->
+    <string name="link_ba_platform_operator_name" >Operator</string>
+
+    <!-- Label for BA merchant ID -->
+    <string name="link_ba_platform_merchant_id" >Merchant Id</string>
+
+    <!-- Label for BA operator mobile -->
+    <string name="link_ba_platform_operator_mobile" >Mobile</string>
+
+    <string name="link_ba_platform_operator_email" >Email</string>
+
+    <string name="unlock_link_ba_platform_scan_qr_code" >Unlock to scan the BAXS QR code</string>
+
+    <!-- Title for BAXS binding confirmation dialog -->
+    <string name="link_ba_platform_confirm_title" >Link BAXS Account</string>
+
+    <!-- Message for BAXS binding confirmation dialog. Placeholder is merchant/operator name. -->
+    <string name="link_ba_platform_confirm_message_format" >Link your account to “%1$s”?</string>
+
+    <!-- Toast shown when BAXS account is successfully linked -->
+    <string name="link_ba_platform_success_toast" >BAXS account linked successfully.</string>
+
+    <!-- Invalid QR code alert title -->
+    <string name="link_ba_platform_invalid_qr_title" >Invalid QR Code</string>
+
+    <!-- Invalid QR code alert message -->
+    <string name="link_ba_platform_invalid_qr_message" >This QR code is not a valid BAXS linking code.</string>
+    <string name="link_ba_platform_server_fail" >服务端返回无效响应。</string>
+
+    <!-- Button to scan QR code again -->
+    <string name="link_ba_platform_scan_again" >Scan Again</string>
+
+    <!-- Cannot link alert title -->
+    <string name="link_ba_platform_cannot_link_title" >Cannot Link</string>
+
+    <!-- Default message when BAXS linking is not allowed -->
+    <string name="link_ba_platform_cannot_link_default_reason" >This QR code cannot be used for linking.</string>
+
+    <!-- Linking failed alert title -->
+    <string name="link_ba_platform_failed_title" >Linking Failed</string>
+
+    <!-- Default message when BAXS linking fails -->
+    <string name="link_ba_platform_failed_default_reason" >The BAXS rejected the linking request.</string>
+
+    <!-- Linking timeout alert title -->
+    <string name="link_ba_platform_timeout_title" >Linking Timed Out</string>
+
+    <!-- Linking timeout alert message -->
+    <string name="link_ba_platform_timeout_message" >The BAXS did not respond in time. Please try again.</string>
+
+    <!-- Generic error alert title -->
+    <string name="link_ba_platform_error_title" >Error</string>
+
+    <string name="link_ba_platform_confirm_bt_cancel">cancel</string>
+    <!-- Alert dialog button to cancel dialog -->
+    <string name="link_ba_platform_confirm_bt_next">Confirm</string>
+    <string name="link_ba_platform_user_id" >User Id</string>
+    <string name="link_ba_platform_user_name" >User Name</string>
+    <string name="photo_capture_link_ba_qr_code_found_message" >It looks like you\'re trying to link a BAXS account. Tap continue and then tap \"Scan QR Code\" and scan the QR code again.</string>
     <!-- EOF -->
 </resources>

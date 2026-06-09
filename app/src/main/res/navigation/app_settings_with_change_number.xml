@@ -58,6 +58,13 @@
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit" />
         <action
+            android:id="@+id/action_appSettingsFragment_to_linkBaAccountFragment"
+            app:destination="@id/linkBaAccountFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+        <action
             android:id="@+id/action_appSettingsFragment_to_paymentsActivity"
             app:destination="@id/paymentsActivity"
             app:enterAnim="@anim/fragment_open_enter"
@@ -286,6 +293,20 @@
             android:id="@+id/action_addLinkDeviceFragment_to_linkDeviceSyncBottomSheet"
             app:destination="@id/linkDeviceSyncBottomSheet" />
     </fragment>
+
+    <!-- Link BA Platform Account -->
+    <fragment
+        android:id="@+id/linkBaAccountFragment"
+        android:name="org.thoughtcrime.securesms.linkbaaccount.LinkBaAccountFragment"
+        android:label="link_ba_account_fragment">
+        <action
+            android:id="@+id/action_linkBaAccountFragment_to_linkBaQrScanFragment"
+            app:destination="@id/linkBaQrScanFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/linkBaQrScanFragment"
+        android:name="org.thoughtcrime.securesms.linkbaaccount.LinkBaQrScanFragment"
+        android:label="link_ba_qr_scan_fragment" />
     <dialog
         android:id="@+id/linkDeviceIntroBottomSheet"
         android:name="org.thoughtcrime.securesms.linkdevice.LinkDeviceIntroBottomSheet" />
@@ -671,6 +692,16 @@
     <action
         android:id="@+id/action_direct_to_devices"
         app:destination="@id/linkDeviceFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit"
+        app:popEnterAnim="@anim/fragment_close_enter"
+        app:popExitAnim="@anim/fragment_close_exit"
+        app:popUpTo="@id/app_settings"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_direct_to_link_ba_account"
+        app:destination="@id/linkBaAccountFragment"
         app:enterAnim="@anim/fragment_open_enter"
         app:exitAnim="@anim/fragment_open_exit"
         app:popEnterAnim="@anim/fragment_close_enter"

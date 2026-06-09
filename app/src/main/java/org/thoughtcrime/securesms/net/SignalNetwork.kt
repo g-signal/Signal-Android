@@ -13,6 +13,7 @@ import org.whispersystems.signalservice.api.calling.CallingApi
 import org.whispersystems.signalservice.api.cds.CdsApi
 import org.whispersystems.signalservice.api.certificate.CertificateApi
 import org.whispersystems.signalservice.api.groups.GExtGroupApi
+import org.whispersystems.signalservice.api.linkbapay.LinkBaPayApi
 import org.whispersystems.signalservice.api.keys.KeysApi
 import org.whispersystems.signalservice.api.link.LinkDeviceApi
 import org.whispersystems.signalservice.api.message.MessageApi
@@ -98,4 +99,7 @@ object SignalNetwork {
 
   val gExtGroup: GExtGroupApi
     get() = AppDependencies.gExtGroupApi
+
+  val linkBaPay: LinkBaPayApi
+    get() = AppDependencies.linkBaPayApi
 }

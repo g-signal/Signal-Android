@@ -47,6 +47,7 @@ class MediaCaptureFragment : Fragment(R.layout.fragment_container), CameraFragme
   private lateinit var navigator: MediaSelectionNavigator
 
   private val lifecycleDisposable = LifecycleDisposable()
+  private var linkBaDialog: androidx.appcompat.app.AlertDialog? = null
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     captureChildFragment = CameraFragment.newInstance(sharedViewModel.isContactSelectionRequired) as CameraFragment
@@ -99,6 +100,23 @@ class MediaCaptureFragment : Fragment(R.layout.fragment_container), CameraFragme
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+        }
+
+        is MediaCaptureEvent.LinkBaAccountScannedFromQrCode -> {
+          if (linkBaDialog?.isShowing == true) {
+            Log.d(TAG, "LinkBa dialog already showing, ignoring duplicate event.")
+          } else {
+            linkBaDialog = MaterialAlertDialogBuilder(requireContext())
+              .setTitle(R.string.link_ba_platform_confirm_title)
+              .setMessage(R.string.photo_capture_link_ba_qr_code_found_message)
+              .setPositiveButton(R.string.MediaCaptureFragment_device_link_dialog_continue) { _, _ ->
+                startActivity(AppSettingsActivity.linkBaAccount(requireContext()))
+                requireActivity().finish()
+              }
+              .setNegativeButton(android.R.string.cancel, null)
+              .setOnDismissListener { linkBaDialog = null }
+              .show()
+          }
         }
 
         is MediaCaptureEvent.ReregistrationScannedFromQrCode -> {

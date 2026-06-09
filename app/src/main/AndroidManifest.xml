@@ -123,8 +123,7 @@
     <meta-data android:name="com.google.android.gms.version"
                android:value="@integer/google_play_services_version" />
 
-    <meta-data android:name="com.google.android.gms.car.application"
-               android:resource="@xml/automotive_app_desc" />
+
 
     <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
     <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
@@ -164,6 +163,18 @@
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="baxs"
                   android:host="linkdevice"/>
+        </intent-filter>
+    </activity>
+
+    <activity android:name=".linkbaaccount.LinkBaProvisioningActivity"
+              android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
+              android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="baxs"
+                  android:host="linkba"/>
         </intent-filter>
     </activity>
 

@@ -8517,6 +8517,81 @@
     <plurals name="Notification_you_have_not_completed_a_backup">
         <item quantity="other">您已有 %1$d 天未备份。立即创建备份。</item>
     </plurals>
+    <string name="link_ba_platform_account_title">绑定BAXS账号</string>
+    <string name="link_ba_platform_account_scan_fail_title">绑定BAXS账号失败</string>
+    <!-- Section header when BAXS account is not linked -->
+    <!-- Section header when BAXS account is linked -->
+    <string name="link_ba_platform_linked_section_title" >已绑定BAXS账号</string>
 
-    <!-- EOF -->
+    <!-- Section header when BAXS account is not linked -->
+    <string name="link_ba_platform_unlinked_section_title" >BAXS账号</string>
+
+    <!-- Footer text explaining how to link BAXS account -->
+    <string name="link_ba_platform_scan_footer" >扫描BAXS显示的二维码，完成账号绑定。</string>
+
+    <!-- Button to scan QR code to link BAXS account -->
+    <string name="link_ba_platform_scan_qr_code" >扫描二维码</string>
+    <string name="unlock_link_ba_platform_scan_qr_code" >解锁以扫描BAXS二维码</string>
+
+    <!-- Label for BA operator name -->
+    <string name="link_ba_platform_operator_name" >操作员</string>
+
+    <!-- Label for BA merchant ID -->
+    <string name="link_ba_platform_merchant_id" >商户ID</string>
+
+    <!-- Label for BA operator mobile -->
+    <string name="link_ba_platform_operator_mobile" >手机号</string>
+
+    <!-- Label for BA account link date -->
+    <string name="link_ba_platform_linked_date" >绑定时间</string>
+
+    <!-- Title for BAXS binding confirmation dialog -->
+    <string name="link_ba_platform_confirm_title" >绑定BAXS账号</string>
+
+    <!-- Message for BAXS binding confirmation dialog. Placeholder is merchant/operator name. -->
+    <string name="link_ba_platform_confirm_message_format" >确认绑定到“%1$s”?</string>
+
+    <!-- Toast shown when BAXS account is successfully linked -->
+    <string name="link_ba_platform_success_toast" >BAXS账号绑定成功。</string>
+
+    <!-- Invalid QR code alert title -->
+    <string name="link_ba_platform_invalid_qr_title" >无效的二维码</string>
+
+    <!-- Invalid QR code alert message -->
+    <string name="link_ba_platform_invalid_qr_message" >此二维码不是有效的BAXS绑定码。</string>
+
+    <!-- Button to scan QR code again -->
+    <string name="link_ba_platform_scan_again" >重新扫描</string>
+
+    <!-- Cannot link alert title -->
+    <string name="link_ba_platform_cannot_link_title" >无法绑定</string>
+
+    <!-- Default message when BAXS linking is not allowed -->
+    <string name="link_ba_platform_cannot_link_default_reason" >此二维码不可用于绑定。</string>
+
+    <!-- Linking failed alert title -->
+    <string name="link_ba_platform_failed_title" >绑定失败</string>
+
+    <!-- Default message when BAXS linking fails -->
+    <string name="link_ba_platform_failed_default_reason" >BAXS拒绝了绑定请求。</string>
+
+    <!-- Linking timeout alert title -->
+    <string name="link_ba_platform_timeout_title" >绑定超时</string>
+    <string name="link_ba_platform_server_fail" >服务端返回无效响应。</string>
+
+    <!-- Linking timeout alert message -->
+    <string name="link_ba_platform_timeout_message" >BAXS未在规定时间内响应，请重试。</string>
+
+    <!-- Generic error alert title -->
+    <string name="link_ba_platform_error_title" >错误</string>
+
+
+
+    <string name="link_ba_platform_operator_email" >邮箱</string>
+    <string name="link_ba_platform_confirm_bt_cancel">取消</string>
+    <!-- Alert dialog button to cancel dialog -->
+    <string name="link_ba_platform_confirm_bt_next">绑定</string>
+    <string name="link_ba_platform_user_id" >用户ID</string>
+    <string name="link_ba_platform_user_name" >用户名</string>
+    <string name="photo_capture_link_ba_qr_code_found_message" >您似乎正在尝试绑定 BAXS 账号，请点击“继续”，然后点击“扫描二维码”，并再次扫描二维码。</string>
 </resources>
