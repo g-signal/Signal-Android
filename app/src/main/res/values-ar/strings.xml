@@ -5,7 +5,7 @@
   -->
 <!-- smartling.instruction_comments_enabled = on -->
 <resources>
-  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Remi Messenger</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
   <!-- Removed by excludeNonTranslatables <string name="donate_url" translatable="false">https://signal.org/donate</string> -->
@@ -3296,8 +3296,8 @@
     <string name="SupportEmailUtil_filter">الفلتر:</string>
     <string name="SupportEmailUtil_device_info">معلومات الجهاز:</string>
     <string name="SupportEmailUtil_android_version">إصدار اﻷندرويد:</string>
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">Signal version:</string> -->
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">Signal package:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">Remi Messenger version:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">Remi Messenger package:</string> -->
     <string name="SupportEmailUtil_registration_lock">قفل التسجيل:</string>
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
 
@@ -9109,7 +9109,7 @@
     <!-- Dialog message shown when there is an error saving the backup key because no compatible password manager was detected. -->
     <string name="MessageBackupsKeyRecordScreen__missing_password_manager_message">لم تقم بإعداد مدير كلمات المرور، أو مدير كلمات المرور الذي تستخدمه غير مدعوم.</string>
     <!-- Dialog message shown when there is an error saving the backup key because the user previously chose not to save Signal passwords to their password manager. -->
-    <string name="MessageBackupsKeyRecordScreen__password_save_prompt_disabled_message">You previously chose not to save passwords for Signal to Google Password Manager. In your Google Password Manager settings, remove Signal from \"Declined sites and apps\" and try again.</string>
+    <string name="MessageBackupsKeyRecordScreen__password_save_prompt_disabled_message">You previously chose not to save passwords for Remi Messenger to Google Password Manager. In your Google Password Manager settings, remove Remi Messenger from \"Declined sites and apps\" and try again.</string>
     <!-- Label for a button that navigates to the device settings -->
     <string name="MessageBackupsKeyRecordScreen__go_to_settings">انتقِل إلى الإعدادات</string>
     <!-- Action button label -->
@@ -9313,12 +9313,12 @@
 
     <!-- Email subject when contacting support on a restore backup network issue -->
     <string name="EnterBackupKey_network_failure_support_email">خطأ في الشبكة عند استعادة النسخة الاحتياطية لسيجنال أندرويد</string>
-  <!-- Removed by excludeNonTranslatables <string name="EnterBackupKey_network_failure_support_email_filter" translatable="false">Android SignalBackups Import Failed</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="EnterBackupKey_network_failure_support_email_filter" translatable="false">Android Remi MessengerBackups Import Failed</string> -->
 
     <!-- Email subject when contacting support on a create backup failure -->
     <string name="BackupAlertBottomSheet_network_failure_support_email">خطأ في الشبكة عند استعادة النسخة الاحتياطية لسيجنال أندرويد</string>
     <!-- Email filter when contacting support on a create backup failure -->
-  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android SignalBackups Export Failed</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android Remi MessengerBackups Export Failed</string> -->
 
     <!-- Title of dialog asking to submit debuglogs -->
     <string name="ContactSupportDialog_submit_debug_log">هل ترغبُ بإرسال سجل الأخطاء؟</string>
