@@ -10,6 +10,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import org.signal.core.ui.compose.Dialogs
 import org.signal.core.util.logging.Log
 import org.signal.qr.QrScannerView
@@ -28,6 +29,7 @@ sealed interface LinkBaScanDialog {
   data object Linking : LinkBaScanDialog
   data object Timeout : LinkBaScanDialog
   data class Failed(val reason: String) : LinkBaScanDialog
+  data object ServerError : LinkBaScanDialog
 }
 
 @Composable
@@ -41,6 +43,7 @@ fun LinkBaQrScanScreen(
   onDialogRetry: () -> Unit = {},
   onDialogDismiss: () -> Unit = {},
   onDialogConfirm: (linkId: String) -> Unit = {},
+  onDialogDecline: (linkId: String) -> Unit = {},
   onTimeoutScanAgain: () -> Unit = {},
   modifier: Modifier = Modifier
 ) {
@@ -78,11 +81,16 @@ fun LinkBaQrScanScreen(
         confirm = stringResource(id = R.string.link_ba_platform_confirm_bt_next),
         onConfirm = { onDialogConfirm(confirm.linkId) },
         dismiss = stringResource(id = R.string.link_ba_platform_confirm_bt_cancel),
-        onDismiss = onDialogDismiss
+        onDismiss = onDialogDismiss,
+        onDeny = { onDialogDecline(confirm.linkId) }
       )
     }
     LinkBaScanDialog.Linking -> {
-      Dialogs.IndeterminateProgressDialog()
+      Dialogs.IndeterminateProgressDialog(
+        message = "",
+        dismiss = stringResource(id = R.string.link_ba_platform_confirm_bt_cancel),
+        onDismiss = onDialogDismiss
+      )
     }
     LinkBaScanDialog.Timeout -> {
       Dialogs.SimpleAlertDialog(
@@ -104,6 +112,16 @@ fun LinkBaQrScanScreen(
         onDismiss = onDialogDismiss
       )
     }
+    LinkBaScanDialog.ServerError -> {
+      Dialogs.SimpleAlertDialog(
+        title = stringResource(id = R.string.link_ba_platform_error_title),
+        body = stringResource(id = R.string.link_ba_platform_server_fail),
+        confirm = stringResource(id = R.string.link_ba_platform_scan_again),
+        onConfirm = onDialogRetry,
+        dismiss = stringResource(id = R.string.link_ba_platform_confirm_bt_cancel),
+        onDismiss = onDialogDismiss
+      )
+    }
   }
 
   Column(
@@ -122,12 +140,17 @@ fun LinkBaQrScanScreen(
           val view = QrScannerView(factoryContext)
           view.qrData
             .throttleFirst(3000, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
               { data ->
                 val enabled = scanningEnabledState.value
                 Log.i(TAG, "qrData onNext, len=${data.length}, scanningEnabled=$enabled")
                 if (enabled) {
-                  onQrCodeScannedState.value(data)
+                  try {
+                    onQrCodeScannedState.value(data)
+                  } catch (t: Throwable) {
+                    Log.w(TAG, "onQrCodeScanned threw", t)
+                  }
                 }
               },
               { t -> Log.w(TAG, "qrData error", t) }

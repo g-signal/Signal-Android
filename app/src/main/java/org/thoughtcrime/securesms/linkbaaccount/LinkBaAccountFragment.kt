@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -325,24 +326,22 @@ private fun LinkedContent(info: LinkBaLinkedUserInfoResponse) {
         containerColor = MaterialTheme.colorScheme.surfaceVariant
       )
     ) {
-      Column(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-      ) {
+      Column(modifier = Modifier.fillMaxWidth()) {
         LinkedInfoRow(
           label = stringResource(id = R.string.link_ba_platform_user_id),
           value = info.linkbaxsOptId.orEmpty()
         )
+        LinkedInfoDivider()
         LinkedInfoRow(
           label = stringResource(id = R.string.link_ba_platform_user_name),
           value = info.linkbaxsOptName.orEmpty()
         )
+        LinkedInfoDivider()
         LinkedInfoRow(
           label = stringResource(id = R.string.link_ba_platform_operator_email),
           value = info.linkbaxsOptEmail.orEmpty()
         )
+        LinkedInfoDivider()
         LinkedInfoRow(
           label = stringResource(id = R.string.link_ba_platform_operator_mobile),
           value = info.linkbaxsOptMobile.orEmpty()
@@ -353,9 +352,20 @@ private fun LinkedContent(info: LinkBaLinkedUserInfoResponse) {
 }
 
 @Composable
+private fun LinkedInfoDivider() {
+  HorizontalDivider(
+    thickness = 1.dp,
+    color = MaterialTheme.colorScheme.outlineVariant,
+    modifier = Modifier.padding(horizontal = 16.dp)
+  )
+}
+
+@Composable
 private fun LinkedInfoRow(label: String, value: String) {
   Row(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(horizontal = 16.dp, vertical = 14.dp),
     horizontalArrangement = Arrangement.spacedBy(16.dp),
     verticalAlignment = Alignment.Top
   ) {

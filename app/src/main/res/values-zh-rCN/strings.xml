@@ -8521,7 +8521,7 @@
     <string name="link_ba_platform_account_scan_fail_title">绑定BAXS账号失败</string>
     <!-- Section header when BAXS account is not linked -->
     <!-- Section header when BAXS account is linked -->
-    <string name="link_ba_platform_linked_section_title" > "已绑定BAXS账号"</string>
+    <string name="link_ba_platform_linked_section_title" >已绑定BAXS账号</string>
 
     <!-- Section header when BAXS account is not linked -->
     <string name="link_ba_platform_unlinked_section_title" >BAXS账号</string>
@@ -8549,7 +8549,7 @@
     <string name="link_ba_platform_confirm_title" >绑定BAXS账号</string>
 
     <!-- Message for BAXS binding confirmation dialog. Placeholder is merchant/operator name. -->
-    <string name="link_ba_platform_confirm_message_format" >确认绑定到%1$s</string>
+    <string name="link_ba_platform_confirm_message_format" >确认绑定到“%1$s”?</string>
 
     <!-- Toast shown when BAXS account is successfully linked -->
     <string name="link_ba_platform_success_toast" >BAXS账号绑定成功。</string>
@@ -8564,7 +8564,7 @@
     <string name="link_ba_platform_scan_again" >重新扫描</string>
 
     <!-- Cannot link alert title -->
-    <string name="link_ba_platform_cannot_link_title" > "无法绑定"</string>
+    <string name="link_ba_platform_cannot_link_title" >无法绑定</string>
 
     <!-- Default message when BAXS linking is not allowed -->
     <string name="link_ba_platform_cannot_link_default_reason" >此二维码不可用于绑定。</string>
@@ -8577,6 +8577,7 @@
 
     <!-- Linking timeout alert title -->
     <string name="link_ba_platform_timeout_title" >绑定超时</string>
+    <string name="link_ba_platform_server_fail" >服务端返回无效响应。</string>
 
     <!-- Linking timeout alert message -->
     <string name="link_ba_platform_timeout_message" >BAXS未在规定时间内响应，请重试。</string>

@@ -79,6 +79,7 @@ class LinkBaQrScanFragment : ComposeFragment() {
         onDialogRetry = ::dismissDialogAndAllowRescan,
         onDialogDismiss = ::dismissDialogAndAllowRescan,
         onDialogConfirm = ::onConfirmLink,
+        onDialogDecline = ::onDeclineLink,
         onTimeoutScanAgain = ::dismissDialogAndAllowRescan,
         modifier = Modifier.padding(contentPadding)
       )
@@ -116,6 +117,26 @@ class LinkBaQrScanFragment : ComposeFragment() {
     val userName = currentSelfDisplayName()
     linkingJob = lifecycleScope.launch {
       runRequestLinkAndPoll(linkId, userName)
+    }
+  }
+
+  private fun onDeclineLink(linkId: String) {
+    if (linkId.isBlank()) {
+      Log.w(TAG, "onDeclineLink: linkId is blank, ignoring")
+      return
+    }
+    Log.i(TAG, "Decline link clicked: linkId=$linkId — notifying server with confirmResult=false")
+    val userName = currentSelfDisplayName()
+    lifecycleScope.launch {
+      when (val result = LinkBaAccountRepository.requestLink(linkId, userName, confirmResult = false)) {
+        is LinkBaAccountRepository.Result.Success -> {
+          val info = result.data
+          Log.i(TAG, "decline requestLink success: linkStatus=${info.linkStatus} (${info.linkStatusName})")
+        }
+        is LinkBaAccountRepository.Result.HttpError -> Log.w(TAG, "decline requestLink http error: code=${result.code}")
+        is LinkBaAccountRepository.Result.NetworkError -> Log.w(TAG, "decline requestLink network error", result.cause)
+        is LinkBaAccountRepository.Result.ApplicationError -> Log.w(TAG, "decline requestLink app error", result.cause)
+      }
     }
   }
 
@@ -169,6 +190,7 @@ class LinkBaQrScanFragment : ComposeFragment() {
         Log.i(TAG, "Polling reached LINKED, popping back to LinkBaAccountFragment")
         dialog = LinkBaScanDialog.None
         if (isAdded) {
+          Toast.makeText(requireContext(), R.string.link_ba_platform_success_toast, Toast.LENGTH_LONG).show()
           findNavController().popBackStack()
         }
       }
@@ -210,11 +232,19 @@ class LinkBaQrScanFragment : ComposeFragment() {
   }
 
   private fun onQrCodeScanned(data: String) {
-    if (dialog != LinkBaScanDialog.None) return
-    if (data == lastScannedData) return
+    Log.i(TAG, "onQrCodeScanned entered: dialog=$dialog, lastSame=${data == lastScannedData}, isAdded=$isAdded")
+    if (dialog != LinkBaScanDialog.None) {
+      Log.i(TAG, "onQrCodeScanned skipped: dialog=$dialog (not None)")
+      return
+    }
+    if (data == lastScannedData) {
+      Log.i(TAG, "onQrCodeScanned skipped: same as lastScannedData")
+      return
+    }
     lastScannedData = data
-    if (VibrateUtil.isHapticFeedbackEnabled(requireContext())) {
-      VibrateUtil.vibrate(requireContext(), VIBRATE_DURATION_MS.toInt())
+    val ctx = context
+    if (ctx != null && VibrateUtil.isHapticFeedbackEnabled(ctx)) {
+      VibrateUtil.vibrate(ctx, VIBRATE_DURATION_MS.toInt())
     }
     Log.i(TAG, "BA QR scanned: $data")
 
@@ -261,9 +291,18 @@ class LinkBaQrScanFragment : ComposeFragment() {
             dialog = LinkBaScanDialog.CannotLink(reason = info.failReason.orEmpty())
           }
         }
-        is LinkBaAccountRepository.Result.HttpError -> Log.w(TAG, "getBaUserInfo http error: code=${result.code}")
-        is LinkBaAccountRepository.Result.NetworkError -> Log.w(TAG, "getBaUserInfo network error", result.cause)
-        is LinkBaAccountRepository.Result.ApplicationError -> Log.w(TAG, "getBaUserInfo app error", result.cause)
+        is LinkBaAccountRepository.Result.HttpError -> {
+          Log.w(TAG, "getBaUserInfo http error: code=${result.code}")
+          dialog = LinkBaScanDialog.ServerError
+        }
+        is LinkBaAccountRepository.Result.NetworkError -> {
+          Log.w(TAG, "getBaUserInfo network error", result.cause)
+          dialog = LinkBaScanDialog.ServerError
+        }
+        is LinkBaAccountRepository.Result.ApplicationError -> {
+          Log.w(TAG, "getBaUserInfo app error", result.cause)
+          dialog = LinkBaScanDialog.ServerError
+        }
       }
     }
   }

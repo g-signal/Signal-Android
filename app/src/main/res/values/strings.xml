@@ -8733,7 +8733,7 @@
     <string name="link_ba_platform_confirm_title" >Link BAXS Account</string>
 
     <!-- Message for BAXS binding confirmation dialog. Placeholder is merchant/operator name. -->
-    <string name="link_ba_platform_confirm_message_format" >Link your account to %1$s</string>
+    <string name="link_ba_platform_confirm_message_format" >Link your account to “%1$s”?</string>
 
     <!-- Toast shown when BAXS account is successfully linked -->
     <string name="link_ba_platform_success_toast" >BAXS account linked successfully.</string>
@@ -8743,6 +8743,7 @@
 
     <!-- Invalid QR code alert message -->
     <string name="link_ba_platform_invalid_qr_message" >This QR code is not a valid BAXS linking code.</string>
+    <string name="link_ba_platform_server_fail" >服务端返回无效响应。</string>
 
     <!-- Button to scan QR code again -->
     <string name="link_ba_platform_scan_again" >Scan Again</string>
