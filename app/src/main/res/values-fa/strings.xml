@@ -5,7 +5,7 @@
   -->
 <!-- smartling.instruction_comments_enabled = on -->
 <resources>
-  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">B&amp;A</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
   <!-- Removed by excludeNonTranslatables <string name="donate_url" translatable="false">https://signal.org/donate</string> -->
@@ -2924,8 +2924,8 @@
     <string name="SupportEmailUtil_filter">فیلتر:</string>
     <string name="SupportEmailUtil_device_info">اطلاعات دستگاه:</string>
     <string name="SupportEmailUtil_android_version">نسخهٔ اندروید:</string>
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">Signal version:</string> -->
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">Signal package:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">B&amp;A version:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">B&amp;A package:</string> -->
     <string name="SupportEmailUtil_registration_lock">قفل ثبت‌نام:</string>
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
 
@@ -4720,7 +4720,7 @@
     <string name="BackupDialog_passphrase_was_not_correct">گذرواژه نادرست بود</string>
     <string name="LocalBackupJob_creating_signal_backup">در حال ایجاد پشتیبان سیگنال…</string>
     <!-- Title for progress notification shown in a system notification while verifying a recent backup. -->
-    <string name="LocalBackupJob_verifying_signal_backup">در حال تایید پشتیبان Signal…</string>
+    <string name="LocalBackupJob_verifying_signal_backup">در حال تایید پشتیبان B&amp;A…</string>
     <string name="LocalBackupJobApi29_backup_failed">پشتیبان‌گیری ناموفق بود</string>
     <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">آدرس ذخیره‌سازی پشتیبان شما پاک شده یا به جای دیگری انتقال یافته است.</string>
     <string name="LocalBackupJobApi29_your_backup_file_is_too_large">حجم فایل پشتیبان شما برای نگهداری در این محل زیاد است.</string>
@@ -8585,12 +8585,12 @@
 
     <!-- Email subject when contacting support on a restore backup network issue -->
     <string name="EnterBackupKey_network_failure_support_email">خطای شبکه بازیابی پشتیبان سیگنال اندروید</string>
-  <!-- Removed by excludeNonTranslatables <string name="EnterBackupKey_network_failure_support_email_filter" translatable="false">Android SignalBackups Import Failed</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="EnterBackupKey_network_failure_support_email_filter" translatable="false">Android B&amp;ABackups Import Failed</string> -->
 
     <!-- Email subject when contacting support on a create backup failure -->
     <string name="BackupAlertBottomSheet_network_failure_support_email">خطای شبکه خروجی «پشتیبان‌گیری سیگنال اندروید»</string>
     <!-- Email filter when contacting support on a create backup failure -->
-  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android SignalBackups Export Failed</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android B&amp;ABackups Export Failed</string> -->
 
     <!-- Title of dialog asking to submit debuglogs -->
     <string name="ContactSupportDialog_submit_debug_log">گزارش اشکال‌زدایی ارسال شود؟</string>

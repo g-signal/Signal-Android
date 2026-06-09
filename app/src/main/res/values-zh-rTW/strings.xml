@@ -5,7 +5,7 @@
   -->
 <!-- smartling.instruction_comments_enabled = on -->
 <resources>
-  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">B&amp;A</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
   <!-- Removed by excludeNonTranslatables <string name="donate_url" translatable="false">https://signal.org/donate</string> -->
@@ -2831,8 +2831,8 @@
     <string name="SupportEmailUtil_filter">過濾:</string>
     <string name="SupportEmailUtil_device_info">裝置資訊:</string>
     <string name="SupportEmailUtil_android_version">Android 版本:</string>
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">Signal version:</string> -->
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">Signal package:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">B&amp;A version:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">B&amp;A package:</string> -->
     <string name="SupportEmailUtil_registration_lock">註冊鎖：</string>
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
 
@@ -8404,12 +8404,12 @@
 
     <!-- Email subject when contacting support on a restore backup network issue -->
     <string name="EnterBackupKey_network_failure_support_email">B&amp;A Android 備份還原時網路發生錯誤</string>
-  <!-- Removed by excludeNonTranslatables <string name="EnterBackupKey_network_failure_support_email_filter" translatable="false">Android SignalBackups Import Failed</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="EnterBackupKey_network_failure_support_email_filter" translatable="false">Android B&amp;ABackups Import Failed</string> -->
 
     <!-- Email subject when contacting support on a create backup failure -->
     <string name="BackupAlertBottomSheet_network_failure_support_email">B&amp;A Android 備份匯出時網路發生錯誤</string>
     <!-- Email filter when contacting support on a create backup failure -->
-  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android SignalBackups Export Failed</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android B&amp;ABackups Export Failed</string> -->
 
     <!-- Title of dialog asking to submit debuglogs -->
     <string name="ContactSupportDialog_submit_debug_log">要提交除錯日誌嗎？</string>

@@ -46,7 +46,7 @@
   <!-- Removed by excludeNonTranslatables <string name="AlbumThumbnailView_plus" translatable="false">\+%d</string> -->
 
     <!-- ApplicationMigrationActivity -->
-    <string name="ApplicationMigrationActivity__signal_is_updating">Signal 正在更新…</string>
+    <string name="ApplicationMigrationActivity__signal_is_updating">B&amp;A 正在更新…</string>
 
     <!-- ApplicationPreferencesActivity -->
     <string name="ApplicationPreferenceActivity_you_havent_set_a_passphrase_yet">您尚未设置密码！</string>
@@ -101,7 +101,7 @@
     <!-- Text explaining that Signal has limited access to photos -->
     <string name="AttachmentKeyboard_signal_has_limited_access">B&amp;A 对照片或视频的访问受限</string>
     <!-- Text shown when user has given no photos for Signal to access and an explanation on how to change those permissions -->
-    <string name="AttachmentKeyboard_no_photos_found">未找到照片。请选择要在此处显示的照片或视频，或者更改 Signal 的访问权限。</string>
+    <string name="AttachmentKeyboard_no_photos_found">未找到照片。请选择要在此处显示的照片或视频，或者更改 B&amp;A 的访问权限。</string>
 
     <!-- MediaGalleryFragment -->
     <!-- Text describing that no photos or videos are currently found in the gallery and that Signal can only access media that the user allows -->
@@ -2151,7 +2151,7 @@
     <string name="DeviceProvisioningActivity_sorry_you_have_too_many_devices_linked_already">很抱歉，关联设备过多，请先移除一些。</string>
     <string name="DeviceActivity_sorry_this_is_not_a_valid_device_link_qr_code">抱歉，设备关联二维码无效。</string>
     <string name="DeviceProvisioningActivity_link_a_signal_device">关联 B&amp;A 设备？</string>
-    <string name="DeviceProvisioningActivity_to_link_a_desktop_or_ipad_to_this_signal_account">如要将电脑或 iPad 链接到此 B&amp;A 账户，请前往“已链接设备”，然后点击“链接新设备”，并再次扫描二维码。请确保仅扫描直接来自 Signal 的二维码。</string>
+    <string name="DeviceProvisioningActivity_to_link_a_desktop_or_ipad_to_this_signal_account">如要将电脑或 iPad 链接到此 B&amp;A 账户，请前往“已链接设备”，然后点击“链接新设备”，并再次扫描二维码。请确保仅扫描直接来自 B&amp;A 的二维码。</string>
 
     <string name="DeviceActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code">B&amp;A 需“相机”权限，来扫描二维码，但该权限已永久禁用。请访问应用设置菜单，选择“权限”并启用“相机”。</string>
     <string name="DeviceActivity_unable_to_scan_a_qr_code_without_the_camera_permission">没有“相机”权限，无法扫描二维码</string>
