@@ -1,0 +1,57 @@
+=== bamain-merge-tag-v7.58.0 独有文件分析 ===
+
+### 按文件类型分类 ###
+
+# Kotlin/Java 源文件:
+数量: 96
+.idea/fileTemplates/ViewModel.kt
+.idea/fileTemplates/internal/AnnotationType.java
+.idea/fileTemplates/internal/Class.java
+.idea/fileTemplates/internal/Enum.java
+.idea/fileTemplates/internal/Interface.java
+.idea/fileTemplates/internal/Kotlin Class.kt
+.idea/fileTemplates/internal/Kotlin Enum.kt
+.idea/fileTemplates/internal/Kotlin File.kt
+.idea/fileTemplates/internal/Kotlin Interface.kt
+app/src/androidTest/java/org/thoughtcrime/securesms/jobs/BackupDeleteJobTest.kt
+app/src/androidTest/java/org/thoughtcrime/securesms/jobs/BackupSubscriptionCheckJobTest.kt
+app/src/main/java/org/signal/glide/common/io/GlideStreamConfig.kt
+app/src/main/java/org/signal/glide/common/io/InputStreamFactory.kt
+app/src/main/java/org/signal/glide/common/io/InputStreamRewinder.java
+app/src/main/java/org/signal/glide/load/ImageHeaderParserUtils.kt
+app/src/main/java/org/signal/glide/load/resource/bitmap/Downsampler.java
+app/src/main/java/org/signal/glide/load/resource/bitmap/HardwareConfigState.java
+app/src/main/java/org/signal/glide/load/resource/bitmap/ImageReader.java
+app/src/main/java/org/thoughtcrime/securesms/attachments/LocalStickerAttachment.kt
+app/src/main/java/org/thoughtcrime/securesms/backup/v2/ArchiveRestoreProgress.kt
+
+# 资源文件:
+数量: 9
+.idea/codeStyles/Project.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/copyright/Signal.xml
+.idea/copyright/profiles_settings.xml
+.idea/file.template.settings.xml
+app/src/main/res/drawable/symbol_filter_24.xml
+app/src/main/res/drawable/symbol_match_case_24.xml
+app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+app/src/main/res/values-sw800dp/dimens.xml
+
+# 配置文件:
+
+# 文档/其他:
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_00.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_01.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_02.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_03.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_04.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_05.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_06.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_07.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_08.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_09.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_10.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_11.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_12.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_13.binproto
+app/src/androidTest/assets/backupTests/chat_item_standard_message_group_text_only_14.binproto

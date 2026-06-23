@@ -13,6 +13,7 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import io.mockk.every
+import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
@@ -57,6 +58,14 @@ class RegistrationUtilTest {
     initialize(logRecorder)
 
     every { SignalStore.backup.backupTier } returns null
+    every { SignalStore.backup.backupsInitialized = any() } answers { }
+    every { SignalStore.backup.cachedMediaCdnPath = any() } answers { }
+    every { SignalStore.backup.mediaCredentials } returns mockk {
+      every { clearAll() } answers {}
+    }
+    every { SignalStore.backup.messageCredentials } returns mockk {
+      every { clearAll() } answers {}
+    }
   }
 
   @After
@@ -65,39 +74,11 @@ class RegistrationUtilTest {
   }
 
   @Test
-  fun maybeMarkRegistrationComplete_allValidNoRestoreOption() {
-    every { signalStore.registration.isRegistrationComplete } returns false
-    every { signalStore.account.isRegistered } returns true
-    every { Recipient.self() } returns Recipient(profileName = ProfileName.fromParts("Dark", "Helmet"))
-    every { signalStore.svr.hasPin() } returns true
-    every { RemoteConfig.restoreAfterRegistration } returns false
-
-    RegistrationUtil.maybeMarkRegistrationComplete()
-
-    verify { signalStore.registration.markRegistrationComplete() }
-  }
-
-  @Test
-  fun maybeMarkRegistrationComplete_allValidNoRestoreOptionSvrOptOut() {
-    every { signalStore.registration.isRegistrationComplete } returns false
-    every { signalStore.account.isRegistered } returns true
-    every { Recipient.self() } returns Recipient(profileName = ProfileName.fromParts("Dark", "Helmet"))
-    every { signalStore.svr.hasPin() } returns false
-    every { signalStore.svr.hasOptedOut() } returns true
-    every { RemoteConfig.restoreAfterRegistration } returns false
-
-    RegistrationUtil.maybeMarkRegistrationComplete()
-
-    verify { signalStore.registration.markRegistrationComplete() }
-  }
-
-  @Test
   fun maybeMarkRegistrationComplete_allValidWithRestoreOption() {
     every { signalStore.registration.isRegistrationComplete } returns false
     every { signalStore.account.isRegistered } returns true
     every { Recipient.self() } returns Recipient(profileName = ProfileName.fromParts("Dark", "Helmet"))
     every { signalStore.svr.hasPin() } returns true
-    every { RemoteConfig.restoreAfterRegistration } returns true
     every { signalStore.registration.restoreDecisionState } returns RestoreDecisionState.Skipped
 
     RegistrationUtil.maybeMarkRegistrationComplete()
@@ -124,7 +105,6 @@ class RegistrationUtilTest {
     RegistrationUtil.maybeMarkRegistrationComplete()
 
     every { signalStore.svr.hasPin() } returns true
-    every { RemoteConfig.restoreAfterRegistration } returns true
     every { signalStore.registration.restoreDecisionState } returns RestoreDecisionState.Start
 
     RegistrationUtil.maybeMarkRegistrationComplete()

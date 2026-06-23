@@ -1,0 +1,44 @@
+=== AndroidManifest.xml 差异分析 ===
+
+### 权限差异 ###
+
+[bamain 权限]:
+权限数量: 51
+
+[branch 权限]:
+权限数量: 51
+
+### Service/Activity/Receiver 数量对比 ###
+
+[bamain]:
+Service数: 17
+Activity数: 99
+Receiver数: 27
+
+[branch]:
+Service数: 18
+Activity数: 97
+Receiver数: 27
+
+
+=== Proto 接口文件变更概览 ===
+
+### Backup.proto 差异 ###
+文件路径: ./app/src/main/protowire/Backup.proto
+[bamain] message数量: 80
+[branch] message数量: 80
+
+### Database.proto 差异 ###
+文件路径: ./app/src/main/protowire/Database.proto
+[bamain] message数量: 35
+[branch] message数量: 36
+
+### RegistrationProvisioning.proto 差异 ###
+文件路径: ./libsignal-service/build/resources/main/RegistrationProvisioning.proto
+[bamain] message数量: 0
+[branch] message数量: 0
+
+### StorageService.proto 差异 ###
+文件路径: ./libsignal-service/build/resources/main/StorageService.proto
+[bamain] message数量: 0
+[branch] message数量: 0
