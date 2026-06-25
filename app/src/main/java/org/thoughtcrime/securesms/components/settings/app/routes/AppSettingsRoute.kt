@@ -35,6 +35,7 @@ sealed interface AppSettingsRoute : Parcelable {
     data object ExportAccountData : AccountRoute
     data object OldDeviceTransfer : AccountRoute
     data class Username(val mode: UsernameEditMode = UsernameEditMode.NORMAL) : AccountRoute
+    data object LinkBaAccount : AccountRoute
   }
 
   data object Payments : AppSettingsRoute

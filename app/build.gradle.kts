@@ -12,6 +12,7 @@ plugins {
   alias(libs.plugins.jetbrains.kotlin.android)
   alias(libs.plugins.ktlint)
   alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.kotlinx.serialization)
   id("androidx.navigation.safeargs")
   id("kotlin-parcelize")
   id("com.squareup.wire")
@@ -171,7 +172,6 @@ android {
 
   packaging {
     jniLibs {
-      useLegacyPackaging = true
       excludes += setOf(
         "**/*.dylib",
         "**/*.dll"
@@ -269,7 +269,7 @@ android {
     buildConfigField("String", "STRIPE_BASE_URL", "\"https://api.stripe.com/v1\"")
     buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_live_6cmGZopuTsV8novGgJJW9JpC00vLIgtQ1D\"")
     buildConfigField("boolean", "TRACING_ENABLED", "false")
-    buildConfigField("boolean", "MESSAGE_BACKUP_RESTORE_ENABLED", "false")
+    buildConfigField("boolean", "LINK_DEVICE_UX_ENABLED", "false")
 
     ndk {
       abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -352,6 +352,7 @@ android {
       isMinifyEnabled = false
       matchingFallbacks += "debug"
       buildConfigField("String", "BUILD_VARIANT_TYPE", "\"Spinner\"")
+      buildConfigField("boolean", "LINK_DEVICE_UX_ENABLED", "true")
     }
 
     create("perf") {
@@ -411,7 +412,6 @@ android {
       buildConfigField("boolean", "MANAGES_APP_UPDATES", "true")
       buildConfigField("String", "APK_UPDATE_MANIFEST_URL", "\"${apkUpdateManifestUrl}\"")
       buildConfigField("String", "BUILD_DISTRIBUTION_TYPE", "\"nightly\"")
-      buildConfigField("boolean", "MESSAGE_BACKUP_RESTORE_ENABLED", "true")
     }
 
     create("prod") {
@@ -425,6 +425,7 @@ android {
 
     create("staging") {
       dimension = "environment"
+
       applicationIdSuffix = ".staging"
       buildConfigField("String", "SIGNAL_URL", "\"https://chat.imba-test.com\"")
       buildConfigField("String", "STORAGE_URL", "\"https://storage.imba-test.com\"")
@@ -466,7 +467,6 @@ android {
 
       buildConfigField("boolean", "MANAGES_APP_UPDATES", "true")
       buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"Backup\"")
-      buildConfigField("boolean", "MESSAGE_BACKUP_RESTORE_ENABLED", "true")
     }
   }
 
@@ -646,9 +646,9 @@ dependencies {
   implementation(libs.rxdogtag)
   implementation(libs.androidx.credentials)
   implementation(libs.androidx.credentials.compat)
+  implementation(libs.kotlinx.serialization.json)
 
-  "playImplementation"(project(":billing"))
-  "nightlyImplementation"(project(":billing"))
+  implementation(project(":billing"))
 
   "spinnerImplementation"(project(":spinner"))
 
@@ -679,6 +679,9 @@ dependencies {
   testImplementation(testFixtures(project(":libsignal-service")))
   testImplementation(testLibs.espresso.core)
   testImplementation(testLibs.kotlinx.coroutines.test)
+  testImplementation(libs.androidx.compose.ui.test.junit4)
+
+  "perfImplementation"(libs.androidx.compose.ui.test.manifest)
 
   androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.compose.ui.test.junit4)

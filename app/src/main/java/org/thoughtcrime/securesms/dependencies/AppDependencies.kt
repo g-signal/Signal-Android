@@ -66,6 +66,7 @@ import org.whispersystems.signalservice.api.remoteconfig.RemoteConfigApi
 import org.whispersystems.signalservice.api.services.DonationsService
 import org.whispersystems.signalservice.api.services.ProfileService
 import org.whispersystems.signalservice.api.storage.StorageServiceApi
+import org.whispersystems.signalservice.api.svr.SvrBApi
 import org.whispersystems.signalservice.api.username.UsernameApi
 import org.whispersystems.signalservice.api.websocket.SignalWebSocket
 import org.whispersystems.signalservice.api.websocket.WebSocketConnectionState
@@ -328,6 +329,9 @@ object AppDependencies {
   val usernameApi: UsernameApi
     get() = networkModule.usernameApi
 
+  val svrBApi: SvrBApi
+    get() = networkModule.svrBApi
+
   val callingApi: CallingApi
     get() = networkModule.callingApi
 
@@ -456,6 +460,7 @@ object AppDependencies {
     fun provideProfileApi(authWebSocket: SignalWebSocket.AuthenticatedWebSocket, unauthWebSocket: SignalWebSocket.UnauthenticatedWebSocket, pushServiceSocket: PushServiceSocket, clientZkProfileOperations: ClientZkProfileOperations): ProfileApi
     fun provideRemoteConfigApi(authWebSocket: SignalWebSocket.AuthenticatedWebSocket, pushServiceSocket: PushServiceSocket): RemoteConfigApi
     fun provideDonationsApi(authWebSocket: SignalWebSocket.AuthenticatedWebSocket, unauthWebSocket: SignalWebSocket.UnauthenticatedWebSocket): DonationsApi
+    fun provideSvrBApi(libSignalNetwork: Network): SvrBApi
     fun provideGExtGroupApi(pushServiceSocket: PushServiceSocket): GExtGroupApi
     fun provideLinkBaPayApi(pushServiceSocket: PushServiceSocket): LinkBaPayApi
   }

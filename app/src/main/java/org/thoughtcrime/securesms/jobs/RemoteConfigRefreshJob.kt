@@ -1,77 +1,78 @@
-package org.thoughtcrime.securesms.jobs;
+package org.thoughtcrime.securesms.jobs
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import org.signal.core.util.isNotNullOrBlank
+import org.signal.core.util.logging.Log
+import org.thoughtcrime.securesms.jobmanager.Job
+import org.thoughtcrime.securesms.jobmanager.impl.NetworkConstraint
+import org.thoughtcrime.securesms.keyvalue.SignalStore
+import org.thoughtcrime.securesms.net.SignalNetwork
+import org.thoughtcrime.securesms.util.RemoteConfig
+import org.whispersystems.signalservice.api.NetworkResult
+import org.whispersystems.signalservice.api.websocket.SignalWebSocket
+import kotlin.time.Duration.Companion.days
 
-import org.signal.core.util.logging.Log;
-import org.thoughtcrime.securesms.dependencies.AppDependencies;
-import org.thoughtcrime.securesms.jobmanager.Job;
-import org.thoughtcrime.securesms.jobmanager.impl.NetworkConstraint;
-import org.thoughtcrime.securesms.keyvalue.SignalStore;
-import org.thoughtcrime.securesms.net.SignalNetwork;
-import org.thoughtcrime.securesms.util.ExceptionHelper;
-import org.thoughtcrime.securesms.util.RemoteConfig;
-import org.whispersystems.signalservice.api.NetworkResultUtil;
-import org.whispersystems.signalservice.api.remoteconfig.RemoteConfigResult;
-import org.whispersystems.signalservice.api.push.exceptions.PushNetworkException;
-
-import java.util.concurrent.TimeUnit;
-
-public class RemoteConfigRefreshJob extends BaseJob {
-
-  private static final String TAG = Log.tag(RemoteConfigRefreshJob.class);
-
-  public static final String KEY = "RemoteConfigRefreshJob";
-
-  public RemoteConfigRefreshJob() {
-    this(new Job.Parameters.Builder()
-                           .setQueue("RemoteConfigRefreshJob")
-                           .setMaxInstancesForFactory(1)
-                           .addConstraint(NetworkConstraint.KEY)
-                           .setMaxAttempts(Parameters.UNLIMITED)
-                           .setLifespan(TimeUnit.DAYS.toMillis(1))
-                           .build());
+/**
+ * Job to refresh remote configs. Utilizes eTags so a 304 is returned if content is unchanged since last fetch.
+ */
+class RemoteConfigRefreshJob private constructor(parameters: Parameters) : Job(parameters) {
+  companion object {
+    const val KEY: String = "RemoteConfigRefreshJob"
+    private val TAG = Log.tag(RemoteConfigRefreshJob::class.java)
   }
 
-  private RemoteConfigRefreshJob(@NonNull Parameters parameters) {
-    super(parameters);
+  constructor() : this(
+    Parameters.Builder()
+      .setQueue(KEY)
+      .addConstraint(NetworkConstraint.KEY)
+      .setMaxInstancesForFactory(1)
+      .setMaxAttempts(Parameters.UNLIMITED)
+      .setLifespan(1.days.inWholeMilliseconds)
+      .build()
+  )
+
+  override fun serialize(): ByteArray? {
+    return null
   }
 
-  @Override
-  public @Nullable byte[] serialize() {
-    return null;
+  override fun getFactoryKey(): String {
+    return KEY
   }
 
-  @Override
-  public @NonNull String getFactoryKey() {
-    return KEY;
-  }
-
-  @Override
-  protected void onRun() throws Exception {
-    if (!SignalStore.account().isRegistered()) {
-      Log.w(TAG, "Not registered. Skipping.");
-      return;
+  override fun run(): Result {
+    if (!SignalStore.account.isRegistered) {
+      Log.w(TAG, "Not registered. Skipping.")
+      return Result.success()
     }
 
-    RemoteConfigResult result = NetworkResultUtil.toBasicLegacy(SignalNetwork.remoteConfig().getRemoteConfig());
-    RemoteConfig.update(result.getConfig());
-    SignalStore.misc().setLastKnownServerTime(result.getServerEpochTimeMilliseconds(), System.currentTimeMillis());
+    return when (val result = SignalNetwork.remoteConfig.getRemoteConfig(SignalStore.remoteConfig.eTag)) {
+      is NetworkResult.Success -> {
+        RemoteConfig.update(result.result.config)
+        SignalStore.misc.setLastKnownServerTime(result.result.serverEpochTimeMilliseconds, System.currentTimeMillis())
+        if (result.result.eTag.isNotNullOrBlank()) {
+          SignalStore.remoteConfig.eTag = result.result.eTag
+        }
+        Result.success()
+      }
+
+      is NetworkResult.ApplicationError -> Result.failure()
+      is NetworkResult.NetworkError -> Result.retry(defaultBackoff())
+      is NetworkResult.StatusCodeError ->
+        if (result.code == 304) {
+          Log.i(TAG, "Remote config has not changed since last pull.")
+          SignalStore.remoteConfig.lastFetchTime = System.currentTimeMillis()
+          SignalStore.misc.setLastKnownServerTime(result.headers[SignalWebSocket.SERVER_DELIVERED_TIMESTAMP_HEADER]?.toLongOrNull() ?: System.currentTimeMillis(), System.currentTimeMillis())
+          Result.success()
+        } else {
+          Result.retry(defaultBackoff())
+        }
+    }
   }
 
-  @Override
-  protected boolean onShouldRetry(@NonNull Exception e) {
-    return ExceptionHelper.isRetryableIOException(e);
-  }
+  override fun onFailure() = Unit
 
-  @Override
-  public void onFailure() {
-  }
-
-  public static final class Factory implements Job.Factory<RemoteConfigRefreshJob> {
-    @Override
-    public @NonNull RemoteConfigRefreshJob create(@NonNull Parameters parameters, @Nullable byte[] serializedData) {
-      return new RemoteConfigRefreshJob(parameters);
+  class Factory : Job.Factory<RemoteConfigRefreshJob?> {
+    override fun create(parameters: Parameters, serializedData: ByteArray?): RemoteConfigRefreshJob {
+      return RemoteConfigRefreshJob(parameters)
     }
   }
 }

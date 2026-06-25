@@ -6,6 +6,7 @@
 package org.thoughtcrime.securesms.registration.util;
 
 import org.signal.core.util.logging.Log;
+import org.thoughtcrime.securesms.backup.v2.BackupRepository;
 import org.thoughtcrime.securesms.backup.v2.MessageBackupTier;
 import org.thoughtcrime.securesms.dependencies.AppDependencies;
 import org.thoughtcrime.securesms.jobs.ArchiveBackupIdReservationJob;
@@ -36,7 +37,7 @@ public final class RegistrationUtil {
         SignalStore.account().isRegistered() &&
         !Recipient.self().getProfileName().isEmpty() &&
         (SignalStore.svr().hasPin() || SignalStore.svr().hasOptedOut()) &&
-        (!RemoteConfig.restoreAfterRegistration() || RestoreDecisionStateUtil.isTerminal(SignalStore.registration().getRestoreDecisionState())))
+        RestoreDecisionStateUtil.isTerminal(SignalStore.registration().getRestoreDecisionState()))
     {
       Log.i(TAG, "Marking registration completed.", new Throwable());
       SignalStore.registration().markRegistrationComplete();
@@ -53,14 +54,13 @@ public final class RegistrationUtil {
                      .then(new DirectoryRefreshJob(false))
                      .enqueue();
 
-      if (SignalStore.backup().getBackupTier() == MessageBackupTier.PAID) {
-        AppDependencies.getJobManager().add(new PostRegistrationBackupRedemptionJob());
-      }
-
       SignalStore.emoji().clearSearchIndexMetadata();
       EmojiSearchIndexDownloadJob.scheduleImmediately();
 
+
+      BackupRepository.INSTANCE.resetInitializedStateAndAuthCredentials();
       AppDependencies.getJobManager().add(new ArchiveBackupIdReservationJob());
+      AppDependencies.getJobManager().add(new PostRegistrationBackupRedemptionJob());
 
     } else if (!SignalStore.registration().isRegistrationComplete()) {
       Log.i(TAG, "Registration is not yet complete.", new Throwable());

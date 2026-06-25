@@ -1,238 +1,183 @@
-package org.thoughtcrime.securesms.recipients;
+/*
+ * Copyright 2025 Signal Messenger, LLC
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 
-import android.annotation.SuppressLint;
-import android.os.Parcel;
-import android.os.Parcelable;
+package org.thoughtcrime.securesms.recipients
 
-import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import androidx.annotation.AnyThread
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import org.signal.core.util.DatabaseId
+import org.signal.core.util.LongSerializer
+import org.signal.core.util.logging.Log
+import org.signal.core.util.orNull
+import org.thoughtcrime.securesms.database.SignalDatabase
+import org.thoughtcrime.securesms.groups.GroupId
+import org.whispersystems.signalservice.api.push.ServiceId
+import org.whispersystems.signalservice.api.push.SignalServiceAddress
+import java.util.regex.Pattern
 
-import com.annimon.stream.Stream;
+@Parcelize
+@Serializable
+class RecipientId private constructor(private val id: Long) : Parcelable, Comparable<RecipientId>, DatabaseId {
 
-import org.signal.core.util.DatabaseId;
-import org.signal.core.util.LongSerializer;
-import org.signal.core.util.logging.Log;
-import org.thoughtcrime.securesms.database.SignalDatabase;
-import org.thoughtcrime.securesms.groups.GroupId;
-import org.thoughtcrime.securesms.util.DelimiterUtil;
-import org.thoughtcrime.securesms.util.Util;
-import org.whispersystems.signalservice.api.push.ServiceId;
-import org.whispersystems.signalservice.api.push.SignalServiceAddress;
+  companion object {
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.regex.Pattern;
+    private val TAG = Log.tag(RecipientId::class)
+    private const val UNKNOWN_ID = -1L
+    private const val DELIMITER = ','
 
-public class RecipientId implements Parcelable, Comparable<RecipientId>, DatabaseId {
+    @JvmField
+    val UNKNOWN = from(UNKNOWN_ID)
 
-  private static final String TAG        = "RecipientId";
-  private static final long   UNKNOWN_ID = -1;
-  private static final char   DELIMITER  = ',';
+    @JvmField
+    val SERIALIZER: LongSerializer<RecipientId> = Serializer()
 
-  public static final RecipientId UNKNOWN = RecipientId.from(UNKNOWN_ID);
-  public static final LongSerializer<RecipientId> SERIALIZER = new Serializer();
+    @JvmStatic
+    fun from(id: Long): RecipientId {
+      if (id == 0L) {
+        throw InvalidLongRecipientIdError()
+      }
 
-  private final long id;
-
-  public static RecipientId from(long id) {
-    if (id == 0) {
-      throw new InvalidLongRecipientIdError();
+      return RecipientId(id)
     }
 
-    return new RecipientId(id);
-  }
-
-  public static RecipientId from(@NonNull String id) {
-    try {
-      return RecipientId.from(Long.parseLong(id));
-    } catch (NumberFormatException e) {
-      throw new InvalidStringRecipientIdError();
-    }
-  }
-
-  public static @Nullable RecipientId fromNullable(@Nullable String id) {
-    return id != null ? from(id) : null;
-  }
-
-  @AnyThread
-  public static @NonNull RecipientId from(@NonNull SignalServiceAddress address) {
-    return from(address.getServiceId(), address.getNumber().orElse(null));
-  }
-
-  @AnyThread
-  public static @NonNull RecipientId from(@NonNull ServiceId serviceId) {
-    return from(serviceId, null);
-  }
-
-  @AnyThread
-  public static @NonNull RecipientId fromE164(@NonNull String identifier) {
-    return from(null, identifier);
-  }
-
-  public static @NonNull RecipientId from(@NonNull GroupId groupId) {
-    RecipientId recipientId = RecipientIdCache.INSTANCE.get(groupId);
-    if (recipientId == null) {
-      Log.d(TAG, "RecipientId cache miss for " + groupId);
-      recipientId = SignalDatabase.recipients().getOrInsertFromPossiblyMigratedGroupId(groupId);
-      if (groupId.isV2()) {
-        RecipientIdCache.INSTANCE.put(groupId, recipientId);
+    @JvmStatic
+    fun from(id: String): RecipientId {
+      try {
+        return from(id.toLong())
+      } catch (_: NumberFormatException) {
+        throw InvalidStringRecipientIdError()
       }
     }
-    return recipientId;
-  }
-  /**
-   * Used for when you have a string that could be either a UUID or an e164. This was primarily
-   * created for interacting with protocol stores.
-   * @param identifier A UUID or e164
-   */
-  @AnyThread
-  public static @NonNull RecipientId fromSidOrE164(@NonNull String identifier) {
-    ServiceId serviceId = ServiceId.parseOrNull(identifier);
-    if (serviceId != null) {
-      return from(serviceId);
-    } else {
-      return from(null, identifier);
+
+    @JvmStatic
+    fun fromNullable(id: String?): RecipientId? = id?.let { from(it) }
+
+    @JvmStatic
+    fun from(address: SignalServiceAddress): RecipientId = from(address.serviceId, address.number.orNull())
+
+    @JvmStatic
+    fun from(serviceId: ServiceId): RecipientId = from(serviceId, null)
+
+    @JvmStatic
+    fun fromE164(identifier: String): RecipientId = from(null, identifier)
+
+    @JvmStatic
+    fun from(groupId: GroupId): RecipientId {
+      var recipientId = RecipientIdCache.INSTANCE.get(groupId)
+      if (recipientId == null) {
+        Log.d(TAG, "RecipientId cache miss for $groupId")
+        recipientId = SignalDatabase.recipients.getOrInsertFromPossiblyMigratedGroupId(groupId)
+        if (groupId.isV2) {
+          RecipientIdCache.INSTANCE.put(groupId, recipientId)
+        }
+      }
+
+      return recipientId
+    }
+
+    /**
+     * Used for when you have a string that could be either a UUID or an e164. This was primarily
+     * created for interacting with protocol stores.
+     * @param identifier A UUID or e164
+     */
+    @JvmStatic
+    @AnyThread
+    fun fromSidOrE164(identifier: String): RecipientId {
+      val serviceId = ServiceId.parseOrNull(identifier)
+      return if (serviceId != null) {
+        from(serviceId)
+      } else {
+        from(null, identifier)
+      }
+    }
+
+    @JvmStatic
+    @AnyThread
+    @SuppressLint("WrongThread")
+    fun from(serviceId: ServiceId?, e164: String?): RecipientId {
+      if (serviceId != null && serviceId.isUnknown) {
+        return UNKNOWN
+      }
+
+      var recipientId = RecipientIdCache.INSTANCE.get(serviceId, e164)
+      if (recipientId == null) {
+        recipientId = SignalDatabase.recipients.getAndPossiblyMerge(serviceId, e164)
+        RecipientIdCache.INSTANCE.put(recipientId, e164, serviceId)
+      }
+
+      return recipientId
+    }
+
+    @JvmStatic
+    @AnyThread
+    fun clearCache() {
+      RecipientIdCache.INSTANCE.clear()
+    }
+
+    @JvmStatic
+    fun toSerializedList(ids: Collection<RecipientId>): String {
+      return ids.joinToString(DELIMITER.toString()) { it.serialize() }
+    }
+
+    @JvmStatic
+    fun fromSerializedList(serialized: String): List<RecipientId> {
+      return serialized.split(DELIMITER).filter { it.isNotEmpty() }.map { from(it) }
+    }
+
+    @JvmStatic
+    fun serializedListContains(serialized: String, recipientId: RecipientId): Boolean {
+      return Pattern.compile("\\b${recipientId.serialize()}\\b")
+        .matcher(serialized)
+        .find()
     }
   }
 
-  @AnyThread
-  @SuppressLint("WrongThread")
-  private static @NonNull RecipientId from(@Nullable ServiceId serviceId, @Nullable String e164) {
-    if (serviceId != null && serviceId.isUnknown()) {
-      return RecipientId.UNKNOWN;
-    }
+  override fun serialize(): String = id.toString()
 
-    RecipientId recipientId = RecipientIdCache.INSTANCE.get(serviceId, e164);
+  override fun toString(): String = "RecipientId::$id"
 
-    if (recipientId == null) {
-      recipientId = SignalDatabase.recipients().getAndPossiblyMerge(serviceId, e164);
-      RecipientIdCache.INSTANCE.put(recipientId, e164, serviceId);
-    }
+  fun toLong(): Long = id
 
-    return recipientId;
+  @Transient
+  @IgnoredOnParcel
+  val isUnknown: Boolean = id == UNKNOWN_ID
+
+  @JvmOverloads
+  fun toQueueKey(forMedia: Boolean = false): String {
+    return "RecipientId::$id${if (forMedia) "::MEDIA" else ""}"
   }
 
-  @AnyThread
-  public static void clearCache() {
-    RecipientIdCache.INSTANCE.clear();
+  fun toScheduledSendQueueKey(): String = "RecipientId::$id::SCHEDULED"
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as RecipientId
+
+    return id == other.id
   }
 
-  private RecipientId(long id) {
-    this.id = id;
+  override fun hashCode(): Int {
+    return id.hashCode()
   }
 
-  private RecipientId(Parcel in) {
-    id = in.readLong();
+  override fun compareTo(other: RecipientId): Int {
+    return id.compareTo(other.id)
   }
 
-  public static @NonNull String toSerializedList(@NonNull Collection<RecipientId> ids) {
-    return Util.join(Stream.of(ids).map(RecipientId::serialize).toList(), String.valueOf(DELIMITER));
-  }
+  private class InvalidLongRecipientIdError : AssertionError()
+  private class InvalidStringRecipientIdError : AssertionError()
 
-  public static List<RecipientId> fromSerializedList(@NonNull String serialized) {
-    String[]          stringIds = DelimiterUtil.split(serialized, DELIMITER);
-    List<RecipientId> out       = new ArrayList<>(stringIds.length);
-
-    for (String stringId : stringIds) {
-      RecipientId id = RecipientId.from(Long.parseLong(stringId));
-      out.add(id);
-    }
-
-    return out;
-  }
-
-  public static boolean serializedListContains(@NonNull String serialized, @NonNull RecipientId recipientId) {
-    return Pattern.compile("\\b" + recipientId.serialize() + "\\b")
-                  .matcher(serialized)
-                  .find();
-  }
-
-  public boolean isUnknown() {
-    return id == UNKNOWN_ID;
-  }
-
-  @Override
-  public @NonNull String serialize() {
-    return String.valueOf(id);
-  }
-
-  public long toLong() {
-    return id;
-  }
-
-  public @NonNull String toQueueKey() {
-    return toQueueKey(false);
-  }
-
-  public @NonNull String toQueueKey(boolean forMedia) {
-    return "RecipientId::" + id + (forMedia ? "::MEDIA" : "");
-  }
-
-  public @NonNull String toScheduledSendQueueKey() {
-    return "RecipientId::" + id + "::SCHEDULED";
-  }
-
-  @Override
-  public @NonNull String toString() {
-    return "RecipientId::" + id;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    RecipientId that = (RecipientId) o;
-
-    return id == that.id;
-  }
-
-  @Override
-  public int hashCode() {
-    return (int) (id ^ (id >>> 32));
-  }
-
-  @Override
-  public int compareTo(RecipientId o) {
-    return Long.compare(this.id, o.id);
-  }
-
-  @Override
-  public int describeContents() {
-    return 0;
-  }
-
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
-    dest.writeLong(id);
-  }
-
-  public static final Creator<RecipientId> CREATOR = new Creator<RecipientId>() {
-    @Override
-    public RecipientId createFromParcel(Parcel in) {
-      return new RecipientId(in);
-    }
-
-    @Override
-    public RecipientId[] newArray(int size) {
-      return new RecipientId[size];
-    }
-  };
-
-  private static class InvalidLongRecipientIdError extends AssertionError {}
-  private static class InvalidStringRecipientIdError extends AssertionError {}
-
-  private static class Serializer implements LongSerializer<RecipientId> {
-    @Override
-    public Long serialize(RecipientId data) {
-      return data.toLong();
-    }
-
-    @Override
-    public @NonNull RecipientId deserialize(Long data) {
-      return RecipientId.from(data);
-    }
+  private class Serializer : LongSerializer<RecipientId> {
+    override fun serialize(data: RecipientId): Long = data.toLong()
+    override fun deserialize(input: Long): RecipientId = from(input)
   }
 }

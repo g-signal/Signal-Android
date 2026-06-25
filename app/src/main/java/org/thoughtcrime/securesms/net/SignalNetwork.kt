@@ -23,6 +23,7 @@ import org.whispersystems.signalservice.api.provisioning.ProvisioningApi
 import org.whispersystems.signalservice.api.ratelimit.RateLimitChallengeApi
 import org.whispersystems.signalservice.api.remoteconfig.RemoteConfigApi
 import org.whispersystems.signalservice.api.storage.StorageServiceApi
+import org.whispersystems.signalservice.api.svr.SvrBApi
 import org.whispersystems.signalservice.api.username.UsernameApi
 
 /**
@@ -102,4 +103,7 @@ object SignalNetwork {
 
   val linkBaPay: LinkBaPayApi
     get() = AppDependencies.linkBaPayApi
+
+  val svrB: SvrBApi
+    get() = AppDependencies.svrBApi
 }
