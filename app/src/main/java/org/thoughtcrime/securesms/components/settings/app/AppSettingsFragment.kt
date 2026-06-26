@@ -113,6 +113,7 @@ class AppSettingsFragment : ComposeFragment(), Callbacks {
             is AppSettingsRoute.Invite -> findNavController().safeNavigate(R.id.action_appSettingsFragment_to_inviteFragment)
             is AppSettingsRoute.InternalRoute.Internal -> findNavController().safeNavigate(R.id.action_appSettingsFragment_to_internalSettingsFragment)
             is AppSettingsRoute.AccountRoute.ManageProfile -> findNavController().safeNavigate(R.id.action_appSettingsFragment_to_manageProfileActivity)
+            is AppSettingsRoute.AccountRoute.LinkBaAccount -> findNavController().safeNavigate(R.id.action_appSettingsFragment_to_linkBaAccountFragment)
             is AppSettingsRoute.UsernameLinkRoute.UsernameLink -> findNavController().safeNavigate(R.id.action_appSettingsFragment_to_usernameLinkSettingsFragment)
             else -> error("Unsupported route: ${route.javaClass.name}")
           }
@@ -318,7 +319,7 @@ private fun AppSettingsContent(
             text = stringResource(R.string.link_ba_platform_account_title),
             icon = painterResource(R.drawable.symbol_bapay_24),
             onClick = {
-              callbacks.navigate(R.id.action_appSettingsFragment_to_linkBaAccountFragment)
+              callbacks.navigate(AppSettingsRoute.AccountRoute.LinkBaAccount)
             },
             enabled = isRegisteredAndUpToDate
           )

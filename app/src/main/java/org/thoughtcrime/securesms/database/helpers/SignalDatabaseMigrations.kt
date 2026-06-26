@@ -140,12 +140,12 @@ import org.thoughtcrime.securesms.database.helpers.migration.V282_AddSnippetMess
 import org.thoughtcrime.securesms.database.helpers.migration.V283_ViewOnceRemoteDataCleanup
 import org.thoughtcrime.securesms.database.helpers.migration.V284_SetPlaceholderGroupFlag
 import org.thoughtcrime.securesms.database.helpers.migration.V285_AddEpochToCallLinksTable
-import org.thoughtcrime.securesms.database.helpers.migration.V289_AddQuoteTargetContentTypeColumn
-import org.thoughtcrime.securesms.database.helpers.migration.V290_AddArchiveThumbnailTransferStateColumn
-import org.thoughtcrime.securesms.database.helpers.migration.V291_NullOutRemoteKeyIfEmpty
 import org.thoughtcrime.securesms.database.helpers.migration.V286_AddGExtRecipientTable
 import org.thoughtcrime.securesms.database.helpers.migration.V287_AddGExtGroupsTable
 import org.thoughtcrime.securesms.database.helpers.migration.V288_AddGExtRecipientTableRobotFiled
+import org.thoughtcrime.securesms.database.helpers.migration.V289_AddQuoteTargetContentTypeColumn
+import org.thoughtcrime.securesms.database.helpers.migration.V290_AddArchiveThumbnailTransferStateColumn
+import org.thoughtcrime.securesms.database.helpers.migration.V291_NullOutRemoteKeyIfEmpty
 import org.thoughtcrime.securesms.database.SQLiteDatabase as SignalSqliteDatabase
 
 /**

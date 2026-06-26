@@ -295,18 +295,19 @@ class LinkDeviceViewModel : ViewModel() {
       // As a fallback, check if any new device was actually created
       Log.d(TAG, "[addDeviceWithSync] Checking device list as fallback...")
       val devices = LinkDeviceRepository.loadDevices()
-      val recentDevice = devices?.maxByOrNull { it.createdMillis }
+      val recentDevice = devices?.maxByOrNull { it.createdMillis ?: 0L }
 
       // If there's a device created within the last 2 minutes, it's likely the one we're looking for
-      if (recentDevice != null && (System.currentTimeMillis() - recentDevice.createdMillis) < 20_000) {
+      val deviceCreated = recentDevice?.createdMillis
+      if (recentDevice != null && deviceCreated != null && (System.currentTimeMillis() - deviceCreated) < 20_000) {
         Log.i(TAG, "[addDeviceWithSync] Found recently created device ${recentDevice.id}, assuming it's the linked device!")
         // Continue with this device
-        NewLinkedDeviceNotificationJob.enqueue(recentDevice.id, recentDevice.createdMillis)
+        NewLinkedDeviceNotificationJob.enqueue(recentDevice.id, deviceCreated)
 
         _state.update {
           it.copy(
             linkDeviceResult = result,
-            dialogState = DialogState.SyncingMessages(recentDevice.id, recentDevice.createdMillis)
+            dialogState = DialogState.SyncingMessages(recentDevice.id)
           )
         }
 
@@ -315,11 +316,20 @@ class LinkDeviceViewModel : ViewModel() {
         val uploadResult = LinkDeviceRepository.createAndUploadArchive(
           ephemeralMessageBackupKey = ephemeralMessageBackupKey,
           deviceId = recentDevice.id,
-          deviceCreatedAt = recentDevice.createdMillis,
+          deviceRegistrationId = recentDevice.registrationId,
           cancellationSignal = { _state.value.shouldCancelArchiveUpload }
         )
 
-        handleUploadResult(uploadResult, WaitForLinkedDeviceResponse(recentDevice.id, recentDevice.name ?: "Unknown Device", recentDevice.createdMillis, recentDevice.lastSeenMillis))
+        handleUploadResult(
+          uploadResult,
+          WaitForLinkedDeviceResponse(
+            id = recentDevice.id,
+            name = recentDevice.name ?: "Unknown Device",
+            lastSeen = recentDevice.lastSeenMillis,
+            registrationId = recentDevice.registrationId,
+            createdAtCiphertext = null
+          )
+        )
         return
       }
 
