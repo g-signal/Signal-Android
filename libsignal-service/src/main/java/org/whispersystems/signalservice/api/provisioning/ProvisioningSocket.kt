@@ -249,7 +249,7 @@ class ProvisioningSocket<T> private constructor(
     private fun generateProvisioningUrl(deviceAddress: String): String {
       val encodedDeviceId = URLEncoder.encode(deviceAddress, "UTF-8")
       val encodedPubKey: String = URLEncoder.encode(Base64.encodeWithoutPadding(cipher.secondaryDevicePublicKey.serialize()), "UTF-8")
-      return "sgnl://${mode.host}?uuid=$encodedDeviceId&pub_key=$encodedPubKey${mode.params}"
+      return "baxs://${mode.host}?uuid=$encodedDeviceId&pub_key=$encodedPubKey${mode.params}"
     }
 
     private suspend fun keepAlive(webSocket: WebSocket) {

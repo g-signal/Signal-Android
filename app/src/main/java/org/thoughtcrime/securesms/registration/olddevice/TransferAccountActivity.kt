@@ -35,7 +35,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,7 +49,6 @@ import org.signal.core.ui.compose.Buttons
 import org.signal.core.ui.compose.Dialogs
 import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.SignalPreview
-import org.signal.core.ui.compose.Texts
 import org.signal.core.ui.compose.horizontalGutters
 import org.signal.core.ui.compose.theme.SignalTheme
 import org.signal.core.util.logging.Log
@@ -64,10 +62,8 @@ import org.thoughtcrime.securesms.fonts.SignalSymbols
 import org.thoughtcrime.securesms.fonts.SignalSymbols.SignalSymbol
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.registration.data.QuickRegistrationRepository
-import org.thoughtcrime.securesms.util.CommunicationActions
 import org.thoughtcrime.securesms.util.DynamicNoActionBarTheme
 import org.thoughtcrime.securesms.util.DynamicTheme
-import org.thoughtcrime.securesms.util.SpanUtil
 import org.thoughtcrime.securesms.util.viewModel
 import org.whispersystems.signalservice.api.provisioning.RestoreMethod
 
@@ -236,13 +232,11 @@ fun TransferToNewDevice(
         modifier = Modifier.padding(top = 20.dp, bottom = 28.dp)
       )
 
-      val context = LocalContext.current
-      val learnMore = stringResource(id = R.string.TransferAccount_learn_more)
-      val fullString = stringResource(id = R.string.TransferAccount_body, learnMore)
-      val spanned = SpanUtil.urlSubsequence(fullString, learnMore, TransferAccountActivity.LEARN_MORE_URL)
-      Texts.LinkifiedText(
-        textWithUrlSpans = spanned,
-        onUrlClick = { CommunicationActions.openBrowserLink(context, it) },
+      // 隐藏“了解详情”链接：将 TransferAccount_body 中的 %1$s 占位符替换为空串，
+      // 同时退化为普通 Text，去掉原有的 LinkifiedText 可点击行为。
+      val body = stringResource(id = R.string.TransferAccount_body, "").trimEnd()
+      Text(
+        text = body,
         style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
       )
 
@@ -306,7 +300,7 @@ fun TransferToNewDevice(
 @Composable
 private fun TransferToNewDevicePreview() {
   Previews.Preview {
-    TransferToNewDevice(state = TransferAccountViewModel.TransferAccountState("sgnl://rereg"))
+    TransferToNewDevice(state = TransferAccountViewModel.TransferAccountState("baxs://rereg"))
   }
 }
 

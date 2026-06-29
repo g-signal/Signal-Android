@@ -342,7 +342,7 @@ private fun RestoreViaQrScreenPreview() {
     RestoreViaQrScreen(
       state = RestoreViaQrViewModel.RestoreViaQrState(
         qrState = RestoreViaQrViewModel.QrState.Loaded(
-          QrCodeData.forData("sgnl://rereg?uuid=asdfasdfasdfasdfasdfasdf&pub_key=asdfasdfasdfSDFSsdfsdfSDFSDffd", false)
+          QrCodeData.forData("baxs://rereg?uuid=asdfasdfasdfasdfasdfasdf&pub_key=asdfasdfasdfSDFSsdfsdfSDFSDffd", false)
         )
       )
     )
