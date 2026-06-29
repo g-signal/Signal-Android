@@ -225,6 +225,8 @@ private fun AppSettingsContent(
           )
         }
 
+        // 隐藏备份相关警告条（备份入口已隐藏，点进去也无意义）
+        /*
         when (state.backupFailureState) {
           BackupFailureState.SUBSCRIPTION_STATE_MISMATCH -> {
             item {
@@ -292,6 +294,7 @@ private fun AppSettingsContent(
 
           BackupFailureState.NONE -> Unit
         }
+        */
 
         item {
           Rows.TextRow(
@@ -425,6 +428,8 @@ private fun AppSettingsContent(
           )
         }
 
+        // 隐藏备份入口
+        /*
         item {
           Rows.TextRow(
             text = {
@@ -449,6 +454,7 @@ private fun AppSettingsContent(
             enabled = isRegisteredAndUpToDate
           )
         }
+        */
 
         item {
           Rows.TextRow(

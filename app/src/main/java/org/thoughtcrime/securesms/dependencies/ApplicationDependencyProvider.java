@@ -14,6 +14,7 @@ import org.signal.core.util.ThreadUtil;
 import org.signal.core.util.billing.BillingApi;
 import org.signal.core.util.concurrent.DeadlockDetector;
 import org.signal.core.util.concurrent.SignalExecutors;
+import org.signal.core.util.logging.Log;
 import org.signal.libsignal.net.Network;
 import org.signal.libsignal.zkgroup.profiles.ClientZkProfileOperations;
 import org.signal.libsignal.zkgroup.receipts.ClientZkReceiptOperations;
@@ -330,21 +331,32 @@ public class ApplicationDependencyProvider implements AppDependencies.Provider {
   }
 
   private boolean shouldUseLibsignalForWebsocket(@NonNull SignalServiceConfiguration signalServiceConfiguration) {
-    if (RemoteConfig.libSignalWebSocketEnabled()) {
-      if (RemoteConfig.libSignalWebSocketEnabledForProxies()) {
-        return true;
+    boolean mainEnabled    = RemoteConfig.libSignalWebSocketEnabled();
+    boolean proxyEnabled   = RemoteConfig.libSignalWebSocketEnabledForProxies();
+    boolean censored       = signalServiceConfiguration.getCensored();
+    boolean hasSignalProxy = signalServiceConfiguration.getSignalProxy().isPresent();
+
+    boolean useLibsignal;
+    if (mainEnabled) {
+      if (proxyEnabled) {
+        useLibsignal = true;
+      } else if (censored || hasSignalProxy) {
+        useLibsignal = false;
       } else {
-        // libsignalWebSocketEnabled = true but libsignalWebSocketEnabledForProxies = false
-        if (signalServiceConfiguration.getCensored() ||
-            signalServiceConfiguration.getSignalProxy().isPresent()) {
-          return false;
-        } else {
-          return true;
-        }
+        useLibsignal = true;
       }
     } else {
-      return false;
+      useLibsignal = false;
     }
+
+    Log.i("LibSignalWS",
+          "shouldUseLibsignalForWebsocket: result=" + useLibsignal +
+          " mainEnabled=" + mainEnabled +
+          " proxyEnabled=" + proxyEnabled +
+          " censored=" + censored +
+          " hasSignalProxy=" + hasSignalProxy);
+
+    return useLibsignal;
   }
   @Override
   public @NonNull SignalWebSocket.AuthenticatedWebSocket provideAuthWebSocket(@NonNull Supplier<SignalServiceConfiguration> signalServiceConfigurationSupplier, @NonNull Supplier<Network> libSignalNetworkSupplier) {
