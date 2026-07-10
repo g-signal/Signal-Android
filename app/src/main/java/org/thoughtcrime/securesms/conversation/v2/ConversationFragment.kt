@@ -154,6 +154,7 @@ import org.thoughtcrime.securesms.contactshare.SharedContactDetailsActivity
 import org.thoughtcrime.securesms.conversation.AttachmentKeyboardButton
 import org.thoughtcrime.securesms.conversation.BadDecryptLearnMoreDialog
 import org.thoughtcrime.securesms.conversation.ConversationAdapter
+import org.thoughtcrime.securesms.conversation.ConversationArgs
 import org.thoughtcrime.securesms.conversation.ConversationBottomSheetCallback
 import org.thoughtcrime.securesms.conversation.ConversationData
 import org.thoughtcrime.securesms.conversation.ConversationHeaderView
@@ -257,6 +258,7 @@ import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.linkpreview.LinkPreview
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModelV2
 import org.thoughtcrime.securesms.longmessage.LongMessageFragment
+import org.thoughtcrime.securesms.main.InsetsViewModel
 import org.thoughtcrime.securesms.main.MainNavigationListLocation
 import org.thoughtcrime.securesms.mediaoverview.MediaOverviewActivity
 import org.thoughtcrime.securesms.mediapreview.MediaIntentFactory
@@ -352,6 +354,7 @@ import org.thoughtcrime.securesms.util.visible
 import org.thoughtcrime.securesms.verify.VerifyIdentityActivity
 import org.thoughtcrime.securesms.wallpaper.ChatWallpaper
 import org.thoughtcrime.securesms.wallpaper.ChatWallpaperDimLevelUtil
+import org.thoughtcrime.securesms.window.WindowSizeClass
 import org.thoughtcrime.securesms.window.WindowSizeClass.Companion.getWindowSizeClass
 import java.time.Instant
 import java.time.LocalDateTime
@@ -394,8 +397,8 @@ class ConversationFragment :
     private const val IS_SCROLLED_TO_BOTTOM_THRESHOLD: Int = 2
   }
 
-  private val args: ConversationIntents.Args by lazy {
-    ConversationIntents.Args.from(requireArguments())
+  private val args: ConversationArgs by lazy {
+    ConversationIntents.readArgsFromBundle(requireArguments())
   }
 
   private val conversationRecipientRepository: ConversationRecipientRepository by lazy {
@@ -485,6 +488,8 @@ class ConversationFragment :
   }
 
   private val shareDataTimestampViewModel: ShareDataTimestampViewModel by activityViewModels()
+
+  private val insetsViewModel: InsetsViewModel by activityViewModels()
 
   private val inlineQueryController: InlineQueryResultsControllerV2 by lazy {
     InlineQueryResultsControllerV2(
@@ -602,7 +607,21 @@ class ConversationFragment :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     binding.toolbar.isBackInvokedCallbackEnabled = false
 
-    binding.root.setUseWindowTypes(!resources.getWindowSizeClass().isSplitPane())
+    if (WindowSizeClass.isLargeScreenSupportEnabled()) {
+      viewLifecycleOwner.lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.RESUMED) {
+          binding.root.clearVerticalInsetOverride()
+          if (!resources.getWindowSizeClass().isSplitPane()) {
+            insetsViewModel.insets.collect {
+              binding.root.applyInsets(it)
+            }
+          }
+        }
+      }
+    }
+
+    binding.root.setApplyRootInsets(!WindowSizeClass.isLargeScreenSupportEnabled())
+    binding.root.setUseWindowTypes(!WindowSizeClass.isLargeScreenSupportEnabled())
 
     disposables.bindTo(viewLifecycleOwner)
 
@@ -1336,19 +1355,19 @@ class ConversationFragment :
     } else {
       val mimeType = MediaUtil.getMimeType(requireContext(), uri) ?: mediaType.toFallbackMimeType()
       val media = Media(
-        uri,
-        mimeType,
-        0,
-        width,
-        height,
-        0,
-        0,
-        borderless,
-        videoGif,
-        Optional.empty(),
-        Optional.empty(),
-        Optional.of(AttachmentTable.TransformProperties.forSentMediaQuality(SignalStore.settings.sentMediaQuality.code)),
-        Optional.empty()
+        uri = uri,
+        contentType = mimeType,
+        date = 0,
+        width = width,
+        height = height,
+        size = 0,
+        duration = 0,
+        isBorderless = borderless,
+        isVideoGif = videoGif,
+        bucketId = null,
+        caption = null,
+        transformProperties = AttachmentTable.TransformProperties.forSentMediaQuality(SignalStore.settings.sentMediaQuality.code),
+        fileName = null
       )
       conversationActivityResultContracts.launchMediaEditor(listOf(media), recipientId, composeText.textTrimmed)
     }
@@ -1707,6 +1726,7 @@ class ConversationFragment :
         composeText.setDraftText(data.text)
         inputPanel.clickOnComposeInput()
       }
+
       is ShareOrDraftData.SetLocation -> attachmentManager.setLocation(data.location, MediaConstraints.getPushMediaConstraints())
       is ShareOrDraftData.SetEditMessage -> {
         composeText.setDraftText(data.draftText)
@@ -1756,11 +1776,6 @@ class ConversationFragment :
     if (!inputPanel.inEditMessageMode()) {
       Log.w(TAG, "Not in edit message mode, unknown state, forcing re-exit")
       inputPanel.exitEditMessageMode()
-      return
-    }
-
-    if (SignalStore.uiHints.hasNotSeenEditMessageBetaAlert()) {
-      Dialogs.showEditMessageBetaDialog(requireContext()) { handleSendEditMessage() }
       return
     }
 
@@ -2070,13 +2085,6 @@ class ConversationFragment :
     }
 
     if (scheduledDate != -1L && ReenableScheduledMessagesDialogFragment.showIfNeeded(requireContext(), childFragmentManager, null, scheduledDate)) {
-      return
-    }
-
-    if (SignalStore.uiHints.hasNotSeenTextFormattingAlert() && bodyRanges != null && bodyRanges.ranges.isNotEmpty()) {
-      Dialogs.showFormattedTextDialog(requireContext()) {
-        sendMessage(body, mentions, bodyRanges, messageToEdit, quote, scheduledDate, slideDeck, contacts, clearCompose, linkPreviews, preUploadResults, bypassPreSendSafetyNumberCheck, isViewOnce, afterSendComplete)
-      }
       return
     }
 
@@ -3148,6 +3156,10 @@ class ConversationFragment :
       UnverifiedProfileNameBottomSheet.show(parentFragmentManager, forGroup)
     }
 
+    override fun onUpdateSignalClicked() {
+      PlayStoreUtil.openPlayStoreOrOurApkDownloadPage(requireContext())
+    }
+
     override fun onJoinGroupCallClicked() {
       val activity = activity ?: return
       val recipient = viewModel.recipientSnapshot ?: return
@@ -3349,9 +3361,13 @@ class ConversationFragment :
 
     override fun onItemLongClick(itemView: View, item: MultiselectPart) {
       Log.d(TAG, "onItemLongClick")
-      if (actionMode != null) { return }
+      if (actionMode != null) {
+        return
+      }
 
-      if (item.getMessageRecord().isInMemoryMessageRecord) { return }
+      if (item.getMessageRecord().isInMemoryMessageRecord) {
+        return
+      }
 
       val messageRecord = item.getMessageRecord()
       val recipient = viewModel.recipientSnapshot ?: return
@@ -3921,11 +3937,11 @@ class ConversationFragment :
 
       val slides: List<Slide> = result.nonUploadedMedia.mapNotNull {
         when {
-          MediaUtil.isVideoType(it.contentType) -> VideoSlide(requireContext(), it.uri, it.size, it.isVideoGif, it.width, it.height, it.caption.orNull(), it.transformProperties.orNull())
-          MediaUtil.isGif(it.contentType) -> GifSlide(requireContext(), it.uri, it.size, it.width, it.height, it.isBorderless, it.caption.orNull())
-          MediaUtil.isImageType(it.contentType) -> ImageSlide(requireContext(), it.uri, it.contentType, it.size, it.width, it.height, it.isBorderless, it.caption.orNull(), null, it.transformProperties.orNull())
+          MediaUtil.isVideoType(it.contentType) -> VideoSlide(requireContext(), it.uri, it.size, it.isVideoGif, it.width, it.height, it.caption, it.transformProperties)
+          MediaUtil.isGif(it.contentType) -> GifSlide(requireContext(), it.uri, it.size, it.width, it.height, it.isBorderless, it.caption)
+          MediaUtil.isImageType(it.contentType) -> ImageSlide(requireContext(), it.uri, it.contentType, it.size, it.width, it.height, it.isBorderless, it.caption, null, it.transformProperties)
           MediaUtil.isDocumentType(it.contentType) -> {
-            DocumentSlide(requireContext(), it.uri, it.contentType, it.size, it.fileName.orNull())
+            DocumentSlide(requireContext(), it.uri, it.contentType!!, it.size, it.fileName)
           }
 
           else -> {

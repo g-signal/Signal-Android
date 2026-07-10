@@ -48,3 +48,5 @@ app/playStaging
 */*.apk
 *.so
 gradle.properties
+./.claude
+*.md

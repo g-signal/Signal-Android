@@ -143,6 +143,9 @@ import org.thoughtcrime.securesms.database.helpers.migration.V285_AddEpochToCall
 import org.thoughtcrime.securesms.database.helpers.migration.V286_AddGExtRecipientTable
 import org.thoughtcrime.securesms.database.helpers.migration.V287_AddGExtGroupsTable
 import org.thoughtcrime.securesms.database.helpers.migration.V288_AddGExtRecipientTableRobotFiled
+import org.thoughtcrime.securesms.database.helpers.migration.V289_AddQuoteTargetContentTypeColumn
+import org.thoughtcrime.securesms.database.helpers.migration.V290_AddArchiveThumbnailTransferStateColumn
+import org.thoughtcrime.securesms.database.helpers.migration.V291_NullOutRemoteKeyIfEmpty
 import org.thoughtcrime.securesms.database.SQLiteDatabase as SignalSqliteDatabase
 
 /**
@@ -291,48 +294,56 @@ object SignalDatabaseMigrations {
     285 to V285_AddEpochToCallLinksTable,
     286 to V286_AddGExtRecipientTable,
     287 to V287_AddGExtGroupsTable,
-    288 to V288_AddGExtRecipientTableRobotFiled
+    288 to V288_AddGExtRecipientTableRobotFiled,
+    //将branch_from_tag_v7.58.0 上游的 286，287，288 已经合并到289中
+    289 to V289_AddQuoteTargetContentTypeColumn,
+    290 to V290_AddArchiveThumbnailTransferStateColumn,
+    291 to V291_NullOutRemoteKeyIfEmpty
   )
 
-  const val DATABASE_VERSION = 288
+  const val DATABASE_VERSION = 291
 
   @JvmStatic
   fun migrate(context: Application, db: SignalSqliteDatabase, oldVersion: Int, newVersion: Int) {
     val initialForeignKeyState = db.areForeignKeyConstraintsEnabled()
 
-    for (migrationData in migrations) {
+    val eligibleMigrations = if (newVersion < 0) {
+      migrations.filter { (version, _) -> version > oldVersion }
+    } else {
+      migrations.filter { (version, _) -> version > oldVersion && version <= newVersion }
+    }
+
+    for (migrationData in eligibleMigrations) {
       val (version, migration) = migrationData
 
-      if (oldVersion < version) {
-        Log.i(TAG, "Running migration for version $version: ${migration.javaClass.simpleName}. Foreign keys: ${migration.enableForeignKeys}")
-        val startTime = System.currentTimeMillis()
+      Log.i(TAG, "Running migration for version $version: ${migration.javaClass.simpleName}. Foreign keys: ${migration.enableForeignKeys}")
+      val startTime = System.currentTimeMillis()
 
-        var ftsException: SQLiteException? = null
+      var ftsException: SQLiteException? = null
 
-        db.setForeignKeyConstraintsEnabled(migration.enableForeignKeys)
-        db.beginTransaction()
-        try {
-          migration.migrate(context, db, oldVersion, newVersion)
-          db.version = version
-          db.setTransactionSuccessful()
-        } catch (e: SQLiteException) {
-          if (e.message?.contains("invalid fts5 file format") == true || e.message?.contains("vtable constructor failed") == true) {
-            ftsException = e
-          } else {
-            throw e
-          }
-        } finally {
-          db.endTransaction()
+      db.setForeignKeyConstraintsEnabled(migration.enableForeignKeys)
+      db.beginTransaction()
+      try {
+        migration.migrate(context, db, oldVersion, newVersion)
+        db.version = version
+        db.setTransactionSuccessful()
+      } catch (e: SQLiteException) {
+        if (e.message?.contains("invalid fts5 file format") == true || e.message?.contains("vtable constructor failed") == true) {
+          ftsException = e
+        } else {
+          throw e
         }
-
-        if (ftsException != null) {
-          Log.w(TAG, "Encountered FTS format issue! Attempting to repair.", ftsException)
-          SignalDatabase.messageSearch.fullyResetTables(db)
-          throw ftsException
-        }
-
-        Log.i(TAG, "Successfully completed migration for version $version in ${System.currentTimeMillis() - startTime} ms")
+      } finally {
+        db.endTransaction()
       }
+
+      if (ftsException != null) {
+        Log.w(TAG, "Encountered FTS format issue! Attempting to repair.", ftsException)
+        SignalDatabase.messageSearch.fullyResetTables(db)
+        throw ftsException
+      }
+
+      Log.i(TAG, "Successfully completed migration for version $version in ${System.currentTimeMillis() - startTime} ms")
     }
 
     db.setForeignKeyConstraintsEnabled(initialForeignKeyState)
