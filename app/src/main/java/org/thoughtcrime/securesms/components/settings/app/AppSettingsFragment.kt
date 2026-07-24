@@ -320,16 +320,17 @@ private fun AppSettingsContent(
               enabled = isRegisteredAndUpToDate
             )
           }
-        item {
-          Rows.TextRow(
-            text = stringResource(R.string.link_ba_platform_account_title),
-            icon = painterResource(R.drawable.symbol_bapay_24),
-            onClick = {
-              callbacks.navigate(AppSettingsRoute.AccountRoute.LinkBaAccount)
-            },
-            enabled = isRegisteredAndUpToDate
-          )
-        }
+
+          item {
+            Rows.TextRow(
+              text = stringResource(R.string.link_ba_platform_account_title),
+              icon = painterResource(R.drawable.symbol_bapay_24),
+              onClick = {
+                callbacks.navigate(AppSettingsRoute.AccountRoute.LinkBaAccount)
+              },
+              enabled = isRegisteredAndUpToDate
+            )
+          }
         // 隐藏捐赠入口
         /*
           item {
@@ -374,7 +375,7 @@ private fun AppSettingsContent(
           item {
             Dividers.Default()
           }
-
+        }
 
         item {
           Rows.TextRow(

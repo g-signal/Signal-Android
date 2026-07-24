@@ -60,12 +60,7 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
     lifecycleDisposable.bindTo(viewLifecycleOwner)
 
     attachmentKeyboardView = view.findViewById(R.id.attachment_keyboard)
-    attachmentKeyboardView.apply {
-      setCallback(this@AttachmentKeyboardFragment)
-      if (!SignalStore.payments.paymentsAvailability.isSendAllowed) {
-        filterAttachmentKeyboardButtons(removePaymentFilter)
-      }
-    }
+    attachmentKeyboardView.setCallback(this)
 
     viewModel.getRecentMedia()
       .subscribeBy {
@@ -132,6 +127,9 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
   }
 
   private fun updateButtonsAvailable(recipient: Recipient) {
+    // 先用一次同步规则，避免等异步回来期间按钮闪
+    applyButtonFilter(recipient, null)
+
     // 异步查 robot/msgButtonVisible，结合 payment 规则一起 filter
     Single.fromCallable<Optional<GextRobot>> {
       Optional.ofNullable(SignalDatabase.gExtRecipients.getRobot(recipient.id))
@@ -150,9 +148,6 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
         }
       )
       .addTo(lifecycleDisposable)
-
-    // 先用一次同步规则，避免等异步回来期间按钮闪
-    applyButtonFilter(recipient, null)
   }
 
 

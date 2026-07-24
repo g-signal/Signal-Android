@@ -4891,14 +4891,11 @@ class ConversationFragment :
       }
 
       viewModel.setIsMediaKeyboardShowing(true)
-      isEnabled = true
       // 媒体键盘显示前再应用一次：处理 KeyboardPager 在 robot 查询完成之后才被创建的情况。
       applyRobotButtonVisibility()
     }
 
     override fun onInputHidden() {
-      isEnabled = false
-
       setNavBarBackgroundColor(viewModel.wallpaperSnapshot)
       viewModel.setIsMediaKeyboardShowing(false)
     }
