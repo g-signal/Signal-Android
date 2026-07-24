@@ -5,7 +5,7 @@
   -->
 <!-- smartling.instruction_comments_enabled = on -->
 <resources>
-  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">B&amp;A</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
   <!-- Removed by excludeNonTranslatables <string name="donate_url" translatable="false">https://signal.org/donate</string> -->
@@ -60,6 +60,12 @@
     <string name="ApplicationPreferencesActivity_record_payments_recovery_phrase">記錄付款回復短語</string>
     <string name="ApplicationPreferencesActivity_record_phrase">紀錄短語</string>
     <string name="ApplicationPreferencesActivity_before_you_can_disable_your_pin">在停用PIN碼之前，你必須記錄你的付款回復詞語以確保可以回復你的付款帳戶。</string>
+    <!-- The title of a dialog letting the user know they have to rotate their recovery key if they want to disable PINs -->
+    <string name="AdvancedPinSettingsFragment_rotate_aep_dialog_title">建立新的恢復金鑰</string>
+    <!-- The body of a dialog letting the user know they have to rotate their recovery key if they want to disable PINs -->
+    <string name="AdvancedPinSettingsFragment_rotate_aep_dialog_body">你必須先建立並記下新的恢復金鑰，才能停用 PIN 碼。</string>
+    <!-- The confirmation button for a dialog letting the user know they have to rotate their recovery key if they want to disable PINs. If they click the button, they will be taken to a flow to rotate their key. -->
+    <string name="AdvancedPinSettingsFragment_rotate_aep_dialog_positive_button">建立金鑰</string>
 
     <!-- NumericKeyboardView -->
   <!-- Removed by excludeNonTranslatables <string name="NumericKeyboardView__1" translatable="false">1</string> -->
@@ -88,6 +94,8 @@
     <string name="AttachmentKeyboard_file">檔案</string>
     <string name="AttachmentKeyboard_contact">聯絡人</string>
     <string name="AttachmentKeyboard_location">位置</string>
+    <!-- Text for a button that will allow users to create a poll -->
+    <string name="AttachmentKeyboard_poll">投票</string>
     <string name="AttachmentKeyboard_Signal_needs_permission_to_show_your_photos_and_videos">B&amp;A 需要獲取權限以顯示你的相片和影片</string>
     <!-- Text for a button prompting users to allow Signal access to their gallery storage -->
     <string name="AttachmentKeyboard_allow_access">允許存取</string>
@@ -335,7 +343,7 @@
     <string name="ClientDeprecatedActivity_update">更新</string>
     <string name="ClientDeprecatedActivity_dont_update">不更新</string>
     <string name="ClientDeprecatedActivity_warning">警告</string>
-    <string name="ClientDeprecatedActivity_your_version_of_signal_has_expired_you_can_view_your_message_history">你的 B&amp;A 版本已過期。你可以查看訊息歷史記錄，但是只有在更新後才能傳送或接收訊息。</string>
+    <string name="ClientDeprecatedActivity_your_version_of_signal_has_expired_you_can_view_your_message_history">你的B&amp;A版本已過期。你可以查看訊息歷史記錄，但是只有在更新後才能傳送或接收訊息。</string>
 
     <!-- CommunicationActions -->
     <string name="CommunicationActions_no_browser_found">找不到網路瀏覽器。</string>
@@ -345,7 +353,7 @@
     <string name="CommunicationActions_cancel">取消</string>
     <string name="CommunicationActions_call">撥打</string>
     <string name="CommunicationActions_insecure_call">不安全的電話</string>
-    <string name="CommunicationActions_carrier_charges_may_apply">電信商可能會收取額外的費用。你撥出的號碼未在 B&amp;A 中註冊。 該電話將通過你的電信商撥出，而不是通過網際網路撥出。</string>
+    <string name="CommunicationActions_carrier_charges_may_apply">電信商可能會收取額外的費用。你撥出的號碼未在B&amp;A中註冊。 該電話將通過你的電信商撥出，而不是通過網際網路撥出。</string>
     <string name="CommunicationActions_cant_join_call">無法加入通話</string>
     <string name="CommunicationActions_this_call_link_is_no_longer_valid">此通話連結已失效。</string>
     <!-- Title on dialog when call link url cannot be parsed -->
@@ -354,6 +362,11 @@
     <string name="CommunicationActions_this_is_not_a_valid_call_link">這不是有效的通話連結。在嘗試加入之前，請確保整個連結是完整且正確的。</string>
     <!-- Displayed in a snackbar when the user is already in a call -->
     <string name="CommunicationActions__you_are_already_in_a_call">你已經在通話中</string>
+    <!-- Title on dialog when quick restore qr code is scanned in system camera -->
+    <string name="CommunicationActions__transfer_dialog_title">要轉移帳戶至新的裝置嗎？</string>
+    <!-- Message on dialog when quick restore qr code is scanned in system camera -->
+    <string name="CommunicationActions__transfer_dialog_message">要將此帳戶轉移至新裝置，輕按「繼續」並用 B&amp;A 相機再次掃描二維碼。請確保只掃描直接來自 B&amp;A 的二維碼。</string>
+    <string name="CommunicationActions__dont_transfer">不要轉移</string>
 
     <!-- ConfirmIdentityDialog -->
 
@@ -395,7 +408,7 @@
     <string name="ContactShareEditActivity_type_work">工作電話</string>
     <string name="ContactShareEditActivity_type_missing">其他</string>
     <string name="ContactShareEditActivity_invalid_contact">選擇的聯絡人無效</string>
-    <!-- Content descrption for name edit button on contact share edit activity -->
+    <!-- Content description for name edit button on contact share edit activity -->
     <string name="ContactShareEditActivity__edit_name">編輯名稱</string>
     <!-- Content description for user avatar in edit activity -->
     <string name="ContactShareEditActivity__avatar">頭像</string>
@@ -501,7 +514,7 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">B&amp;A 需要相機的權限來拍攝照片或是影片 ，但是現在系統設定為總是拒絕 B&amp;A。請到 B&amp;A 的應用程式設定中，點選「權限」，並啟用相機的權限。</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">B&amp;A 需要使用相機的權限來拍攝照片和影片</string>
     <string name="ConversationActivity_enable_the_microphone_permission_to_capture_videos_with_sound">開啟麥克風權限以擷取帶有音效的影片。</string>
-    <string name="ConversationActivity_signal_needs_the_recording_permissions_to_capture_video">B&amp;A  需要麥克風權限才能錄製影片，但已被拒絕。 請繼續進行應用程式設定，選擇“權限”，然後啟用“麥克風”和“相機”。</string>
+    <string name="ConversationActivity_signal_needs_the_recording_permissions_to_capture_video">B&amp;A需要麥克風權限才能錄製影片，但已被拒絕。 請繼續進行應用程式設定，選擇“權限”，然後啟用“麥克風”和“相機”。</string>
     <string name="ConversationActivity_signal_needs_recording_permissions_to_capture_video">B&amp;A 需要麥克風權限以錄製影片。</string>
 
     <string name="ConversationActivity_quoted_contact_message">%1$s %2$s</string>
@@ -539,9 +552,9 @@
     <!-- Message shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
     <string name="ConversationActivity__sms_messaging_is_no_longer_supported_in_signal_invite_s_to_to_signal_to_keep_the_conversation_here">B&amp;A 不再支援短訊功能。邀請 %1$s 加入 B&amp;A 以繼續對話。</string>
     <!-- Message shown when opening a conversation with an unregistered user who used to be on Signal -->
-    <string name="ConversationActivity__this_person_is_no_longer_using_signal">此人不再使用 B&amp;A 。邀請他們加入 B&amp;A 以繼續對話。</string>
+    <string name="ConversationActivity__this_person_is_no_longer_using_signal">此人不再使用 B&amp;A。邀請他們加入 B&amp;A 以繼續對話。</string>
     <!-- Action button shown when opening an SMS conversation with SMS disabled and there are no exported messages -->
-    <string name="ConversationActivity__invite_to_signal">邀請至 B&amp;A </string>
+    <string name="ConversationActivity__invite_to_signal">邀請至 B&amp;A</string>
     <!-- Snackbar message shown after dismissing the full screen sms export megaphone indicating we\'ll do it again soon -->
     <string name="ConversationActivity__you_will_be_reminded_again_soon">我們稍後會再次提醒你。</string>
     <!-- Toast message shown when trying to record a voice message during an ongoing call -->
@@ -572,7 +585,7 @@
     <string name="ConversationFragment_dont_show_again">不再顯示</string>
     <string name="ConversationFragment_pending">暫待等候中…</string>
     <!-- Describes how the message was sent when looking at a message detail. Previously, messages could be through other means like SMS -->
-    <string name="ConversationFragment_push">數據 (B&amp;A )</string>
+    <string name="ConversationFragment_push">數據 (B&amp;A)</string>
     <string name="ConversationFragment_mms">多媒體訊息</string>
     <string name="ConversationFragment_sms">簡訊</string>
     <string name="ConversationFragment_deleting">正在刪除</string>
@@ -585,7 +598,7 @@
     <string name="ConversationFragment_delete">刪除</string>
     <!-- Dialog button for deleting one or more note-to-self messages on all linked devices. -->
     <string name="ConversationFragment_delete_everywhere">從所有裝置中刪除</string>
-    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">如果聊天中的每個人都使用最新版本的 B&amp;A ，則該訊息將被刪除。 他們將能夠看到你刪除了一則訊息。</string>
+    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">如果聊天中的每個人都使用最新版本的B&amp;A，則該訊息將被刪除。 他們將能夠看到你刪除了一則訊息。</string>
     <string name="ConversationFragment_quoted_message_not_found">無法找到原始訊息</string>
     <string name="ConversationFragment_quoted_message_no_longer_available">原始訊息已不存在</string>
     <string name="ConversationFragment_failed_to_open_message">開啟訊息失敗</string>
@@ -602,7 +615,7 @@
     <string name="ConversationFragment_verify">驗證</string>
     <string name="ConversationFragment_not_now">稍後</string>
     <string name="ConversationFragment_your_safety_number_with_s_changed">你與 %1$s 的安全碼已變更</string>
-    <string name="ConversationFragment_your_safety_number_with_s_changed_likey_because_they_reinstalled_signal">你與 %1$s 的安全碼已變更，可能是因為對方重新安裝了 B&amp;A  或更換了裝置。輕觸「驗證」以確認新的安全碼。這是可選的。</string>
+    <string name="ConversationFragment_your_safety_number_with_s_changed_likey_because_they_reinstalled_signal">你與 %1$s 的安全碼已變更，可能是因為對方重新安裝了 B&amp;A 或更換了裝置。輕觸「驗證」以確認新的安全碼。這是可選的。</string>
     <!-- Dialog title for block group link join requests -->
     <string name="ConversationFragment__block_request">要封鎖請求嗎？</string>
     <!-- Dialog message for block group link join requests -->
@@ -614,13 +627,13 @@
     <!-- Message shown after successfully blocking join requests for a user -->
     <string name="ConversationFragment__blocked">已封鎖</string>
     <!-- Action shown to allow a user to update their application because it has expired -->
-    <string name="ConversationFragment__update_build">更新 B&amp;A </string>
+    <string name="ConversationFragment__update_build">更新 B&amp;A</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
-    <string name="ConversationFragment__reregister_signal">重新註冊 B&amp;A </string>
+    <string name="ConversationFragment__reregister_signal">重新註冊 B&amp;A</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">導向返回。</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
-    <string name="ConversationFragment__content_description_launch_signal_button">開啟 B&amp;A </string>
+    <string name="ConversationFragment__content_description_launch_signal_button">開啟 B&amp;A</string>
     <!-- Dialog title shown when more than one contact in a group conversation is no longer verified -->
     <string name="ConversationFragment__no_longer_verified">已無驗證</string>
     <!-- Button shown in conversation header when in a message request state and no groups in common to show new message safety tips -->
@@ -638,7 +651,7 @@
     <!-- Dialog title shown after reporting spam and tapping the conversation item -->
     <string name="ConversationFragment_reported_spam">已舉報垃圾訊息</string>
     <!-- Dialog message shown after reporting spam and tapping the conversation item -->
-    <string name="ConversationFragment_reported_spam_message">B&amp;A  剛收到通知，此人可能正在發送垃圾訊息。B&amp;A  不能看到任何聊天內容。</string>
+    <string name="ConversationFragment_reported_spam_message">B&amp;A 剛收到通知，此人可能正在發送垃圾訊息。B&amp;A 不能看到任何聊天內容。</string>
     <!-- Toast shown after reporting spam and tapping the conversation item -->
     <string name="ConversationFragment_reported_as_spam">已舉報垃圾訊息</string>
     <!-- Toast shown after reporting and blocking a conversation -->
@@ -657,6 +670,22 @@
     <string name="ConversationFragment_group_names">群組名稱</string>
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">下載相片失敗。請再試一次。</string>
+    <!-- Dialog for how to long to keep a messaged pinned for -->
+    <string name="ConversationFragment__keep_pinned">釘選時長…</string>
+    <!-- Dialog option to keep message pin for 24 hours -->
+    <string name="ConversationFragment__24_hours">24 小時</string>
+    <!-- Dialog option to keep message pin for 7 days -->
+    <string name="ConversationFragment__7_days">7天</string>
+    <!-- Dialog option to keep message pin for 30 days -->
+    <string name="ConversationFragment__30_days">30天</string>
+    <!-- Dialog option to keep message pin forever -->
+    <string name="ConversationFragment__forever">永久</string>
+    <!-- Dialog title when replacing the oldest pin -->
+    <string name="ConversationFragment__replace_title">要取代最舊的釘選訊息嗎？</string>
+    <!-- Dialog body when replacing the oldest pin -->
+    <string name="ConversationFragment__replace_body">正在釘選的訊息會取代最舊的訊息</string>
+    <!-- Dialog button when replacing the oldest pin -->
+    <string name="ConversationFragment__replace">取代</string>
 
     <!-- Title of Safety Tips bottom sheet dialog -->
     <string name="SafetyTips_title">安全提示</string>
@@ -671,7 +700,7 @@
     <!-- Title of tip 0 -->
     <string name="SafetyTips_tip0_title">假名稱和帳戶</string>
     <!-- Message of tip 0 -->
-    <string name="SafetyTips_tip0_message">B&amp;A  永遠不會聯絡你來索取你的註冊碼或 PIN 碼。請小心那些冒充他人的請求。個人檔案名稱由其帳戶持有人選擇，並未經過驗證。</string>
+    <string name="SafetyTips_tip0_message">B&amp;A 永遠不會聯絡你來索取你的註冊碼或 PIN 碼。請小心那些冒充他人的請求。個人檔案名稱由其帳戶持有人選擇，並未經過驗證。</string>
     <!-- Title of tip 1 -->
     <string name="SafetyTips_tip1_title">加密貨幣或金錢詐騙</string>
     <!-- Message of tip 1 -->
@@ -814,9 +843,9 @@
     <!-- Toolbar title for this screen -->
     <string name="WhoCanSeeMyPhoneNumberFragment__who_can_find_me_by_number">誰能用手機號碼找到我？</string>
     <!-- Description for radio item stating anyone can see your phone number -->
-    <string name="WhoCanSeeMyPhoneNumberFragment__anyone_who_has_your">任何擁有你電話號碼的人都會看到你在使用 B&amp;A ，並可以開始與你聊天。</string>
+    <string name="WhoCanSeeMyPhoneNumberFragment__anyone_who_has_your">任何擁有你電話號碼的人都會看到你在使用 B&amp;A，並可以開始與你聊天。</string>
     <!-- Description for radio item stating no one will be able to see your phone number -->
-    <string name="WhoCanSeeMyPhoneNumberFragment__nobody_will_be_able">除非你向對方傳送訊息或與對方已有聊天記錄，否則沒有人能看到你使用 B&amp;A 。</string>
+    <string name="WhoCanSeeMyPhoneNumberFragment__nobody_will_be_able">除非你向對方傳送訊息或與對方已有聊天記錄，否則沒有人能看到你使用 B&amp;A。</string>
 
     <!-- ChooseBackupFragment -->
     <string name="ChooseBackupFragment__restore_from_backup">從備份來還原？</string>
@@ -844,7 +873,7 @@
     <!-- Bottom sheet paid message -->
     <string name="CreateBackupBottomSheet__depending_on_the_size">視備份的大小而定，這可能需要一段較長的時間。備份期間，你可以如常使用手機。</string>
     <!-- Bottom sheet free message -->
-    <string name="CreateBackupBottomSheet__free_tier">Media is added to your backup as you send and receive messages.</string>
+    <string name="CreateBackupBottomSheet__free_tier">當你發送和接收訊息時，媒體會加入備份。</string>
 
     <!-- Headline text for a bottom sheet dialog shown when the restoration of the media backup fails. -->
     <string name="RestoreMediaFailedBottomSheet__Cant_restore_media">無法還原媒體</string>
@@ -893,7 +922,7 @@
     <string name="BackupsPreferenceFragment__test_your_backup_passphrase">測試你的備份碼，並驗證其是否相符</string>
     <string name="BackupsPreferenceFragment__turn_on">開啟</string>
     <string name="BackupsPreferenceFragment__turn_off">關閉</string>
-    <string name="BackupsPreferenceFragment__to_restore_a_backup">"要回復備份，請安裝新的 B&amp;A  。 打開應用程式，然後點擊“還原備份”，然後找到一個備份檔案。%1$s"</string>
+    <string name="BackupsPreferenceFragment__to_restore_a_backup">"要回復備份，請安裝新的B&amp;A。 打開應用程式，然後點擊“還原備份”，然後找到一個備份檔案。%1$s"</string>
     <string name="BackupsPreferenceFragment__learn_more">了解更多</string>
     <string name="BackupsPreferenceFragment__in_progress">正在進行中…</string>
     <!-- Status text shown in backup preferences when verifying a backup -->
@@ -902,7 +931,7 @@
     <string name="BackupsPreferenceFragment__d_so_far">%1$d到目前為止…</string>
     <!-- Show percentage of completion of backup -->
     <string name="BackupsPreferenceFragment__s_so_far">目前進度%1$s%%…</string>
-    <string name="BackupsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">為了要建立備份，B&amp;A  需要外部空間的權限，但是已被永久拒絕。請到應用程式設定，選擇「權限」及開啟「儲存」。</string>
+    <string name="BackupsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">為了要建立備份，B&amp;A 需要外部空間的權限，但是已被永久拒絕。請到應用程式設定，選擇「權限」及開啟「儲存」。</string>
     <!-- Title of dialog shown when picking the time to perform a chat backup -->
     <string name="BackupsPreferenceFragment__set_backup_time">設定備份時間</string>
 
@@ -919,6 +948,10 @@
     <!-- DateUtils -->
     <string name="DateUtils_just_now">現在</string>
     <string name="DateUtils_minutes_ago">%1$d 分鐘前</string>
+    <!-- Content description when describing how many minutes ago something has happened -->
+    <plurals name="DateUtils_minutes_ago_content_description">
+        <item quantity="other">%1$d 分鐘</item>
+    </plurals>
     <string name="DateUtils_today">今天</string>
     <string name="DateUtils_yesterday">昨天</string>
     <!-- When scheduling a message, %1$s replaced with either today, tonight, or tomorrow. %2$s replaced with the time. e.g. Tonight at 9:00pm -->
@@ -977,23 +1010,23 @@
 
     <!-- DecryptionFailedDialog -->
     <string name="DecryptionFailedDialog_chat_session_refreshed">聊天會話已刷新</string>
-    <string name="DecryptionFailedDialog_signal_uses_end_to_end_encryption">B&amp;A 使用點對點加密，有時可能需要刷新你的聊天對話。 這不會影響你聊天的安全性，但是你可能錯過了此聯絡人的訊息，可以要求他們重新傳送。</string>
+    <string name="DecryptionFailedDialog_signal_uses_end_to_end_encryption">B&amp;A使用點對點加密，有時可能需要刷新你的聊天對話。 這不會影響你聊天的安全性，但是你可能錯過了此聯絡人的訊息，可以要求他們重新傳送。</string>
 
     <!-- LinkDeviceFragment -->
     <!-- Description for how Signal will work with a linked device (eg desktop, iPad) -->
-    <string name="LinkDeviceFragment__use_signal_on_desktop_ipad">在桌面電腦或 iPad 上使用此 B&amp;A  帳戶。</string>
+    <string name="LinkDeviceFragment__use_signal_on_desktop_ipad">在桌面電腦或 iPad 上使用此 B&amp;A 帳戶。</string>
     <!-- Button prompting users to link a new device to their account -->
     <string name="LinkDeviceFragment__link_a_new_device">連結新的裝置</string>
     <!-- Text explaining that on linked devices, messages will be encrypted where %s will be replaced with an image-->
     <string name="LinkDeviceFragment__messages_and_chat_info_are_protected">%1$s所有裝置上的訊息和聊天資訊均受端對端加密的保護</string>
     <!-- Bottom sheet title explaining how Signal works on a linked device -->
-    <string name="LinkDeviceFragment__signal_on_desktop_ipad">在桌面電腦或 iPad 上的 B&amp;A </string>
+    <string name="LinkDeviceFragment__signal_on_desktop_ipad">在桌面電腦或 iPad 上的 B&amp;A</string>
     <!-- Bottom sheet description explaining that messages on linked devices are private -->
     <string name="LinkDeviceFragment__all_messaging_is_private">所有在已連結裝置上的訊息均為私密</string>
     <!-- Bottom sheet description explaining that future messages on linked devices will be in sync with your phone but previous messages will not appear -->
-    <string name="LinkDeviceFragment__signal_messages_are_synchronized">連結後，B&amp;A  的訊息會與手機上的 B&amp;A  同步。您過往的訊息歷史紀錄將不會顯示。</string>
+    <string name="LinkDeviceFragment__signal_messages_are_synchronized">連結後，B&amp;A 的訊息會與手機上的 B&amp;A 同步。您過往的訊息歷史紀錄將不會顯示。</string>
     <!-- Bottom sheet description explaining that for non-desktop/iPad devices, they should go to %s to download Signal where %s is Signal\'s website -->
-    <string name="LinkDeviceFragment__on_other_device_visit_signal">在你想連結的裝置上，前往 %1$s 以安裝 B&amp;A </string>
+    <string name="LinkDeviceFragment__on_other_device_visit_signal">在你想連結的裝置上，前往 %1$s 以安裝 B&amp;A</string>
   <!-- Removed by excludeNonTranslatables <string name="LinkDeviceFragment__signal_download_url" translatable="false">signal.org/download</string> -->
     <!-- Header title listing out current linked devices -->
     <string name="LinkDeviceFragment__my_linked_devices">我的已連結裝置</string>
@@ -1018,7 +1051,7 @@
     <!-- Title on bottom sheet explaining our usage of biometrics to link a device -->
     <string name="LinkDeviceFragment__before_linking">在連結之前，請確認這是你本人</string>
     <!-- Body of bottom sheet explaining that users should use their device pin or biometrics and not their Signal pin -->
-    <string name="LinkDeviceFragment__tap_continue_and_enter_phone">輕按繼續並輸入手機的鎖定密碼以確認。請勿輸入你的 B&amp;A  PIN 碼。</string>
+    <string name="LinkDeviceFragment__tap_continue_and_enter_phone">輕按繼續並輸入手機的鎖定密碼以確認。請勿輸入你的 B&amp;A PIN 碼。</string>
     <!-- Button that dismisses the bottom sheet -->
     <string name="LinkDeviceFragment__continue">繼續</string>
     <!-- Option on button to contact support -->
@@ -1092,7 +1125,7 @@
     <!-- Bottom sheet title telling users to complete the linking process on the other device  -->
     <string name="AddLinkDeviceFragment__finish_linking_on_other_device">在另一部裝置上完成連結</string>
     <!-- Bottom sheet description telling users to complete the linking process -->
-    <string name="AddLinkDeviceFragment__finish_linking_signal">在你的另一部裝置上完成 B&amp;A  連結。</string>
+    <string name="AddLinkDeviceFragment__finish_linking_signal">在你的另一部裝置上完成 B&amp;A 連結。</string>
     <!-- Title of dialog when the QR code being scanned is invalid -->
     <string name="AddLinkDeviceFragment__linking_device_failed">裝置連結失敗</string>
     <!-- Text shown in a dialog when the QR code being scanned is invalid -->
@@ -1139,16 +1172,19 @@
 
     <!-- DozeReminder -->
     <string name="DozeReminder_optimize_for_missing_play_services">為缺少的 Play 服務優化</string>
-    <string name="DozeReminder_this_device_does_not_support_play_services_tap_to_disable_system_battery">這個裝置不支援 Play 服務。輕觸關閉，因為系統電池效能最佳化會防止 B&amp;A  在閒置時取得訊息。</string>
+    <string name="DozeReminder_this_device_does_not_support_play_services_tap_to_disable_system_battery">這個裝置不支援 Play 服務。輕觸關閉，因為系統電池效能最佳化會防止 B&amp;A 在閒置時取得訊息。</string>
 
     <!-- ExpiredBuildReminder -->
-    <string name="ExpiredBuildReminder_this_version_of_signal_has_expired">此版本的 B&amp;A  已過期。立即更新以傳送和接收訊息。</string>
+    <string name="ExpiredBuildReminder_this_version_of_signal_has_expired">此版本的 B&amp;A 已過期。立即更新以傳送和接收訊息。</string>
     <string name="ExpiredBuildReminder_update_now">立即更新</string>
 
+    <!-- A message in a banner shown at the top of the screen indicating that the user must upgrade their device to use signal. -->
+    <string name="DeprecatedSdkBanner_body">B&amp;A 不再適用於此裝置。若要再次使用 B&amp;A，請將你的裝置更新至較新版本的 Android，或切換至較新的裝置。</string>
+
     <!-- Title of notification telling users to update Signal -->
-    <string name="DeprecatedNotificationJob_update_signal">更新 B&amp;A </string>
+    <string name="DeprecatedNotificationJob_update_signal">更新 B&amp;A</string>
     <!-- Message body of notification telling users that this current version of Signal has expired. If pressed, we will direct them to the website APK or PlayStore page -->
-    <string name="DeprecatedNotificationJob_this_version_of_signal_has_expired">此版本的 B&amp;A  已過期。輕按更新以傳送和接收訊息。</string>
+    <string name="DeprecatedNotificationJob_this_version_of_signal_has_expired">此版本的 B&amp;A 已過期。輕按更新以傳送和接收訊息。</string>
 
     <!-- PendingGroupJoinRequestsReminder -->
     <plurals name="PendingGroupJoinRequestsReminder_d_pending_member_requests">
@@ -1157,8 +1193,8 @@
     <string name="PendingGroupJoinRequestsReminder_view">檢視</string>
 
     <!-- GcmRefreshJob -->
-    <string name="GcmRefreshJob_Permanent_Signal_communication_failure">B&amp;A  持續發生傳輸異常！</string>
-    <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">B&amp;A  無法順利與 Google Play Services 註冊，B&amp;A  訊息與通話已經停用，請嘗試在設定 &gt; 進階中重新註冊。</string>
+    <string name="GcmRefreshJob_Permanent_Signal_communication_failure">B&amp;A 持續發生傳輸異常！</string>
+    <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">B&amp;A 無法順利與 Google Play Services 註冊，B&amp;A 訊息與通話已經停用，請嘗試在設定 &gt; 進階中重新註冊。</string>
 
 
     <!-- GiphyActivity -->
@@ -1170,11 +1206,11 @@
     <string name="AddToGroupActivity_add_member">新增成員嗎？</string>
     <string name="AddToGroupActivity_add_s_to_s">新增「%1$s」到「%2$s」嗎？</string>
     <string name="AddToGroupActivity_s_added_to_s">「%1$s」已加入「%2$s」。</string>
-    <string name="AddToGroupActivity_add_to_group">新增到群組</string>
     <string name="AddToGroupActivity_add_to_groups">新增到群組</string>
     <string name="AddToGroupActivity_this_person_cant_be_added_to_legacy_groups">無法將此人新增到舊群組中。</string>
     <string name="AddToGroupActivity_add">新增</string>
     <string name="AddToGroupActivity_add_to_a_group">新增到群組</string>
+    <string name="AddToGroupActivity_search">搜尋</string>
 
     <!-- ChooseNewAdminActivity -->
     <string name="ChooseNewAdminActivity_choose_new_admin">選擇新的管理員</string>
@@ -1272,7 +1308,7 @@
     <string name="LinkPreviewView_this_group_link_is_not_active">此群組連結無效</string>
     <string name="LinkPreviewView_domain_date">%1$s · %2$s</string>
     <!-- Description for Call Link url previews -->
-    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">使用此連結以加入 B&amp;A  通話</string>
+    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">使用此連結以加入 B&amp;A 通話</string>
 
     <!-- LinkPreviewRepository -->
     <plurals name="LinkPreviewRepository_d_members">
@@ -1284,7 +1320,7 @@
     <!-- Message for dialog asking user to submit logs for debugging a crash -->
     <string name="PromptLogsSlowNotificationsDialog__message">除錯日誌可協助我們診斷並修正問題，而且不包含識別資料。</string>
     <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
-    <string name="PromptLogsSlowNotificationsDialog__title_crash">B&amp;A  遇到了問題。要提交除錯日誌嗎？</string>
+    <string name="PromptLogsSlowNotificationsDialog__title_crash">B&amp;A 遇到了問題。要提交除錯日誌嗎？</string>
     <!-- Title for dialog asking user to submit logs for a situation where they\'re not able to connect to the signal service -->
     <string name="PromptLogsSlowNotificationsDialog__title_connectivity_warning">你可能收不到訊息。要提交除錯日誌嗎？</string>
 
@@ -1292,12 +1328,12 @@
     <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
     <string name="PromptBatterySaverBottomSheet__title">由於電池效能最佳化，通知可能會延遲</string>
     <!-- Message explaining that battery saver may delay notifications -->
-    <string name="PromptBatterySaverBottomSheet__message">你可以停用 B&amp;A  的電池效能最佳化設定，以確保訊息通知不會延遲。</string>
+    <string name="PromptBatterySaverBottomSheet__message">你可以停用 B&amp;A 的電池效能最佳化設定，以確保訊息通知不會延遲。</string>
 
     <!-- Title in bottom sheet that states that notifications for this device could be delayed -->
     <string name="DeviceSpecificNotificationBottomSheet__notifications_may_be_delayed">由於電池效能最佳化，通知可能會延遲</string>
     <!-- Message in bottom sheet prompting users to fix potential issues by disabling battery optimizations -->
-    <string name="DeviceSpecificNotificationBottomSheet__disable_battery_optimizations">停用 B&amp;A  的電池效能最佳化設定，以確保訊息通知不會延遲。點按「繼續」查看特定裝置說明。</string>
+    <string name="DeviceSpecificNotificationBottomSheet__disable_battery_optimizations">停用 B&amp;A 的電池效能最佳化設定，以確保訊息通知不會延遲。點按「繼續」查看特定裝置說明。</string>
     <!-- Button to dismiss notification help prompt -->
     <string name="DeviceSpecificNotificationBottomSheet__no_thanks">不必了</string>
     <!-- Button to continue and go to Signal support website -->
@@ -1306,7 +1342,7 @@
     <!-- Title of a bottom sheet that is shown when the user is having connectivity issues -->
     <string name="ConnectivityWarningBottomSheet_title">你可能收不到訊息</string>
     <!-- Body of a bottom sheet that is shown when the user is having connectivity issues -->
-    <string name="ConnectivityWarningBottomSheet_body">重新啟動裝置可能有助於解決訊息傳送問題。如果問題仍然存在，請與 B&amp;A  支援聯絡。</string>
+    <string name="ConnectivityWarningBottomSheet_body">重新啟動裝置可能有助於解決訊息傳送問題。如果問題仍然存在，請與 B&amp;A 支援聯絡。</string>
     <!-- Text for a button in a bottom sheet that is shown when the user is having connectivity issues. Clicking it will dismiss the bottom sheet. -->
     <string name="ConnectivityWarningBottomSheet_dismiss_button">我知道了</string>
 
@@ -1345,10 +1381,15 @@
     <!-- AddMembersActivity -->
     <string name="AddMembersActivity__done">完成</string>
     <string name="AddMembersActivity__this_person_cant_be_added_to_legacy_groups">無法將此人新增到舊群組中。</string>
-    <!-- Confirmation text when adding a member to a group. If one person is added, %1$s is their name. If multiple people are added, the total number is %3$d. %2$s is the name of the group -->
+
+    <!-- Confirmation text when adding one member to a group. %1$s is the member\'s name, %2$s is the group name. -->
+    <string name="AddMembersActivity__add_member_to_s">新增「%1$s」到「%2$s」嗎？</string>
+
+    <!-- Confirmation text when adding members to a group. %1$d is the number of members added. %2$s is the name of the group. -->
     <plurals name="AddMembersActivity__add_d_members_to_s">
-        <item quantity="other">新增 %3$d 個成員到「%2$s」嗎？</item>
+        <item quantity="other">新增 %1$d 個成員到「%2$s」嗎？</item>
     </plurals>
+
     <string name="AddMembersActivity__add">新增</string>
     <string name="AddMembersActivity__add_members">新增成員</string>
 
@@ -1367,9 +1408,9 @@
     <string name="AddGroupDetailsFragment__sms_contact">短訊聯絡人</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">從此群組移除%1$s嗎？</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
-    <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support">你選取的聯絡人無法使用 B&amp;A  群組，因此本群組將採用多媒體訊息模式。只有你能查看自訂多媒體訊息的群組名稱及相片。</string>
+    <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support">你選取的聯絡人無法使用 B&amp;A 群組，因此本群組將採用多媒體訊息模式。只有你能查看自訂多媒體訊息的群組名稱及相片。</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group after SMS Phase 0 -->
-    <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support_signal_groups_mms_removal">你選取的聯絡人無法使用 B&amp;A  群組，因此群組將使用多媒體訊息。只有你可以看到自訂的多媒體訊息群組名稱和相片。系統即將停止支援多媒體訊息群組，專注提供加密通訊服務。</string>
+    <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support_signal_groups_mms_removal">你選取的聯絡人無法使用 B&amp;A 群組，因此群組將使用多媒體訊息。只有你可以看到自訂的多媒體訊息群組名稱和相片。系統即將停止支援多媒體訊息群組，專注提供加密通訊服務。</string>
 
     <!-- ManageGroupActivity -->
     <string name="ManageGroupActivity_who_can_add_new_members">誰可以新增新成員？</string>
@@ -1380,8 +1421,8 @@
     </plurals>
 
     <string name="ManageGroupActivity_you_dont_have_the_rights_to_do_this">你沒有權限來做此事</string>
-    <string name="ManageGroupActivity_not_capable">你新增的人不支援新群組，需要更新 B&amp;A </string>
-    <string name="ManageGroupActivity_not_announcement_capable">你新增的人不支援公告群組，其須要更新 B&amp;A </string>
+    <string name="ManageGroupActivity_not_capable">你新增的人不支援新群組，需要更新B&amp;A</string>
+    <string name="ManageGroupActivity_not_announcement_capable">你新增的人不支援公告群組，其須要更新 B&amp;A</string>
     <string name="ManageGroupActivity_failed_to_update_the_group">更新群組失敗</string>
     <string name="ManageGroupActivity_youre_not_a_member_of_the_group">你不是群組組員</string>
     <string name="ManageGroupActivity_failed_to_update_the_group_please_retry_later">無法更新群組，請稍後重試</string>
@@ -1395,7 +1436,7 @@
     <string name="ManageGroupActivity_legacy_group_upgrade">這是一個舊版群組。 要連結@提及和管理員等新功能，</string>
     <string name="ManageGroupActivity_legacy_group_too_large">這個舊版群組太大，因此無法升級為新版群組。 最大群組大小為%1$d。</string>
     <string name="ManageGroupActivity_upgrade_this_group">升級此群組。</string>
-    <string name="ManageGroupActivity_this_is_an_insecure_mms_group">這是一個不安全的MMS群組。 要私下聊天，請邀請你的聯絡人加入 B&amp;A  。</string>
+    <string name="ManageGroupActivity_this_is_an_insecure_mms_group">這是一個不安全的MMS群組。 要私下聊天，請邀請你的聯絡人加入B&amp;A。</string>
     <string name="ManageGroupActivity_invite_now">立即邀請</string>
     <string name="ManageGroupActivity_more">更多</string>
     <string name="ManageGroupActivity_add_group_description">新增群組描述…</string>
@@ -1444,13 +1485,17 @@
     <!-- Dialog title displayed when remote restore failed because of an outdated backup version. -->
     <string name="RemoteRestoreActivity__couldnt_restore">無法還原此備份</string>
     <!-- Dialog message explaining that an update to Signal is required to restore the backup. -->
-    <string name="RemoteRestoreActivity__update_latest">此版本的 B&amp;A  無法還原備份。更新至最新版本，然後重試。</string>
+    <string name="RemoteRestoreActivity__update_latest">此版本的 B&amp;A 無法還原備份。更新至最新版本，然後重試。</string>
     <!-- Text on button that when pressed will redirect them to update Signal -->
-    <string name="RemoteRestoreActivity__update_signal">更新 B&amp;A </string>
+    <string name="RemoteRestoreActivity__update_signal">更新 B&amp;A</string>
     <!-- Text label button to dismiss the dialog -->
     <string name="RemoteRestoreActivity__not_now">現在不要</string>
     <!-- Text shown on restore screen as information on what will happen if you skip -->
     <string name="RemoteRestoreActivity__your_media_will_restore_in_the_background">媒體將在背景還原。 若你選擇現在不還原，之後將無法還原。</string>
+    <!-- Dialog title -->
+    <string name="RestoreActivity__no_longer_registered_title">此裝置已取消註冊</string>
+    <!-- Dialog message -->
+    <string name="RestoreActivity__no_longer_registered_message">通常是因為你已在另一部裝置上註冊了你的 B&amp;A 帳戶。</string>
 
     <!-- GroupMentionSettingDialog -->
     <string name="GroupMentionSettingDialog_notify_me_for_mentions">通知我提及。</string>
@@ -1549,6 +1594,8 @@
     <string name="GroupJoinBottomSheetDialogFragment_unable_to_join_group_please_try_again_later">無法加入群組。 請稍後再試</string>
     <string name="GroupJoinBottomSheetDialogFragment_encountered_a_network_error">網路連接錯誤。</string>
     <string name="GroupJoinBottomSheetDialogFragment_this_group_link_is_not_active">此群組連結無效</string>
+    <!-- Toast message shown when trying to join a group by link but the group is full -->
+    <string name="GroupJoinBottomSheetDialogFragment_group_limit_reached">已達群組上限，無法加入群組</string>
     <!-- Title shown when there was an known issue getting group information from a group link -->
     <string name="GroupJoinBottomSheetDialogFragment_cant_join_group">無法加入群組</string>
     <!-- Message shown when you try to get information for a group via link but an admin has removed you -->
@@ -1567,9 +1614,9 @@
     </plurals>
 
     <!-- GroupJoinUpdateRequiredBottomSheetDialogFragment -->
-    <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal_to_use_group_links">更新 B&amp;A  以使用群組連結</string>
-    <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_message">你使用的 B&amp;A  版本不支援此群組連結。透過連結更新到最新版本以加入該群組。</string>
-    <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal">更新 B&amp;A </string>
+    <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal_to_use_group_links">更新 B&amp;A 以使用群組連結</string>
+    <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_message">你使用的B&amp;A版本不支援此群組連結。透過連結更新到最新版本以加入該群組。</string>
+    <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal">更新 B&amp;A</string>
     <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_group_link_is_not_valid">群組連結無效</string>
 
     <!-- GroupInviteLinkEnableAndShareBottomSheetDialogFragment -->
@@ -1617,12 +1664,12 @@
     <string name="InviteActivity_cancel">取消</string>
     <string name="InviteActivity_sending">傳送中…</string>
     <string name="InviteActivity_invitations_sent">邀請已傳送！</string>
-    <string name="InviteActivity_invite_to_signal">邀請加入 B&amp;A </string>
+    <string name="InviteActivity_invite_to_signal">邀請加入 B&amp;A</string>
     <string name="InviteActivity_send_sms">傳送 SMS(%1$d)</string>
     <plurals name="InviteActivity_send_sms_invites">
         <item quantity="other">傳送 %1$d 則簡訊邀請？</item>
     </plurals>
-    <string name="InviteActivity_lets_switch_to_signal">讓我們切換到 B&amp;A ：%1$s</string>
+    <string name="InviteActivity_lets_switch_to_signal">讓我們切換到 B&amp;A：%1$s</string>
     <!-- Toast shown when Signal is unable to find an external app to share the Invite text string to -->
     <string name="InviteActivity_no_app_to_share_to">看起來您沒有任何可以分享的應用。</string>
 
@@ -1710,10 +1757,10 @@
     <string name="MessageQuotesBottomSheet_replies">回覆</string>
 
     <!-- NotificationBarManager -->
-    <string name="NotificationBarManager__establishing_signal_call">B&amp;A  通話連線中</string>
+    <string name="NotificationBarManager__establishing_signal_call">B&amp;A 通話連線中</string>
     <!-- Temporary notification shown when starting the calling service -->
-    <string name="NotificationBarManager__starting_signal_call_service">展開 B&amp;A  通話服務</string>
-    <string name="NotificationBarManager__stopping_signal_call_service">B&amp;A  來電服務停止中</string>
+    <string name="NotificationBarManager__starting_signal_call_service">展開 B&amp;A 通話服務</string>
+    <string name="NotificationBarManager__stopping_signal_call_service">B&amp;A 來電服務停止中</string>
     <string name="NotificationBarManager__cancel_call">取消通話</string>
 
     <!-- NotificationsMegaphone -->
@@ -1739,7 +1786,7 @@
 
     <!-- MessageRecord -->
     <string name="MessageRecord_unknown">未知</string>
-    <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">收到一則使用舊版本並已經不再支援的 B&amp;A  加密訊息。請尋求傳送人將 B&amp;A  升級到最新的版本並再次傳送該訊息。</string>
+    <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">收到一則使用舊版本並已經不再支援的 B&amp;A 加密訊息。請尋求傳送人將 B&amp;A 升級到最新的版本並再次傳送該訊息。</string>
     <string name="MessageRecord_left_group">您已經離開了此群組。</string>
     <string name="MessageRecord_you_updated_group">你已更新群組。</string>
     <string name="MessageRecord_the_group_was_updated">該群組已更新。</string>
@@ -1766,7 +1813,7 @@
     <!-- Call update formatter string to place the update message next to a time stamp. e.g., \'Incoming voice call · 11:11am\' -->
     <string name="MessageRecord_call_message_with_date">%1$s · %2$s</string>
     <string name="MessageRecord_s_updated_group">%1$s 更新了群組。</string>
-    <string name="MessageRecord_s_joined_signal">%1$s 在 B&amp;A  了！</string>
+    <string name="MessageRecord_s_joined_signal">%1$s 在 B&amp;A 了！</string>
     <string name="MessageRecord_you_disabled_disappearing_messages">你關閉了自動銷毀訊息的功能。</string>
     <string name="MessageRecord_s_disabled_disappearing_messages">%1$s 關閉了自動銷毀訊息的功能。</string>
     <string name="MessageRecord_you_set_disappearing_message_time_to_s">你已將訊息銷毀時間設定為 %1$s。</string>
@@ -1947,7 +1994,7 @@
     <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">來自 %1$s 的一則訊息無法送達</string>
     <string name="MessageRecord_s_changed_their_phone_number">%1$s 變更了他們的電話號碼。</string>
     <!-- Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost. -->
-    <string name="MessageRecord_like_this_new_feature_help_support_signal_with_a_one_time_donation">喜歡這項新功能？不妨透過單次捐款，支持 B&amp;A  未來的發展。</string>
+    <string name="MessageRecord_like_this_new_feature_help_support_signal_with_a_one_time_donation">喜歡這項新功能？不妨透過單次捐款，支持 B&amp;A 未來的發展。</string>
     <!-- Update item message shown when we merge two threads together. First placeholder is a name, second placeholder is a phone number. -->
     <string name="MessageRecord_your_message_history_with_s_and_their_number_s_has_been_merged">你與 %1$s 的訊息紀錄及其號碼 %2$s 已經合併。</string>
     <!-- Update item message shown when we merge two threads together and we don\'t know the phone number of the other thread. The placeholder is a person\'s name. -->
@@ -2026,9 +2073,9 @@
     </plurals>
 
     <!-- In-conversation update message to indicate that the current contact is sms only and will need to migrate to signal to continue the conversation in signal. -->
-    <string name="MessageRecord__you_will_no_longer_be_able_to_send_sms_messages_from_signal_soon">你很快將無法再於 B&amp;A  傳送短訊。邀請 %1$s 加入 B&amp;A  以繼續對話。</string>
+    <string name="MessageRecord__you_will_no_longer_be_able_to_send_sms_messages_from_signal_soon">你很快將無法再於 B&amp;A 傳送短訊。邀請 %1$s 加入 B&amp;A 以繼續對話。</string>
     <!-- In-conversation update message to indicate that the current contact is sms only and will need to migrate to signal to continue the conversation in signal. -->
-    <string name="MessageRecord__you_can_no_longer_send_sms_messages_in_signal">你無法再於 B&amp;A  傳送短訊。邀請 %1$s 加入 B&amp;A  以繼續對話。</string>
+    <string name="MessageRecord__you_can_no_longer_send_sms_messages_in_signal">你無法再於 B&amp;A 傳送短訊。邀請 %1$s 加入 B&amp;A 以繼續對話。</string>
     <!-- Body for quote when message being quoted is an in-app payment message -->
     <string name="MessageRecord__payment_s">付款：%1$s</string>
     <!-- Body for quote when message being quoted is an in-app payment message tombstone without an amount -->
@@ -2046,7 +2093,11 @@
     <!-- Update message shown in chat after you unblock a group -->
     <string name="MessageRecord_you_unblocked_this_group">你已解除封鎖此群組</string>
     <!-- Update message shown when you receive a message that cannot be processed because your Signal version is too old. %1$s is the sender\'s name -->
-    <string name="MessageRecord_unsupported_feature">%1$s 傳送了一則無法處理或顯示的訊息，因為它使用了新的 Signal 功能。</string>
+    <string name="MessageRecord_unsupported_feature">%1$s 傳送了一則無法處理或顯示的訊息，因為它使用了新的 B&amp;A 功能。</string>
+    <!-- Update message shown when someone ends the poll. %1$s is the person who ended the poll and %2$s is the poll question. -->
+    <string name="MessageRecord_ended_the_poll">%1$s 結束了投票：「%2$s」</string>
+    <!-- Update message shown when you end the poll. %1$s is the poll question. -->
+    <string name="MessageRecord_you_ended_the_poll">你結束了投票：「%1$s」</string>
 
     <!-- MessageRequestBottomView -->
     <string name="MessageRequestBottomView_accept">接受</string>
@@ -2147,27 +2198,27 @@
     <!-- Toast message shown when a user has too many linked devices and needs to remove one before linking another -->
     <string name="DeviceProvisioningActivity_sorry_you_have_too_many_devices_linked_already">抱歉，您已連結太多裝置，請試試先移除部分</string>
     <string name="DeviceActivity_sorry_this_is_not_a_valid_device_link_qr_code">抱歉，這不是有效的裝置連結 QR 碼。</string>
-    <string name="DeviceProvisioningActivity_link_a_signal_device">連結 B&amp;A  裝置？</string>
-    <string name="DeviceProvisioningActivity_to_link_a_desktop_or_ipad_to_this_signal_account">要將桌面電腦或 iPad 連結至此 B&amp;A  帳戶，請前往已連結裝置，並輕按「連結新的裝置」，然後再次掃描二維碼。請確保只掃描直接來自 B&amp;A  的二維碼。</string>
+    <string name="DeviceProvisioningActivity_link_a_signal_device">連結 B&amp;A 裝置？</string>
+    <string name="DeviceProvisioningActivity_to_link_a_desktop_or_ipad_to_this_signal_account">要將桌面電腦或 iPad 連結至此 B&amp;A 帳戶，請前往已連結裝置，並輕按「連結新的裝置」，然後再次掃描二維碼。請確保只掃描直接來自 B&amp;A 的二維碼。</string>
 
-    <string name="DeviceActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code">B&amp;A  需要相機的權限以掃描 QR 碼，但是現在被設定為永久拒絕使用。請到應用程式設定中，選取「權限」，並啟用「相機」的權限。</string>
+    <string name="DeviceActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code">B&amp;A 需要相機的權限以掃描 QR 碼，但是現在被設定為永久拒絕使用。請到應用程式設定中，選取「權限」，並啟用「相機」的權限。</string>
     <string name="DeviceActivity_unable_to_scan_a_qr_code_without_the_camera_permission">因為沒有相機的使用權限，所以無法掃描 QR 碼。</string>
 
     <!-- OutdatedBuildReminder -->
     <string name="OutdatedBuildReminder_update_now">立即更新</string>
-    <string name="OutdatedBuildReminder_your_version_of_signal_will_expire_today">此版本的 B&amp;A  將於今天到期。請更新到最新版本。</string>
+    <string name="OutdatedBuildReminder_your_version_of_signal_will_expire_today">此版本的B&amp;A將於今天到期。請更新到最新版本。</string>
     <plurals name="OutdatedBuildReminder_your_version_of_signal_will_expire_in_n_days">
         <item quantity="other">此版本的B&amp;A將在%1$d天內過期。請更新到最新版本。</item>
     </plurals>
 
     <!-- PassphrasePromptActivity -->
     <string name="PassphrasePromptActivity_enter_passphrase">輸入自訂密碼</string>
-    <string name="PassphrasePromptActivity_watermark_content_description">B&amp;A  圖示</string>
+    <string name="PassphrasePromptActivity_watermark_content_description">B&amp;A 圖示</string>
     <string name="PassphrasePromptActivity_ok_button_content_description">送出密碼</string>
     <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">無效的密碼！</string>
-    <string name="PassphrasePromptActivity_unlock_signal">解鎖 B&amp;A </string>
+    <string name="PassphrasePromptActivity_unlock_signal">解鎖 B&amp;A</string>
     <!-- This is the subject line for the email that is sent to support -->
-    <string name="PassphrasePromptActivity_signal_android_lock_screen">B&amp;A  Android-螢幕鎖定</string>
+    <string name="PassphrasePromptActivity_signal_android_lock_screen">B&amp;A Android-螢幕鎖定</string>
 
     <!-- PlacePickerActivity -->
     <string name="PlacePickerActivity_title">地圖</string>
@@ -2192,28 +2243,28 @@
     <plurals name="PinRestoreEntryFragment_you_have_d_attempt_remaining">
         <item quantity="other">你還有 %1$d 次嘗試的機會。機會耗盡後，你可建立一個新的 PIN 碼。註冊和使用帳號將不成問題，惟你會遺失一些已儲存的設定，例如你的個人資料訊息。</item>
     </plurals>
-    <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">B&amp;A  註冊 - 在 Android 上需要 PIN 碼協助</string>
+    <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">B&amp;A 註冊 - 在 Android 上需要 PIN 碼協助</string>
 
     <!-- PinRestoreLockedFragment -->
     <string name="PinRestoreLockedFragment_create_your_pin">建立你的 PIN 碼</string>
-    <string name="PinRestoreLockedFragment_youve_run_out_of_pin_guesses">你已耗盡猜測 PIN 碼的嘗試機會了，但你仍可建立一個新的 PIN 碼，以便存取你的 B&amp;A  帳號。為確保你的隱私和安全，將會恢復您的帳號，惟不會還原任何已儲存的個人資料訊息或設定。</string>
+    <string name="PinRestoreLockedFragment_youve_run_out_of_pin_guesses">你已耗盡猜測 PIN 碼的嘗試機會了，但你仍可建立一個新的 PIN 碼，以便存取你的 B&amp;A 帳號。為確保你的隱私和安全，將會恢復您的帳號，惟不會還原任何已儲存的個人資料訊息或設定。</string>
     <string name="PinRestoreLockedFragment_create_new_pin">建立新的 PIN 碼</string>
   <!-- Removed by excludeNonTranslatables <string name="PinRestoreLockedFragment_learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
     <!-- Dialog button text indicating user wishes to send an sms code isntead of skipping it -->
     <string name="ReRegisterWithPinFragment_send_sms_code">傳送 SMS 驗證碼</string>
     <!-- Email subject used when user contacts support about an issue with the reregister flow. -->
-    <string name="ReRegisterWithPinFragment_support_email_subject">B&amp;A  註冊 — Android 用戶需要重新註冊 PIN 碼的協助</string>
+    <string name="ReRegisterWithPinFragment_support_email_subject">B&amp;A 註冊 — Android 用戶需要重新註冊 PIN 碼的協助</string>
     <!-- Dialog message shown in reregister flow when tapping a informational button to to learn about pins or contact support for help -->
     <string name="ReRegisterWithPinFragment_need_help_local">PIN 碼是由你建立的 %1$d 位數以上密碼，可以由數字或字母數字混合。如果你忘記 PIN 碼，可以建立一個新的 PIN 碼。</string>
     <!-- Dialog message shown in reregister flow when user requests to skip this flow and return to the normal flow -->
     <string name="ReRegisterWithPinFragment_skip_local">如果你忘記 PIN 碼，可以建立一個新的 PIN 碼。</string>
     <!-- Dialog message shown in reregister flow when user uses up all of their guesses for their pin and we are going to move on -->
-    <string name="ReRegisterWithPinFragment_out_of_guesses_local">你已經用完 PIN 碼猜測次數，但是你仍然可以透過建立新的 PIN 碼來使用你的 B&amp;A  帳戶。</string>
+    <string name="ReRegisterWithPinFragment_out_of_guesses_local">你已經用完 PIN 碼猜測次數，但是你仍然可以透過建立新的 PIN 碼來使用你的 B&amp;A 帳戶。</string>
 
     <!-- PinOptOutDialog -->
     <string name="PinOptOutDialog_warning">警告</string>
-    <string name="PinOptOutDialog_if_you_disable_the_pin_you_will_lose_all_data">如果你停用 PIN 碼，則除非你進行手動備份和還原，否則當你重新註冊 B&amp;A  時，將會遺失所有資料。停用 PIN 碼時無法開啟註冊鎖定。</string>
+    <string name="PinOptOutDialog_if_you_disable_the_pin_you_will_lose_all_data">如果你停用 PIN 碼，則除非你進行手動備份和還原，否則當你重新註冊 B&amp;A 時，將會遺失所有資料。停用 PIN 碼時無法開啟註冊鎖定。</string>
     <string name="PinOptOutDialog_disable_pin">停用 PIN 碼</string>
 
     <!-- RatingManager -->
@@ -2235,7 +2286,7 @@
 
     <!-- RecaptchaRequiredBottomSheetFragment -->
     <string name="RecaptchaRequiredBottomSheetFragment_verify_to_continue_messaging">驗證以繼續傳送訊息</string>
-    <string name="RecaptchaRequiredBottomSheetFragment_to_help_prevent_spam_on_signal">為了協助防止 B&amp;A 上的垃圾訊息，請完成驗證。</string>
+    <string name="RecaptchaRequiredBottomSheetFragment_to_help_prevent_spam_on_signal">為了協助防止B&amp;A上的垃圾訊息，請完成驗證。</string>
     <string name="RecaptchaRequiredBottomSheetFragment_after_verifying_you_can_continue_messaging">驗證後，你可以繼續進行訊息傳送。 任何暫停的訊息將自動傳送。</string>
 
     <!-- Recipient -->
@@ -2279,9 +2330,9 @@
 
     <!-- WebRtcCallActivity -->
     <string name="WebRtcCallActivity__tap_here_to_turn_on_your_video">輕觸此處以開啟你的視訊</string>
-    <string name="WebRtcCallActivity__to_call_s_signal_needs_access_to_your_camera">如要撥電話給 %1$s，B&amp;A  需要存取你的相機</string>
+    <string name="WebRtcCallActivity__to_call_s_signal_needs_access_to_your_camera">如要撥電話給 %1$s，B&amp;A 需要存取你的相機</string>
     <!-- Subtitle shown at top of call where %s is the elapsed time of the call -->
-    <string name="WebRtcCallActivity__signal_s">B&amp;A  %1$s</string>
+    <string name="WebRtcCallActivity__signal_s">B&amp;A %1$s</string>
     <string name="WebRtcCallActivity__calling">撥號中…</string>
     <!-- Call status shown when an active call was disconnected (e.g., network hiccup) and is trying to reconnect -->
     <string name="WebRtcCallActivity__reconnecting">重新連接中…</string>
@@ -2336,23 +2387,29 @@
     <!-- Dialog title asking users for camera permission -->
     <string name="WebRtcCallActivity__allow_access_camera">允許存取你的相機</string>
     <!-- Dialog description explaining why camera and microphone permissions are needed to start or join a call -->
-    <string name="WebRtcCallActivity__to_start_call_camera_microphone">要開始或加入通話，請允許 B&amp;A  存取你的相機和麥克風。</string>
+    <string name="WebRtcCallActivity__to_start_call_camera_microphone">要開始或加入通話，請允許 B&amp;A 存取你的相機和麥克風。</string>
     <!-- Dialog description explaining why microphone permissions are needed to start or join a call -->
-    <string name="WebRtcCallActivity__to_start_call_microphone">要開始或加入通話，請允許 B&amp;A  存取你的麥克風。</string>
+    <string name="WebRtcCallActivity__to_start_call_microphone">要開始或加入通話，請允許 B&amp;A 存取你的麥克風。</string>
     <!-- Dialog description explaining why camera permissions are needed to enable a user\'s video in a call -->
-    <string name="WebRtcCallActivity__to_enable_video_allow_camera">要啟用視訊，請允許 B&amp;A  存取你的相機。</string>
+    <string name="WebRtcCallActivity__to_enable_video_allow_camera">要啟用視訊，請允許 B&amp;A 存取你的相機。</string>
     <!-- Toast describing why microphone permissions are needed to start or join a call -->
-    <string name="WebRtcCallActivity__signal_needs_microphone_start_call">B&amp;A  需要麥克風權限以開始或加入通話。</string>
+    <string name="WebRtcCallActivity__signal_needs_microphone_start_call">B&amp;A 需要麥克風權限以開始或加入通話。</string>
     <!-- Toast describing why camera permissions are needed to enable a video in a call -->
-    <string name="WebRtcCallActivity__signal_needs_camera_access_enable_video">B&amp;A  需要相機存取權限以啟用視訊</string>
+    <string name="WebRtcCallActivity__signal_needs_camera_access_enable_video">B&amp;A 需要相機存取權限以啟用視訊</string>
     <!-- Dialog description that will explain the steps needed to give microphone permissions -->
     <string name="WebRtcCallActivity__to_start_call">要開始或加入通話：</string>
     <!-- Dialog description that will explain the steps needed to give camera permissions -->
     <string name="WebRtcCallActivity__to_enable_video">要啟用你的視訊：</string>
 
+    <!-- MoveableLocalVideoRenderer -->
+    <!-- Content description for button to shrink local video from focused/full-screen mode -->
+    <string name="MoveableLocalVideoRenderer__shrink_local_video">縮小本機影片</string>
+    <!-- Content description for button to expand local video to focused/full-screen mode -->
+    <string name="MoveableLocalVideoRenderer__expand_local_video">放大本機影片</string>
+
     <!-- WebRtcCallView -->
-    <string name="WebRtcCallView__signal_call">B&amp;A  語音通話</string>
-    <string name="WebRtcCallView__signal_video_call">B&amp;A  視訊電話</string>
+    <string name="WebRtcCallView__signal_call">B&amp;A 語音通話</string>
+    <string name="WebRtcCallView__signal_video_call">B&amp;A 視訊電話</string>
     <string name="WebRtcCallView__start_call">開始通話</string>
     <string name="WebRtcCallView__join_call">加入通話</string>
     <string name="WebRtcCallView__call_is_full">通話人數已滿</string>
@@ -2362,7 +2419,7 @@
     <string name="WebRtcCallView__joining">加入中…</string>
     <string name="WebRtcCallView__disconnected">已斷線</string>
     <!-- Utilized in the lobby before joining a call link -->
-    <string name="WebRtcCallView__signal_call_link">B&amp;A  通話連結</string>
+    <string name="WebRtcCallView__signal_call_link">B&amp;A 通話連結</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy disabled-->
     <string name="WebRtcCallView__anyone_who_joins_pnp_disabled">透過連結加入此通話的人都會看到你的姓名、相片和電話號碼。</string>
     <!-- Warning displayed when entering a call via a link and you have Phone Number Privacy enabled-->
@@ -2370,10 +2427,10 @@
     <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
     <string name="WebRtcCallView__waiting_to_be_let_in">正在等待獲准加入…</string>
 
-    <string name="WebRtcCallView__signal_will_ring_s">B&amp;A  將去電給 %1$s</string>
-    <string name="WebRtcCallView__signal_will_ring_s_and_s">B&amp;A  將去電給 %1$s 及 %2$s</string>
+    <string name="WebRtcCallView__signal_will_ring_s">B&amp;A 將去電給 %1$s</string>
+    <string name="WebRtcCallView__signal_will_ring_s_and_s">B&amp;A 將去電給 %1$s 及 %2$s</string>
     <plurals name="WebRtcCallView__signal_will_ring_s_s_and_d_others">
-        <item quantity="other">B&amp;A  將去電給 %1$s、%2$s，和 %3$d 及其他人</item>
+        <item quantity="other">B&amp;A 將去電給 %1$s、%2$s，和 %3$d 及其他人</item>
     </plurals>
 
     <string name="WebRtcCallView__s_will_be_notified">%1$s 將被通知</string>
@@ -2498,7 +2555,7 @@
 
     <!-- AboutSheet -->
     <!-- Displayed in a sheet row and allows user to open signal connection explanation on tap -->
-    <string name="AboutSheet__signal_connection">B&amp;A  人脈</string>
+    <string name="AboutSheet__signal_connection">B&amp;A 人脈</string>
     <!-- Displayed in a sheet row describing that the user has marked this contact as \'verified\' from within the app -->
     <string name="AboutSheet__verified">已驗證</string>
     <!-- Displayed in a sheet row that tells users that profile names are not verified -->
@@ -2534,11 +2591,11 @@
         <item quantity="other">在此通話中 (%1$d)</item>
     </plurals>
     <plurals name="CallParticipantsListDialog__signal_will_ring">
-        <item quantity="other">B&amp;A  會打電話給 (%1$d)</item>
+        <item quantity="other">B&amp;A 會打電話給 (%1$d)</item>
     </plurals>
     <!-- Header text shown in a bottom sheet that indicates how many people will be notified about an outgoing call -->
     <plurals name="CallParticipantsListDialog__signal_will_notify">
-        <item quantity="other">B&amp;A  會通知 (%1$d)</item>
+        <item quantity="other">B&amp;A 會通知 (%1$d)</item>
     </plurals>
     <plurals name="CallParticipantsListDialog__raised_hands">
         <item quantity="other">舉了手 (%1$d)</item>
@@ -2551,6 +2608,16 @@
     <string name="CallParticipantView__cant_receive_audio_video_from_s">無法從 %1$s收到語音 &amp; 影片</string>
     <string name="CallParticipantView__cant_receive_audio_and_video_from_s">無法從 %1$s 收到語音或影片</string>
     <string name="CallParticipantView__this_may_be_Because_they_have_not_verified_your_safety_number_change">這可能是因為他們尚未驗證你的變更的安全號碼，他們的裝置有問題或已封鎖了你。</string>
+
+    <!-- SwitchCameraButton -->
+    <!-- Content description for the button that switches between front and back camera during a call -->
+    <string name="SwitchCameraButton__switch_camera_direction">變換相機方向</string>
+
+    <!-- CallQualityDiagnosticsScreen -->
+    <!-- Title for the call quality diagnostics screen -->
+    <string name="CallQualityDiagnosticsScreen__diagnostic_information">診斷資訊</string>
+    <!-- Content description for the close/back navigation button -->
+    <string name="CallQualityDiagnosticsScreen__close">關閉</string>
 
     <!-- CallToastPopupWindow -->
     <string name="CallToastPopupWindow__swipe_to_view_screen_share">滑動即可查看螢幕畫面共享</string>
@@ -2591,19 +2658,20 @@
     <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">你會接到電話驗證此號碼。</string>
     <string name="RegistrationActivity_edit_number">輸入號碼</string>
     <string name="RegistrationActivity_missing_google_play_services">找不到 Google Play 服務</string>
-    <string name="RegistrationActivity_this_device_is_missing_google_play_services">此裝置缺少 Google Play 服務。你仍然可以使用 B&amp;A ，但是此設定可能會降低可靠性或效能。\n\n如果你不是個進階使用者，不是正在執行原廠的 Android ROM，或是你認為你看到的可能是一個錯誤，請聯絡 support@baxs.com 來協助你排除故障。</string>
+    <string name="RegistrationActivity_this_device_is_missing_google_play_services">此裝置缺少 Google Play 服務。你仍然可以使用 B&amp;A，但是此設定可能會降低可靠性或效能。\n\n如果你不是個進階使用者，不是正在執行原廠的 Android ROM，或是你認為你看到的可能是一個錯誤，請聯絡 support@signal.org 來協助你排除故障。</string>
     <string name="RegistrationActivity_i_understand">我了解</string>
     <string name="RegistrationActivity_play_services_error">Play 服務錯誤</string>
     <string name="RegistrationActivity_google_play_services_is_updating_or_unavailable">Google Play 服務正在更新或暫時無法使用。請再重試。</string>
-    <string name="RegistrationActivity_terms_and_privacy">條款與條件；隱私權政策</string>
-    <string name="RegistrationActivity_signal_needs_access_to_your_contacts_and_media_in_order_to_connect_with_friends">B&amp;A  需要聯絡人和媒體權限來幫助你與朋友聯繫和傳送訊息。你的聯絡人是使用 B&amp;A  的私密聯絡人搜尋上傳的，這意味著它們是點對點加密的，並且也永遠不會被 B&amp;A  的服務讀取。</string>
-    <string name="RegistrationActivity_signal_needs_access_to_your_contacts_in_order_to_connect_with_friends">B&amp;A  需要獲得聯絡人權限才能幫助你與朋友聯絡。妳的聯絡人是使用 B&amp;A  的私密聯絡人搜尋上傳的，這意味著它們是點對點加密的，並且永遠不會被 B&amp;A  的服務讀取。</string>
+    <!-- Non-English translations should use "Signal is a nonprofit" instead, dropping the 501c3 reference. -->
+    <string name="RegistrationActivity_terms_and_privacy">B&amp;A is a 501c3 nonprofit\nTerms &amp; Privacy Policy</string>
+    <string name="RegistrationActivity_signal_needs_access_to_your_contacts_and_media_in_order_to_connect_with_friends">B&amp;A 需要聯絡人和媒體權限來幫助你與朋友聯繫和傳送訊息。你的聯絡人是使用 B&amp;A 的私密聯絡人搜尋上傳的，這意味著它們是點對點加密的，並且也永遠不會被 B&amp;A 的服務讀取。</string>
+    <string name="RegistrationActivity_signal_needs_access_to_your_contacts_in_order_to_connect_with_friends">B&amp;A 需要獲得聯絡人權限才能幫助你與朋友聯絡。妳的聯絡人是使用 B&amp;A 的私密聯絡人搜尋上傳的，這意味著它們是點對點加密的，並且永遠不會被 B&amp;A 的服務讀取。</string>
     <string name="RegistrationActivity_rate_limited_to_service">你已嘗試過多註冊此號碼。 請稍後再試。</string>
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
     <string name="RegistrationActivity_rate_limited_to_try_again">你已多次嘗試註冊此電話號碼。請在 %1$s後再試。</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">無法連接服務。請檢查網路連線並再試一次。</string>
     <!-- Dialog error message shown when attempting to register and the SMS provider fails to send an SMS -->
-    <string name="RegistrationActivity_sms_provider_error">由於 SMS 供應商的問題，B&amp;A  無法傳送 SMS 代碼。請於幾個小時後重試。</string>
+    <string name="RegistrationActivity_sms_provider_error">由於 SMS 供應商的問題，B&amp;A 無法傳送 SMS 代碼。請於幾個小時後重試。</string>
     <!-- A description text for an alert dialog when the entered phone number is not eligible for a verification SMS. -->
     <string name="RegistrationActivity_we_couldnt_send_you_a_verification_code">我們無法透過 SMS 短訊傳送驗證碼給你。請嘗試透過語音通話接收驗證碼。</string>
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
@@ -2821,6 +2889,8 @@
     <string name="SubmitDebugLogActivity_success">成功！</string>
     <string name="SubmitDebugLogActivity_copy_this_url_and_add_it_to_your_issue">複製網址及將之加入你的錯誤報告或支援email:\n\n<b>%1$s</b></string>
     <string name="SubmitDebugLogActivity_share">分享</string>
+    <!-- Displayed when entering activity in view-only mode -->
+    <string name="SubmitDebugLogActivity_close">關閉</string>
     <string name="SubmitDebugLogActivity_this_log_will_be_posted_publicly_online_for_contributors">此日誌將在網上公開發布，供貢獻者查看。 你可以在上傳前檢查它。</string>
     <!-- Banner message shown while submitting debug log -->
     <string name="SubmitDebugLogActivity_your_log_will_be_posted_online">當你點擊提交時，你的日誌將在一個唯一的、未發布的 URL 上在線發布 30 天。你可以先將其保存在本地。</string>
@@ -2837,8 +2907,8 @@
     <string name="SupportEmailUtil_filter">過濾:</string>
     <string name="SupportEmailUtil_device_info">裝置資訊:</string>
     <string name="SupportEmailUtil_android_version">Android 版本:</string>
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">B&amp;A version:</string> -->
-  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">B&amp;A package:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_version" translatable="false">Signal version:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_signal_package" translatable="false">Signal package:</string> -->
     <string name="SupportEmailUtil_registration_lock">註冊鎖：</string>
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
 
@@ -2966,7 +3036,7 @@
     <string name="UsernameEditFragment_continue">繼續</string>
 
     <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
-        <item quantity="other">有%1$d個聯絡人使用 B&amp;A</item>
+        <item quantity="other">有%1$d個聯絡人使用B&amp;A</item>
     </plurals>
 
     <!-- UsernameShareBottomSheet -->
@@ -3055,7 +3125,7 @@
     <string name="MessageNotifier_failed_to_deliver_message">無法送達訊息。</string>
     <string name="MessageNotifier_error_delivering_message">送達訊息時發生錯誤。</string>
     <string name="MessageNotifier_message_delivery_paused">訊息傳送已暫停。</string>
-    <string name="MessageNotifier_verify_to_continue_messaging_on_signal">驗證以繼續在 B&amp;A 上進行訊息傳送。</string>
+    <string name="MessageNotifier_verify_to_continue_messaging_on_signal">驗證以繼續在B&amp;A上進行訊息傳送。</string>
     <string name="MessageNotifier_mark_all_as_read">全部標示為已讀</string>
     <string name="MessageNotifier_mark_read">標示已讀</string>
     <string name="MessageNotifier_turn_off_these_notifications">關閉這些通知</string>
@@ -3076,6 +3146,8 @@
     <string name="MessageNotifier_reacted_s_to_your_payment">對你的付款傳送了 %1$s 回應。</string>
     <string name="MessageNotifier_reacted_s_to_your_sticker">對你的貼圖作出了 %1$s 反應。</string>
     <string name="MessageNotifier_this_message_was_deleted">此訊息已被刪除。</string>
+    <!-- Body of a notification when someone votes in a poll. First placeholder is the poll emoji, second placeholder is the name of the voter and third is the poll question -->
+    <string name="MessageNotifier_s_voted_in_poll">%1$s %2$s 已對「%3$s」投票</string>
 
     <string name="TurnOffContactJoinedNotificationsActivity__turn_off_contact_joined_signal">關閉聯絡人上線 B&amp;A 的通知嗎？你可以在 B&amp;A &gt; 設定 &gt; 通知中再次啟用。</string>
 
@@ -3247,6 +3319,9 @@
     <!-- Label with hyphenation. Translation can use soft hyphen - Unicode U+00AD -->
     <string name="WebRtcCallScreen__answer_without_video">接聽但不開啟視訊</string>
 
+    <!-- CallScreen -->
+    <string name="CallScreen__change_camera_direction">切換鏡頭方向</string>
+
     <!-- WebRtcAudioOutputToggle -->
     <!-- Label for a dialog asking the user to switch the audio output device during a call -->
     <string name="WebRtcAudioOutputToggle__audio_output">聲音輸出</string>
@@ -3304,9 +3379,9 @@
     <string name="ContactSelectionListFragment_s_is_not_a_signal_user">"\"%1$s\"不是 B&amp;A 使用者。請檢查使用者名稱並再試一次。"</string>
     <string name="ContactSelectionListFragment_you_do_not_need_to_add_yourself_to_the_group">你無需將自己新增到群組中</string>
     <string name="ContactSelectionListFragment_maximum_group_size_reached">已達群組人數上限</string>
-    <string name="ContactSelectionListFragment_signal_groups_can_have_a_maximum_of_d_members">B&amp;A 群組最多可以有%1$d個成員。</string>
+    <string name="ContactSelectionListFragment_signal_groups_can_have_a_maximum_of_s_members">B&amp;A 群組最多可以有%1$s個成員。</string>
     <string name="ContactSelectionListFragment_recommended_member_limit_reached">已達到推薦成員數上限</string>
-    <string name="ContactSelectionListFragment_signal_groups_perform_best_with_d_members_or_fewer">B&amp;A 群組在%1$d個成員數或更少的情況下表現最佳。 新增更多成員將導致傳送和接收訊息的延遲。</string>
+    <string name="ContactSelectionListFragment_signal_groups_perform_best_with_s_members_or_fewer">B&amp;A 群組在不多於 %1$s 個成員時效能最佳。新增更多成員將導致傳送和接收訊息時有所延遲。</string>
     <plurals name="ContactSelectionListFragment_d_members">
         <item quantity="other">%1$d 個成員</item>
     </plurals>
@@ -3630,6 +3705,41 @@
     <string name="verify_display_fragment__loading">載入中…</string>
     <string name="verify_display_fragment__mark_as_verified">標記為已驗證</string>
     <string name="verify_display_fragment__clear_verification">清除驗證碼</string>
+    <!-- Header title for automatic key verification -->
+    <string name="verify_display_fragment__automatic">Automatic Key Verification</string>
+    <!-- Button text to verify automatically    -->
+    <string name="verify_display_fragment__verify_automatic">Verify automatically</string>
+    <!-- Loading text when verifying -->
+    <string name="verify_display_fragment__verifying">Verifying encryption…</string>
+    <!-- Success text shown when encryption is verified -->
+    <string name="verify_display_fragment__encryption_verified">Encryption verified</string>
+    <!-- Text shown when verification fails -->
+    <string name="verify_display_fragment__encryption_unavailable">Auto-verification unavailable</string>
+    <!-- Caption text explaining more about automatic verification   -->
+    <string name="verify_display_fragment__auto_verify_not_available">Auto-verification is not available for all chats.</string>
+  <!-- Removed by excludeNonTranslatables <string name="verify_display_fragment__link" translatable="false">https://signal.org/redirect/safety-numbers</string> -->
+
+    <!-- Bottom sheet title when encryption is auto-verified -->
+    <string name="EncryptionVerifiedSheet__title_success">Encryption was auto-verified for this chat</string>
+    <!-- Bottom sheet body when encryption is auto-verified -->
+    <string name="EncryptionVerifiedSheet__body_success">For contacts you’re connected to by phone number, B&amp;A can automatically confirm whether the connection is secure using a process called key transparency. For added security, verify end-to-end encryption manually by comparing the numbers on the previous screen or scanning the code on their device.</string>
+    <!-- Bottom sheet title when encryption is no longer auto-verified -->
+    <string name="EncryptionVerifiedSheet__title_no_longer_unavailable">Auto-verification is no longer available for this chat</string>
+    <!-- Bottom sheet body when encryption is no longer auto-verified. Placeholder is the name of the person. -->
+    <string name="EncryptionVerifiedSheet__body_no_longer_unavailable">B&amp;A can no longer automatically verify the encryption for this chat. This is likely because %1$s changed their phone number. Verify end-to-end encryption manually by comparing the numbers on the previous screen or scanning the code on their device.</string>
+    <!-- Bottom sheet title when encryption cannot be auto-verified -->
+    <string name="EncryptionVerifiedSheet__title_unavailable">Auto-verification not available for this chat</string>
+    <!-- Bottom sheet body when encryption cannot be auto-verified -->
+    <string name="EncryptionVerifiedSheet__body_unavailable">B&amp;A can only automatically verify the encryption in chats where you’re connected to someone via a phone number. If the chat was started with a username or a group in common, verify end-to-end encryption by comparing the numbers on the previous screen or scanning the code on their device.</string>
+
+    <!-- Title for auto verification education sheet -->
+    <string name="VerifyAutomaticallyEducationSheet__title">B&amp;A 現在可自動驗證端對端加密</string>
+    <!-- Body for auto verification education sheet -->
+    <string name="VerifyAutomaticallyEducationSheet__body">當你驗證安全碼時，B&amp;A 會透過稱為「金鑰透明度」的程序，自動確認聯絡對象是否安全。你仍然可以使用二維碼或安全碼手動驗證聯絡人。</string>
+    <!-- Button to learn more about automatic verification -->
+    <string name="VerifyAutomaticallyEducationSheet__learn_more">了解更多</string>
+    <!-- Button to go to verification page -->
+    <string name="VerifyAutomaticallyEducationSheet__verify">驗證</string>
 
     <!-- verity_scan_fragment -->
     <string name="verify_scan_fragment__scan_the_qr_code_on_your_contact">掃描聯絡人裝置上的 QR code</string>
@@ -3700,9 +3810,8 @@
         <item>功能請求</item>
         <item>問題</item>
         <item>回饋</item>
-        <!-- 隐藏付款和捐款徽章選項 -->
-        <!-- <item>付款 (MobileCoin)</item> -->
-        <!-- <item>捐款及徽章</item> -->
+        <item>付款 (MobileCoin)</item>
+        <item>捐款及徽章</item>
         <item>B&amp;A Android 備份</item>
         <item>其他</item>
     </string-array>
@@ -3973,7 +4082,7 @@
     <!-- Summary text for \'censorship circumvention\' toggle. Indicates that you disabled it even though we believe you\'re in a censored country -->
     <string name="preferences_communication__censorship_circumvention_you_have_manually_disabled">你已經手動關閉規避審查。</string>
     <!-- Summary text for \'censorship circumvention\' toggle. Indicates that you cannot use it because you\'re already connected to the Signal service -->
-    <string name="preferences_communication__censorship_circumvention_is_not_necessary_you_are_already_connected">你已經連接上 B&amp;A 服務，所以不需要啟動審查規避功能。</string>
+    <string name="preferences_communication__censorship_circumvention_is_not_necessary_you_are_already_connected">你已經連接上 B&amp;A服務，所以不需要啟動審查規避功能。</string>
     <!-- Summary text for \'censorship circumvention\' toggle. Indicates that you cannot use it because you\'re not connected to the internet -->
     <string name="preferences_communication__censorship_circumvention_can_only_be_activated_when_connected_to_the_internet">審查規避只能在連上網路時啟動。</string>
     <string name="preferences_communication__category_sealed_sender">密封發件人</string>
@@ -4002,6 +4111,8 @@
     <string name="preferences_normal">正常</string>
     <!-- Preference summary for compact navigation bar size -->
     <string name="preferences_compact">簡潔</string>
+    <!-- Dialog message body explaining that we have to restart the app in order to apply the user\'s new language setting.  -->
+    <string name="preferences_language_change_confirmation_message">應用程式會重新啟動以套用新的語言設定。</string>
 
 
     <string name="configurable_single_select__customize_option">自定義選項</string>
@@ -4046,7 +4157,7 @@
     <string name="PaymentsHomeFragment__payments_is_not_available_in_your_region">你所在的地區無法付款。</string>
     <string name="PaymentsHomeFragment__could_not_enable_payments">無法啟用付款功能。請稍後再試。</string>
     <string name="PaymentsHomeFragment__deactivate_payments_question">要停用付款功能?</string>
-    <string name="PaymentsHomeFragment__you_will_not_be_able_to_send">如果你停用付款功能，則將無法在 B&amp;A 中傳送或接收MobileCoin。</string>
+    <string name="PaymentsHomeFragment__you_will_not_be_able_to_send">如果你停用付款功能，則將無法在B&amp;A中傳送或接收MobileCoin。</string>
     <string name="PaymentsHomeFragment__deactivate">停用</string>
     <string name="PaymentsHomeFragment__continue">繼續</string>
     <string name="PaymentsHomeFragment__balance_is_not_currently_available">餘額目前不可用。</string>
@@ -4058,7 +4169,7 @@
     <string name="PaymentsHomeFragment__you_can_use_signal_to_send_and">你可使用 B&amp;A 收發 MobileCoin。所有付款均受 MobileCoin 和 MobileCoin Wallet 的使用條款約束。你或許會遇到一些問題，以及你可能遺失付款或餘額而無法還原。 </string>
     <string name="PaymentsHomeFragment__activate">啟動</string>
     <string name="PaymentsHomeFragment__view_mobile_coin_terms">檢視 MobileCoin 條款</string>
-    <string name="PaymentsHomeFragment__payments_not_available">B&amp;A 中的付款不再可用。 你仍然可以將資金轉帳到交易所，但不能再傳送和接收付款或增加資金。</string>
+    <string name="PaymentsHomeFragment__payments_not_available">B&amp;A中的付款不再可用。 你仍然可以將資金轉帳到交易所，但不能再傳送和接收付款或增加資金。</string>
 
   <!-- Removed by excludeNonTranslatables <string name="PaymentsHomeFragment__mobile_coin_terms_url" translatable="false">https://www.mobilecoin.com/terms-of-use.html</string> -->
     <!-- Alert dialog title which shows up after a payment to turn on payment lock -->
@@ -4178,10 +4289,10 @@
     <string name="PaymentsTransferFragment__next">下一步</string>
     <string name="PaymentsTransferFragment__invalid_address">無效位址</string>
     <string name="PaymentsTransferFragment__check_the_wallet_address">檢查你要轉帳到的錢包位址，然後重試。</string>
-    <string name="PaymentsTransferFragment__you_cant_transfer_to_your_own_signal_wallet_address">你無法轉帳到自己的 B&amp;A 錢包位址。 在支援的交易所中從你的帳戶輸入錢包位址。</string>
-    <string name="PaymentsTransferFragment__to_scan_a_qr_code_signal_needs">要掃描QR碼，B&amp;A 須要開啟相機權限。</string>
-    <string name="PaymentsTransferFragment__signal_needs_the_camera_permission_to_capture_qr_code_go_to_settings">B&amp;A 需要攝像機權限才能擷取QR碼。 到設定，選擇“權限”，然後啟用“相機”。</string>
-    <string name="PaymentsTransferFragment__to_scan_a_qr_code_signal_needs_access_to_the_camera">要掃描QR碼，B&amp;A  須要開啟相機權限。</string>
+    <string name="PaymentsTransferFragment__you_cant_transfer_to_your_own_signal_wallet_address">你無法轉帳到自己的B&amp;A錢包位址。 在支援的交易所中從你的帳戶輸入錢包位址。</string>
+    <string name="PaymentsTransferFragment__to_scan_a_qr_code_signal_needs">要掃描QR碼，B&amp;A須要開啟相機權限。</string>
+    <string name="PaymentsTransferFragment__signal_needs_the_camera_permission_to_capture_qr_code_go_to_settings">B&amp;A需要攝像機權限才能擷取QR碼。 到設定，選擇“權限”，然後啟用“相機”。</string>
+    <string name="PaymentsTransferFragment__to_scan_a_qr_code_signal_needs_access_to_the_camera">要掃描QR碼，B&amp;A須要開啟相機權限。</string>
     <string name="PaymentsTransferFragment__settings">設定</string>
 
     <!-- PaymentsTransferQrScanFragment -->
@@ -4303,6 +4414,12 @@
     <string name="conversation_selection__menu_multi_select">選擇</string>
     <!-- Button to view a in-chat payment message\'s full payment details; Action item with hyphenation. Translation can use soft hyphen - Unicode U+00AD  -->
     <string name="conversation_selection__menu_payment_details">付款詳情</string>
+    <!-- Button to end a poll -->
+    <string name="conversation_selection__menu_end_poll">結束投票</string>
+    <!-- Button to pin a message -->
+    <string name="conversation_selection__menu_pin_message">釘選</string>
+    <!-- Button to unpin a message -->
+    <string name="conversation_selection__menu_unpin_message">取消釘選</string>
 
     <!-- conversation_expiring_on -->
 
@@ -4648,7 +4765,7 @@
     <!-- Dialog title shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
     <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_title">你確定嗎？</string>
     <!-- Dialog warning message shown when selecting "Nobody" in phone number privacy settings for who can find me by number -->
-    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">將「誰可以透過電話號碼找到我」設定為「沒有人」，會讓別人更難在 B&amp;A 上找到你。</string>
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_can_find_me_warning_message">將「誰可以透過電話號碼找到我」設定為「沒有人」，會讓別人更難在 B&amp;A上找到你。</string>
     <!-- Dialog button text for canceling change action -->
     <string name="PhoneNumberPrivacySettingsFragment__cancel">取消</string>
     <string name="PhoneNumberPrivacy_everyone">所有人</string>
@@ -4665,7 +4782,7 @@
     <string name="preferences_app_protection__turn_off">關閉</string>
     <string name="preferences_app_protection__confirm_pin">確認 PIN 碼</string>
     <string name="preferences_app_protection__confirm_your_signal_pin">確認你的 B&amp;A PIN 碼</string>
-    <string name="preferences_app_protection__make_sure_you_memorize_or_securely_store_your_pin">確保你記住或安全地儲存了PIN碼，因為它無法回復。 如果你忘記了PIN碼，則在重新註冊 B&amp;A 帳號時可能會遺失資料。</string>
+    <string name="preferences_app_protection__make_sure_you_memorize_or_securely_store_your_pin">確保你記住或安全地儲存了PIN碼，因為它無法回復。 如果你忘記了PIN碼，則在重新註冊B&amp;A帳號時可能會遺失資料。</string>
     <string name="preferences_app_protection__incorrect_pin_try_again">PIN 碼不正確。請再試一次。</string>
     <string name="preferences_app_protection__failed_to_enable_registration_lock">無法啟用註冊鎖。</string>
     <string name="preferences_app_protection__failed_to_disable_registration_lock">無法停用註冊鎖。</string>
@@ -4744,7 +4861,7 @@
 
     <!-- TransferOrRestoreFragment -->
     <string name="TransferOrRestoreFragment__transfer_or_restore_account">轉移或還原帳戶</string>
-    <string name="TransferOrRestoreFragment__if_you_have_previously_registered_a_signal_account">如果你以前註冊過 B&amp;A 帳號，則可以轉移或還原你的帳號和訊息</string>
+    <string name="TransferOrRestoreFragment__if_you_have_previously_registered_a_signal_account">如果你以前註冊過B&amp;A帳號，則可以轉移或還原你的帳號和訊息</string>
     <string name="TransferOrRestoreFragment__transfer_from_android_device">從Android裝置移轉</string>
     <string name="TransferOrRestoreFragment__transfer_your_account_and_messages_from_your_old_android_device">從舊的Android裝置轉移你的帳號和訊息。你需要連結舊裝置。</string>
     <string name="TransferOrRestoreFragment__you_need_access_to_your_old_device">你需要連結舊裝置。</string>
@@ -4760,7 +4877,7 @@
     <string name="TransferOrRestoreFragment__skip_transfer_description">不轉移訊息及媒體並繼續</string>
 
     <!-- NewDeviceTransferInstructionsFragment -->
-    <string name="NewDeviceTransferInstructions__open_signal_on_your_old_android_phone">在舊的Android手機上開啟 B&amp;A</string>
+    <string name="NewDeviceTransferInstructions__open_signal_on_your_old_android_phone">在舊的Android手機上開啟B&amp;A</string>
     <string name="NewDeviceTransferInstructions__continue">繼續</string>
     <string name="NewDeviceTransferInstructions__first_bullet">1.</string>
     <string name="NewDeviceTransferInstructions__tap_on_your_profile_photo_in_the_top_left_to_open_settings">點按左上角的個人資料照片以打開“設定”</string>
@@ -4773,10 +4890,10 @@
     <string name="NewDeviceTransferSetup__preparing_to_connect_to_old_android_device">正在準備連結到舊的Android裝置…</string>
     <string name="NewDeviceTransferSetup__take_a_moment_should_be_ready_soon">稍等片刻，應快準備好了</string>
     <string name="NewDeviceTransferSetup__waiting_for_old_device_to_connect">正在等待舊的Android裝置連接…</string>
-    <string name="NewDeviceTransferSetup__signal_needs_the_location_permission_to_discover_and_connect_with_your_old_device">B&amp;A 需要位置權限才能發現並連接到舊的Android裝置。</string>
-    <string name="NewDeviceTransferSetup__signal_needs_location_services_enabled_to_discover_and_connect_with_your_old_device">B&amp;A 需要啟用位置服務才能發現你的舊Android裝置並與之連接。</string>
-    <string name="NewDeviceTransferSetup__signal_needs_wifi_on_to_discover_and_connect_with_your_old_device">B&amp;A 需要啟用Wi-Fi才能發現你的舊Android裝置並與之連接。 Wi-Fi需要開啟，但不必連接到Wi-Fi網路。</string>
-    <string name="NewDeviceTransferSetup__sorry_it_appears_your_device_does_not_support_wifi_direct">抱歉，該裝置似乎不支援Wi-Fi Direct。B&amp;A 使用Wi-Fi Direct來發現你的舊Android裝置並與之連接。你仍然可以還原備份，以從舊的Android裝置還原帳號。</string>
+    <string name="NewDeviceTransferSetup__signal_needs_the_location_permission_to_discover_and_connect_with_your_old_device">B&amp;A需要位置權限才能發現並連接到舊的Android裝置。</string>
+    <string name="NewDeviceTransferSetup__signal_needs_location_services_enabled_to_discover_and_connect_with_your_old_device">B&amp;A需要啟用位置服務才能發現你的舊Android裝置並與之連接。</string>
+    <string name="NewDeviceTransferSetup__signal_needs_wifi_on_to_discover_and_connect_with_your_old_device">B&amp;A需要啟用Wi-Fi才能發現你的舊Android裝置並與之連接。 Wi-Fi需要開啟，但不必連接到Wi-Fi網路。</string>
+    <string name="NewDeviceTransferSetup__sorry_it_appears_your_device_does_not_support_wifi_direct">抱歉，該裝置似乎不支援Wi-Fi Direct。 B&amp;A使用Wi-Fi Direct來發現你的舊Android裝置並與之連接。你仍然可以還原備份，以從舊的Android裝置還原帳號。</string>
     <string name="NewDeviceTransferSetup__restore_a_backup">還原備份</string>
     <string name="NewDeviceTransferSetup__an_unexpected_error_occurred_while_attempting_to_connect_to_your_old_device">嘗試連接到舊的Android裝置時發生未預期的錯誤。</string>
 
@@ -5041,9 +5158,13 @@
 
     <!-- CreateGroupActivity -->
     <string name="CreateGroupActivity__skip">略過</string>
-    <plurals name="CreateGroupActivity__d_members">
-        <item quantity="other">%1$d 個成員</item>
+
+    <!-- Create group screen title displayed when there is at least one group member selected. The placeholder is the total number of group members. -->
+    <plurals name="CreateGroupActivity__s_members">
+        <item quantity="other">%1$s 個成員</item>
     </plurals>
+    <!-- Accessibility label for navigating to the next screen in the create group flow. -->
+    <string name="CreateGroupActivity__accessibility_next">下一步</string>
 
     <!-- ShareActivity -->
     <string name="ShareActivity__share">分享</string>
@@ -5072,7 +5193,7 @@
     <string name="ChatWallpaperFragment__wallpaper_preview_description">壁紙預覽</string>
     <string name="ChatWallpaperFragment__would_you_like_to_override_all_chat_colors">你要覆蓋所有聊天顏色嗎？</string>
     <string name="ChatWallpaperFragment__would_you_like_to_override_all_wallpapers">你要覆蓋所有壁紙嗎？</string>
-    <string name="ChatWallpaperFragment__reset_default_colors">重設預設顏色</string>
+    <string name="ChatWallpaperFragment__reset_default_colors">重設預設色彩</string>
     <string name="ChatWallpaperFragment__reset_all_colors">重設所有顏色</string>
     <string name="ChatWallpaperFragment__reset_default_wallpaper">重設預設壁紙</string>
     <string name="ChatWallpaperFragment__reset_all_wallpapers">重設所有壁紙</string>
@@ -5562,6 +5683,8 @@
     <string name="HelpSettingsFragment__terms_amp_privacy_policy">服務條款與隱私權政策</string>
     <string name="HelpFragment__copyright_signal_messenger">B&amp;A Messenger 版權所有</string>
     <string name="HelpFragment__licenced_under_the_agplv3">依據 GNU AGPLv3 的條款授權</string>
+    <!-- Non-English translations should use "Signal is a nonprofit." instead, dropping the 501c3 reference. -->
+    <string name="HelpSettingsFragment__signal_is_a_501c3">B&amp;A is a 501c3 nonprofit</string>
 
     <!-- DataAndStorageSettingsFragment -->
     <string name="DataAndStorageSettingsFragment__media_quality">媒體檔品質</string>
@@ -5757,23 +5880,23 @@
     <string name="NewConversationActivity__s_has_been_blocked">%1$s 已被封鎖</string>
     <!-- Snackbar message when blocking a contact has failed -->
     <string name="NewConversationActivity__block_failed">封鎖失敗</string>
-    <!-- Dialog title when remove target contact is in system contacts -->
-    <string name="NewConversationActivity__unable_to_remove_s">無法移除 %1$s</string>
-    <!-- Dialog message when remove target contact is in system contacts -->
-    <string name="NewConversationActivity__this_person_is_saved_to_your">已將此人儲存到你裝置的聯絡人中。從你的聯絡人中刪除他們，然後再試一次。</string>
-    <!-- Dialog action to view contact when they can\'t be removed otherwise -->
-    <string name="NewConversationActivity__view_contact">檢視聯絡人</string>
     <!-- Error message shown when looking up a person by phone number and that phone number is not associated with a signal account -->
-    <string name="NewConversationActivity__s_is_not_a_signal_user">%1$s 不是 B&amp;A 用戶</string>
-    <!-- Error message shown when we could not get a user from the username link -->
-    <string name="NewConversationActivity__">%1$s 不是 B&amp;A 用戶</string>
+    <string name="RecipientLookup_error__s_is_not_a_signal_user">%1$s 不是 B&amp;A 用戶</string>
+    <!-- Accessibility label for opening the screen specific dropdown menu. -->
+    <string name="NewConversationActivity__accessibility_open_top_bar_menu">開啟選單</string>
     <!-- Error message shown in a dialog when trying to create a new group with non-signal users (e.g., unregistered or phone number only contacts) -->
-    <plurals name="CreateGroupActivity_not_signal_users">
+    <plurals name="RecipientLookup_error__not_signal_users">
         <item quantity="other">%1$s 不是 B&amp;A 用戶</item>
     </plurals>
 
-    <!-- ContactFilterView -->
-    <string name="ContactFilterView__search_name_or_number">搜尋姓名或電話號碼</string>
+    <!-- Hint text that shows in the recipient search bar when no text is entered yet. -->
+    <string name="RecipientSearchBar__search_name_or_number">名稱、用戶名稱或電話號碼</string>
+    <!-- Accessibility label for the button to switch to the numeric keyboard type. -->
+    <string name="RecipientSearchBar_accessibility_switch_to_numeric_keyboard">切換至數字鍵盤</string>
+    <!-- Accessibility label for the button to switch to the alphanumeric keyboard type. -->
+    <string name="RecipientSearchBar_accessibility_switch_to_alphanumeric_keyboard">切換至字母數字鍵盤</string>
+    <!-- Accessibility label for the button to clear the search filter. -->
+    <string name="RecipientSearchBar_accessibility_clear_search">重設搜尋篩選器</string>
 
     <!-- VoiceNotePlayerView -->
     <string name="VoiceNotePlayerView__dot_s">· %1$s</string>
@@ -5935,13 +6058,12 @@
     <string name="BadgesOverviewFragment__failed_to_update_profile">無法更新個人資料</string>
 
 
-
     <string name="SelectFeaturedBadgeFragment__select_a_badge">選擇徽章</string>
     <string name="SelectFeaturedBadgeFragment__you_must_select_a_badge">你必須選擇一個徽章</string>
     <string name="SelectFeaturedBadgeFragment__failed_to_update_profile">無法更新個人資料</string>
 
     <!-- Displayed on primary button in the bottom sheet as a call-to-action to launch into the donation flow -->
-    <string name="ViewBadgeBottomSheetDialogFragment__donate_now">立即捐款</string>
+    <string name="ViewBadgeBottomSheetDialogFragment__donate_now">贊助</string>
     <!-- Title of a page in the bottom sheet. Placeholder is a user\'s short-name -->
     <string name="ViewBadgeBottomSheetDialogFragment__s_supports_signal">%1$s 支持 B&amp;A</string>
     <!-- Description of a page in the bottom sheet of a monthly badge. Placeholder is a user\'s short-name -->
@@ -5969,13 +6091,15 @@
     <string name="Subscription__expires_s">到期日為 %1$s</string>
 
     <!-- Title of learn more sheet -->
-    <string name="SubscribeLearnMoreBottomSheetDialogFragment__signal_is_different">B&amp;A 有別於其他通訊軟件。</string>
+    <string name="SubscribeLearnMoreBottomSheetDialogFragment__signal_is_different">As an independent nonprofit, B&amp;A is committed to private messaging and calls. No ads, no trackers, no surveillance. Donate today to support B&amp;A.</string>
     <!-- First small text blurb on learn more sheet -->
-    <string name="SubscribeLearnMoreBottomSheetDialogFragment__private_messaging">私密通訊。無廣告、無追蹤、無監控。</string>
+    <string name="SubscribeLearnMoreBottomSheetDialogFragment__private_messaging">No ads, no trackers, no surveillance. Donate today to support B&amp;A.</string>
     <!-- Second small text blurb on learn more sheet -->
-    <string name="SubscribeLearnMoreBottomSheetDialogFragment__signal_is_supported_by">B&amp;A 全靠捐款支持運作，這意味著保護你的私隱就是我們的主要工作。B&amp;A 是為你而打造的，不是為了你的資料，也不是為了盈利。</string>
+    <string name="SubscribeLearnMoreBottomSheetDialogFragment__donate_and_get_badge">Get an optional badge on your profile when you donate</string>
     <!-- Third small text blurb on learn more sheet -->
-    <string name="SubscribeLearnMoreBottomSheetDialogFragment__if_you_can">如果你願意的話，請即捐款支持，讓 B&amp;A 繼續為大家帶來有趣且可靠的應用程式。</string>
+    <string name="SubscribeLearnMoreBottomSheetDialogFragment__your_privacy_is_our_mission">Your privacy is our mission</string>
+    <!-- Fourth small text blurb on learn more sheet. Non-English translations should use "Signal is a nonprofit." instead, dropping the 501c3 reference. -->
+    <string name="SubscribeLearnMoreBottomSheetDialogFragment__signal_is_a_501c3">B&amp;A is a 501c3 nonprofit. US donations are tax deductible.</string>
 
     <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__thanks_for_your_support">謝謝你的支援!</string>
     <!-- Subtext underneath the dialog title on the thanks sheet -->
@@ -6001,7 +6125,8 @@
     <!-- Label for Donation Receipts button -->
     <string name="ManageDonationsFragment__donation_receipts">捐款收據</string>
     <string name="ManageDonationsFragment__badges">徽章</string>
-    <string name="ManageDonationsFragment__subscription_faq">定期贊助 問與答</string>
+    <!-- Label that externally links to Signal Donor FAQ page -->
+    <string name="ManageDonationsFragment__subscription_faq">捐款者常見問題</string>
     <!-- Preference heading for other ways to donate -->
     <string name="ManageDonationsFragment__other_ways_to_give">其他方式提供</string>
     <!-- Preference label to launch badge gifting -->
@@ -6985,11 +7110,11 @@
 
     <!-- DonateToSignalFragment -->
     <!-- Title below avatar -->
-    <string name="DonateToSignalFragment__privacy_over_profit">私隱比盈利更為重要</string>
+    <string name="DonateToSignalFragment__privacy_over_profit">Proudly Nonprofit</string>
     <!-- Continue button label -->
     <string name="DonateToSignalFragment__continue">繼續</string>
     <!-- Description below title -->
-    <string name="DonateToSignalFragment__private_messaging">我們是由你贊助的私密通訊軟件。無廣告、無追蹤、而且絕不妥協。請即捐款支持 B&amp;A。</string>
+    <string name="DonateToSignalFragment__private_messaging">Donate to support private messaging. Keep B&amp;A independent and ad-free.</string>
     <!-- Dialog title when a user tries to donate while they already have a pending donation. -->
     <string name="DonateToSignalFragment__you_have_a_donation_pending">你有捐款正待處理</string>
     <!-- Dialog body when a user tries to donate while they already have a pending monthly donation. -->
@@ -7261,8 +7386,10 @@
     <string name="CallLogAdapter__outgoing">撥出</string>
     <!-- Displayed for missed calls -->
     <string name="CallLogAdapter__missed">未接來電</string>
-    <!-- Displayed for missed calls declined by notification profile -->
+    <!-- Displayed for one missed call declined by notification profile -->
     <string name="CallLogAdapter__missed_notification_profile">通知設定檔開啟時未接通話</string>
+    <!-- Displayed for multiple missed calls declined by notification profile -->
+    <string name="CallLogAdapter__missed_notification_profile_multiple">通知設定檔開啟時未接通話</string>
     <!-- Displayed on Group Call button if user is not in the call -->
     <string name="CallLogAdapter__join">加入</string>
     <!-- Displayed on Group Call button if user is in the call -->
@@ -7561,12 +7688,16 @@
 
     <!-- Title of a megaphone shown at the bottom of the chat list to prompt the user to enable message backups -->
     <string name="TurnOnSignalBackups__title">開啟 B&amp;A 安全備份</string>
+    <!-- Title of a megaphone shown at the bottom of the chat list to prompt the user to enable message backups. Special string for the beta period. -->
+    <string name="TurnOnSignalBackups__title_beta">試用 B&amp;A 安全備份</string>
     <!-- Body of a megaphone shown at the bottom of the chat list to prompt the user to enable message backups -->
     <string name="TurnOnSignalBackups__body">當你使用新手機或重新安裝 B&amp;A 時，絕不會遺失訊息。</string>
     <!-- Button of a megaphone shown at the bottom of the chat list to prompt the user to enable message backups that will take the user to the flow to enable backups -->
     <string name="TurnOnSignalBackups__turn_on">開啟</string>
     <!-- Button of a megaphone shown at the bottom of the chat list to prompt the user to enable message backups that will simply dismiss the megaphone -->
     <string name="TurnOnSignalBackups__not_now">現在不要</string>
+    <!-- Text for a "toast" that pops up at the bottom of the user\'s screen after they respond "not now" to a prompt asking them to enable backups -->
+    <string name="TurnOnSignalBackups__toast_not_now">你可以在「設定」中啟用備份</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">驗證你的恢復金鑰</string>
@@ -7800,6 +7931,15 @@
     <!-- Status action label for resume restore from a paused state -->
     <string name="BackupStatus__resume">恢復</string>
 
+    <!-- Status subtitle for banner when we are creating a backup file -->
+    <string name="BackupStatus__status_creating_backup">Creating backup…</string>
+    <!-- Status title for banner when user is actively uploading backup data -->
+    <string name="BackupStatus__uploading_backup">Uploading backup</string>
+    <!-- Status title for banner when user is temporarily unable to upload a backup -->
+    <string name="BackupStatus__upload_paused">Backup paused</string>
+    <!-- Status title for banner when user has finished creating a backup -->
+    <string name="BackupStatus__upload_complete">Backup complete</string>
+
     <!-- Status subtitle for banner when restoring media pauses for Wi-Fi -->
     <string name="BackupStatus__status_waiting_for_wifi">等待 Wi-Fi…</string>
     <!-- Status subtitle for banner when restoring media pauses for internet in general -->
@@ -7808,6 +7948,10 @@
     <string name="BackupStatus__status_device_has_low_battery">裝置電池電量不足</string>
     <!-- Status subtitle for banner when restoring media. Placeholders are size already restored and total size to restore. e.g., 4.5MB of 100MB -->
     <string name="BackupStatus__status_size_of_size">第 %1$s 個，共 %2$s 個</string>
+    <!-- Label for a context menu item that, when pressed, will hide a banner so it will no longer be shown. -->
+    <string name="BackupStatus__hide">隱藏</string>
+    <!-- Label for a context menu item that, when pressed, will cancel the ongoing backup. -->
+    <string name="BackupStatus__cancel_upload">取消備份</string>
 
     <!-- BackupStatusRow -->
     <!-- Content description for x icon at the end of the linear progress indicator -->
@@ -7836,6 +7980,12 @@
     <string name="BackupStatusRow__your_last_backup">無法完成你上次的備份。確保你的手機已連接到 Wi-Fi，然後點按「立即備份」再試一次。</string>
     <!-- Text displayed when a backup could not be completed and to check that they are on the latest version of Signal -->
     <string name="BackupStatusRow__your_last_backup_latest_version">無法完成你上次的備份。確保你已使用最新版本的 B&amp;A，然後重試。</string>
+    <!-- Text displayed when a backup file exceeds the storage limit during upload. -->
+    <string name="BackupStatusRow__backup_file_too_large">你的訊息數量超過儲存空間上限。刪除一些訊息然後再試。</string>
+    <!-- Text displayed when we\'re not backing up all messages. The placeholder represents the cutoff date for the messages we\'re backing up. -->
+    <string name="BackupStatusRow__not_backing_up_old_messages">以下日期之前傳送或接收的訊息未被備份：%1$s。</string>
+    <!-- Text displayed when we failed to create a backup because of low disk space. -->
+    <string name="BackupStatusRow__not_enough_disk_space">因為儲存空間不足，你的備份無法完成。在你的裝置釋放空間然後再試。</string>
     <!-- Text displayed in a row to learn more about why a backup failed -->
     <string name="BackupStatusRow__learn_more">了解更多</string>
 
@@ -7843,6 +7993,15 @@
     <string name="ResumeRestoreCellular_resume_using_cellular_title">要恢復使用行動數據嗎？</string>
     <!-- Dialog message to prompt resuming media restore over cellular -->
     <string name="ResumeRestoreCellular_resume_using_cellular_message">使用行動數據還原媒體可能會產生數據費用。你可以連線至 Wi-Fi 網路以自動恢復。</string>
+
+    <!-- Title of a dialog box prompting to confirm whether the user truly wants to cancel their backup. -->
+    <string name="CancelBackupDialog_title">Cancel backup?</string>
+    <!-- Body of a dialog box prompting to confirm whether the user truly wants to cancel their backup. -->
+    <string name="CancelBackupDialog_body">Canceling your backup will not delete your backup. You can resume your backup at any time from Backup Settings.</string>
+    <!-- Button on a dialog box that confirming backup cancellation. When pressed, this button will confirm canceling the currently-running backup (future backups are unaffected). -->
+    <string name="CancelBackupDialog_cancel_action">取消備份</string>
+    <!-- Button on a dialog box that confirming backup cancellation. When pressed, this button will continue the backup rather than cancel it. -->
+    <string name="CancelBackupDialog_continue_action">Continue backup</string>
 
     <!-- BackupsTypeSettingsFragment -->
     <!-- Displayed as the user\'s payment method as a label in a preference row -->
@@ -7870,27 +8029,27 @@
     <!-- Dialog title when Google Play services are missing from the device -->
     <string name="GooglePlayServicesAvailability__service_missing_title">缺少 Google Play 服務</string>
     <!-- Dialog message explaining that Google Play services are required for Signal Secure backups subscription -->
-    <string name="GooglePlayServicesAvailability__service_missing_message">若要定期贊助使用 Signal 安全備份，你需要在手機上安裝 Google Play 服務。</string>
+    <string name="GooglePlayServicesAvailability__service_missing_message">若要定期贊助使用 B&amp;A 安全備份，你需要在手機上安裝 Google Play 服務。</string>
     <!-- Dialog button text to install Google Play services -->
     <string name="GooglePlayServicesAvailability__install_play_services">安裝 Play 服務</string>
     <!-- Dialog title when Google Play services are currently updating -->
     <string name="GooglePlayServicesAvailability__service_updating_title">Google Play 服務正在更新</string>
     <!-- Dialog message asking user to wait while Google Play services finish updating -->
-    <string name="GooglePlayServicesAvailability__service_updating_message">若要定期贊助使用 Signal 安全備份，請等待 Google Play 服務完成更新。</string>
+    <string name="GooglePlayServicesAvailability__service_updating_message">若要定期贊助使用 B&amp;A 安全備份，請等待 Google Play 服務完成更新。</string>
     <!-- Dialog title when Google Play services need to be updated -->
     <string name="GooglePlayServicesAvailability__service_update_required_title">更新 Google Play 服務</string>
     <!-- Dialog message explaining that Google Play services need to be updated for Signal Secure backups -->
-    <string name="GooglePlayServicesAvailability__service_update_required_message">若要定期贊助使用 Signal 安全備份，請在手機上更新 Google Play 服務。</string>
+    <string name="GooglePlayServicesAvailability__service_update_required_message">若要定期贊助使用 B&amp;A 安全備份，請在手機上更新 Google Play 服務。</string>
     <!-- Dialog button text to update Google Play services -->
     <string name="GooglePlayServicesAvailability__update">更新</string>
     <!-- Dialog title when Google Play services are disabled -->
     <string name="GooglePlayServicesAvailability__service_disabled_title">付費定期贊助需要 Google Play</string>
     <!-- Dialog message explaining that Google Play services must be enabled for subscriptions -->
-    <string name="GooglePlayServicesAvailability__service_disabled_message">若要定期贊助使用 Signal 安全備份，請在手機上啟用 Google Play 服務，並登入 Google Play 商店。 </string>
+    <string name="GooglePlayServicesAvailability__service_disabled_message">若要定期贊助使用 B&amp;A 安全備份，請在手機上啟用 Google Play 服務，並登入 Google Play 商店。 </string>
     <!-- Dialog button text to learn more about enabling Google Play services -->
     <string name="GooglePlayServicesAvailability__learn_more">了解更多</string>
     <!-- Dialog message shown when Google Play services is invalid and subscriptions are not available -->
-    <string name="GooglePlayServicesAvailability__service_invalid_message">你的手機不支援 Google Play 服務，所以你無法定期贊助使用 Signal 安全備份。請聯絡手機製造商以尋求協助。</string>
+    <string name="GooglePlayServicesAvailability__service_invalid_message">你的手機不支援 Google Play 服務，所以你無法定期贊助使用 B&amp;A 安全備份。請聯絡手機製造商以尋求協助。</string>
 
     <!-- ManageStorageSettingsFragment -->
     <!-- Settings section title header show above manage settings options for automatic chat history management (deleting) -->
@@ -7963,7 +8122,7 @@
     <!-- Subtitle for row for active backup, first placeholder is formatted amount, second is renewal date -->
     <string name="BackupsSettingsFragment_s_month_renews_s">%1$s/月 · %2$s 續訂</string>
     <!-- Subtitle for row for active backup when price is not available, first placeholder is renewal date -->
-    <string name="BackupsSettingsFragment_renews_s">Renews %1$s</string>
+    <string name="BackupsSettingsFragment_renews_s">續約 %1$s</string>
     <!-- Subtitle for row for active backup, placeholder is last date of backup -->
     <string name="BackupsSettingsFragment_last_backup_s">上次備份 %1$s</string>
     <!-- Subtitle for row for canceled backup -->
@@ -8013,10 +8172,10 @@
     <!-- Row label for cancelling and deleting backup -->
     <string name="RemoteBackupsSettingsFragment__turn_off_and_delete_backup">關閉並刪除備份</string>
     <!-- Dialog title for explainer text to on how backup size works for free tier -->
-    <string name="RemoteBackupsSettingsFragment__free_tier_storage_title">Backup size</string>
+    <string name="RemoteBackupsSettingsFragment__free_tier_storage_title">備份大小</string>
     <!-- Dialog message for explainer text to on how backup size works for free tier -->
     <plurals name="RemoteBackupsSettingsFragment__backup_frequency_dialog_body">
-        <item quantity="other">Your backup includes all of your text messages and your last %1$d days of media. The size will change as new media is received and old media expires.</item>
+        <item quantity="other">你的備份包括所有文字訊息和最近 %1$d 天的媒體。隨著新媒體加入和舊媒體到期，備份大小會因而改變。</item>
     </plurals>
     <!-- Snackbar text displayed when backup has been deleted and turned off -->
     <string name="RemoteBackupsSettingsFragment__backup_deleted_and_turned_off">已刪除並關閉備份。</string>
@@ -8159,7 +8318,7 @@
     <!-- Progress message when backup file is being uploaded. First placeholder and second placeholder are formatted byte sizes (2 MB) and third is percent completion. -->
     <string name="RemoteBackupsSettingsFragment__uploading_s_of_s_d">正在上載：%2$s 中的 %1$s (%3$d%%)</string>
     <!-- Progress message when backup file is being uploaded. Placeholder is percent completion. -->
-    <string name="RemoteBackupsSettingsFragment__uploading_d">Uploading: %1$d%%</string>
+    <string name="RemoteBackupsSettingsFragment__uploading_d">正在上傳：%1$d%%</string>
     <!-- Button label to see more details about redemption error -->
     <string name="RemoteBackupsSettingsFragment__details">細節</string>
     <!-- Text displayed when there was an error deleting backup -->
@@ -8180,6 +8339,14 @@
     <string name="RemoteBackupsSettingsFragment__youve_reached_the_s_storage_limit">已達你備份計畫中包含的 %1$s 儲存空間上限。要備份新聊天和媒體，請釋放空間。</string>
     <!-- Button label to open storage management screen -->
     <string name="RemoteBackupsSettingsFragment__manage_storage">管理儲存空間</string>
+
+    <!-- ReadyToTransferBottomSheet -->
+    <!-- Title for a bottom sheet letting people know that they can transfer their back to their new device  -->
+    <string name="RemoteBackupsSettingsFragment__ready_to_transfer">準備轉移</string>
+    <!-- Body for bottom sheet telling the user to scan a QR code to continue transferring their backup to a new device -->
+    <string name="RemoteBackupsSettingsFragment__use_this_device_to_scan_qr">使用此裝置來掃描目標裝置上顯示的二維碼</string>
+    <!-- Button label to open QR scanner to scan a device and transfer a backup -->
+    <string name="RemoteBackupsSettingsFragment__scan_qr_code">掃描 QR code</string>
 
     <!-- DownloadYourBackupTodayDialog -->
     <!-- Dialog title -->
@@ -8233,13 +8400,15 @@
 
     <!-- MessageBackupsKeyEducationScreen -->
     <!-- Screen headline -->
-    <string name="MessageBackupsKeyEducationScreen__your_backup_key">你的恢復金鑰</string>
+    <string name="MessageBackupsKeyEducationScreen__your_backup_key">恢復金鑰</string>
     <!-- Screen body part 1 -->
-    <string name="MessageBackupsKeyEducationScreen__your_backup_key_is_a">你的恢復金鑰是一組 64 個字元的代碼，可讓你在重新安裝 B&amp;A 時還原備份。</string>
+    <string name="MessageBackupsKeyEducationScreen__your_backup_key_is_a">你的恢復金鑰是一組 64 個字元的代碼，你需要使用此代碼來還原你的備份。</string>
     <!-- Screen body part 2 -->
-    <string name="MessageBackupsKeyEducationScreen__if_you_forget_your_key">如果你忘記了金鑰，你將會無法還原備份。B&amp;A 無法幫助你還原備份。</string>
+    <string name="MessageBackupsKeyEducationScreen__store_your_recovery">將恢復金鑰存放在安全可靠的地方，例如安全的密碼管理器，並且不要與任何人分享。</string>
+    <!-- Screen body part 3 -->
+    <string name="MessageBackupsKeyEducationScreen__if_you_lose_it">如果你將其遺失，將會無法恢復訊息。</string>
     <!-- Action button label -->
-    <string name="MessageBackupsKeyEducationScreen__next">下一步</string>
+    <string name="MessageBackupsKeyEducationScreen__view_recovery_key">檢視恢復金鑰</string>
 
     <!-- MessageBackupsKeyRecordScreen -->
     <!-- Screen headline -->
@@ -8290,6 +8459,12 @@
     <string name="MessageBackupsKeyRecordScreen__create_a_new_backup_key">建立新的恢復金鑰</string>
     <!-- Bottom Sheet body for creating a new AEP key -->
     <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">只有當其他人知道你的金鑰時，才需要建立新的金鑰。你必須重新上載備份，包括媒體。如果你使用「最佳化儲存」，則必須先下載已卸載的媒體。</string>
+    <!-- Dialog title shown when user attempts to exit backup setup before completion -->
+    <string name="MessageBackupsKeyRecordScreen__exit_backup_setup">要退出備份設定嗎？</string>
+    <!-- Dialog body warning user that backup setup is incomplete -->
+    <string name="MessageBackupsKeyRecordScreen__you_have_not_finished_setting_up_backups">你尚未完成設定備份，也未建立任何備份。你可以在「設定」中啟用備份。</string>
+    <!-- Dialog confirmation button to exit backup setup -->
+    <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">退出備份設定</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -8317,7 +8492,7 @@
     <!-- Verify your key title -->
     <string name="VerifyBackupPinScreen__enter_your_backup_key">輸入你的恢復金鑰</string>
     <!-- Verify your key subtitle -->
-    <string name="VerifyBackupPinScreen__enter_the_backup_key_that_you_recorded">輸入啟用備份時記錄的 64 位數代碼。</string>
+    <string name="VerifyBackupPinScreen__enter_the_backup_key_that_you_recorded">輸入啟用備份時記錄的 64 位字元碼。</string>
     <!-- Button text when you forget your recovery key -->
     <string name="VerifyBackupPinScreen__forgot_key">忘記了備份金鑰？</string>
 
@@ -8369,7 +8544,7 @@
     <!-- Dialog title when user can\'t upgrade plan due to missing Google Services -->
     <string name="MessageBackupsTypeSelectionScreen__cant_upgrade_plan">無法升級計畫</string>
     <!-- Dialog body text explaining Google Services requirement for backup subscription -->
-    <string name="MessageBackupsTypeSelectionScreen__to_subscribe_to_signal_secure_backups">若要定期贊助使用 Signal 安全備份，你必須在手機上啟用 Google 服務，並登入 Google Play 商店。</string>
+    <string name="MessageBackupsTypeSelectionScreen__to_subscribe_to_signal_secure_backups">若要定期贊助使用 B&amp;A 安全備份，你必須在手機上啟用 Google 服務，並登入 Google Play 商店。</string>
 
     <!-- ConfirmBackupCancellationDialog -->
     <!-- Dialog title -->
@@ -8414,6 +8589,12 @@
     <string name="SelectRestoreMethodFragment__from_your_old_phone">從你的舊手機</string>
     <!-- Option subtitle for restoring via device transfer -->
     <string name="SelectRestoreMethodFragment__transfer_directly_from_old">直接從舊的 Android 手機轉移</string>
+    <!-- Dialog title shown as a warning when skipping restore during registration -->
+    <string name="SelectRestoreMethodFragment__skip_restore_title">要跳過還原嗎？</string>
+    <!-- Dialog message shown as a warning when skipping restore during registration -->
+    <string name="SelectRestoreMethodFragment__skip_restore_warning">若你現在跳過還原，之後將無法還原。如果你在跳過還原後重新啟用備份功能，當前的備份將會被新的訊息紀錄取代。</string>
+    <!-- Dialog confirm text shown as a warning when skipping restore during registration -->
+    <string name="SelectRestoreMethodFragment__skip_restore">跳過還原</string>
 
     <!-- Screen title for restore via local backup -->
     <string name="RestoreLocalBackup_title">還原本機備份</string>
@@ -8454,6 +8635,10 @@
     <string name="EnterBackupKey_backup_not_found">找不到備份</string>
     <!-- Dialog message shown during registration and trying to restore a remote backup -->
     <string name="EnterBackupKey_backup_key_you_entered_is_correct_but_no_backup">你輸入的恢復金鑰是正確的，但沒有與其關聯的備份。如果你還有舊手機，請確定備份已啟用並已完成備份，然後再試一次。</string>
+    <!-- Dialog message shown during registration and trying to restore a remote backup -->
+    <string name="EnterBackupKey_backup_key_incorrect_or_backups_not_enabled">你可能輸入了錯誤的恢復金鑰，或者尚未在舊裝置上完成至少一次備份。\n\n確保你使用在啟用「B&amp;A 安全備份」時儲存的電話號碼和恢復金鑰進行註冊，並確認舊裝置已完成備份。</string>
+    <!-- Dialog message shown during registration and trying to restore a remote backup -->
+    <string name="EnterBackupKey_backup_key_check_rate_limited">你已用完恢復金鑰的嘗試次數。為安全計，你可嘗試的次數是有限的。請等待一小時後再重試。</string>
     <!-- Dialog button shown during registration and trying to restore a remote backup to instead skip said backup process -->
     <string name="EnterBackupKey_skip_restore">跳過還原</string>
     <!-- Dialog title text when encountering backup restore network error -->
@@ -8473,7 +8658,7 @@
     <!-- Email subject when contacting support on a create backup failure -->
     <string name="BackupAlertBottomSheet_network_failure_support_email">B&amp;A Android 備份匯出時網路發生錯誤</string>
     <!-- Email filter when contacting support on a create backup failure -->
-  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android B&amp;ABackups Export Failed</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="BackupAlertBottomSheet_export_failure_filter" translatable="false">Android SignalBackups Export Failed</string> -->
 
     <!-- Title of dialog asking to submit debuglogs -->
     <string name="ContactSupportDialog_submit_debug_log">要提交除錯日誌嗎？</string>
@@ -8518,6 +8703,19 @@
     <!-- Old device Transfer account bottom sheet dialog body -->
     <string name="TransferAccount_continue_on_your_other_device_details">在另一部裝置上繼續轉移你的帳戶。</string>
 
+    <!-- Prepare Device screen title for quick restore flow -->
+    <string name="PrepareDevice_title">準備好你的裝置</string>
+    <!-- Prepare Device screen body text explaining backup recommendation -->
+    <string name="PrepareDevice_body">轉移之前請立即備份。你可能已收到尚未備份的訊息。</string>
+    <!-- Prepare Device screen last backup text format, %1$s is the date and %2$s is the time -->
+    <string name="PrepareDevice_last_backup">你上次備份是在 %1$s 的 %2$s 進行的。</string>
+    <!-- Prepare Device screen back up now button -->
+    <string name="PrepareDevice_back_up_now">馬上備份</string>
+    <!-- Prepare Device screen skip and continue button -->
+    <string name="PrepareDevice_skip_and_continue">跳過並繼續</string>
+    <!-- A string describing the last time the user\'s backup was made. The placeholder represents a date-time. An example would be "Your last backup was made on July 18, 2025 at 9:00am." -->
+    <string name="PrepareDevice_last_backup_description">你上次的備份是在 %1$s 進行的。 </string>
+
     <!-- Restore Complete bottom sheet dialog title -->
     <string name="RestoreCompleteBottomSheet_restore_complete">在另一部裝置上完成</string>
     <!-- Restore Complete bottom sheet dialog message -->
@@ -8542,6 +8740,16 @@
     <!-- No backup to Restore tonal cta to skip restore -->
     <string name="NoBackupToRestore_skip_restore">跳過還原</string>
 
+    <!-- Dialog title when the recovery key change limit is reached -->
+    <string name="MessageBackupsKeyRecordScreen__limit_reached_title">已達恢復金鑰上限</string>
+    <!-- Dialog body when the recovery key change limit is reached -->
+    <string name="MessageBackupsKeyRecordScreen__limit_reached_body">你已成功建立新的恢復金鑰，但為了防止濫用，你可建立的新金鑰數量是有限的。你不能在 7 天內建立另一個金鑰。將你的恢復金鑰存放在安全的地方。</string>
+    <!-- Dialog title when the recovery key change limit is exhausted and you cannot create a new key -->
+    <string name="MessageBackupsKeyRecordScreen__limit_exceeded_title">未能建立新金鑰</string>
+    <!-- Dialog body when the recovery key change limit is exhausted and you cannot create a new key. Placeholder is number of days remaining until they can create a new key. -->
+    <string name="MessageBackupsKeyRecordScreen__limit_exceeded_body">你已用盡可建立的新金鑰數量。你可以在 7 天後建立新的恢復金鑰。如果你認為別人可能存取你的備份，可以選擇「關閉並刪除備份」。</string>
+    <!-- Button to acknowledge and dismiss dialog   -->
+    <string name="MessageBackupsKeyRecordScreen__ok">確定</string>
     <!-- Accessibility label for close search button in MainToolbar -->
     <string name="MainToolbar__close_search_content_description">關閉搜尋</string>
     <!-- Accessibility label for clear search query in MainToolbar -->
@@ -8579,84 +8787,222 @@
     <plurals name="Notification_you_have_not_completed_a_backup">
         <item quantity="other">你已有 %1$d 天未完成備份。請立即建立備份。</item>
     </plurals>
-    <string name="link_ba_platform_account_title">綁定 BAXS 帳號</string>
 
+    <!-- Polls -->
+    <!-- Caption in poll message to select an option  -->
+    <string name="Poll__select_one">投票 · 選擇一項</string>
+    <!-- Caption in poll message to select one or more options  -->
+    <string name="Poll__select_multiple">投票 · 選擇一項或更多</string>
+    <!-- Caption in poll message once a poll has ended  -->
+    <string name="Poll__final_results">投票 · 最終結果</string>
+    <!-- Caption in poll message that no votes have been cast  -->
+    <string name="Poll__no_votes">沒有投票</string>
+    <!-- Button in poll message to view current votes for a poll -->
+    <string name="Poll__view_votes">檢視投票</string>
+    <!-- Button in poll message to view the poll after it has ended -->
+    <string name="Poll__view_poll">檢視投票</string>
+    <!-- Toast message shown if we cannot find the poll -->
+    <string name="Poll__unable_poll">找不到投票</string>
+    <!-- Button in poll message to view results for a poll after it ends -->
+    <string name="Poll__view_results">檢視結果</string>
+    <!-- Quote preview when replying to a poll. %1$s is the question of the poll -->
+    <string name="Poll__poll_question">投票：%1$s</string>
+    <!-- Notification message sent when a poll ends. %1$s is the creator. %2$s is the question of the poll -->
+    <string name="Poll__poll_end">%1$s 結束了投票：「%2$s」</string>
+    <!-- Thread body message when a poll ends. %1$s is the question of the poll -->
+    <string name="Poll__you_poll_end">你結束了投票：「%1$s」</string>
+    <!-- Notification message sent when someone votes in the poll. %1$s is the voter. %2$s is the question of the poll -->
+    <string name="Poll__poll_voted">%1$s 已投票：「%2$s」</string>
+    <!-- Option in settings to configure notifications for polls -->
+    <string name="Poll__poll">投票</string>
+    <!-- Title of screen that shows the poll results of a poll after it has ended-->
+    <string name="Poll__poll_results">投票結果</string>
+    <!-- Title of screen that shows the poll details of a poll -->
+    <string name="Poll__poll_details">投票詳情</string>
+    <!-- Header text displaying the question of the poll -->
+    <string name="Poll__question">問題</string>
+    <!-- Text displaying how many votes, %1$d, an option has gotten -->
+    <plurals name="Poll__num_votes">
+        <item quantity="other">%1$d 個投票</item>
+    </plurals>
+    <!-- Content description to describe the icon that is shown next to the winning option when the poll ends -->
+    <string name="Poll__poll_winner">優勝者</string>
+    <!-- Text that when pressed will end the poll   -->
+    <string name="Poll__end_poll">結束投票</string>
+    <!-- Button that once pressed will show all of the voters for a poll -->
+    <string name="Poll__see_all">查看全部</string>
+    <!-- Dialog title when a poll fails to end -->
+    <string name="Poll__couldnt_end_poll">無法結束投票</string>
+    <!-- Dialog body when a poll fails to end and to try again -->
+    <string name="Poll__check_connection">請檢查你的網路連接並再試一次。</string>
+    <!-- Dialog title when you go to end a poll -->
+    <string name="Poll__end_poll_title">要結束投票嗎？</string>
+    <!-- Dialog body when you go to end a poll -->
+    <string name="Poll__end_poll_body">此聊天的成員將無法再參與此投票。</string>
+    <!-- Body used in dialog when we are waiting for network -->
+    <string name="Poll__waiting_for_network">等待網絡…</string>
+    <!-- Header when creating a new poll -->
+    <string name="CreatePollFragment__new_poll">新的投票</string>
+    <!-- Section text to enter in a question for a poll  -->
+    <string name="CreatePollFragment__question">問題</string>
+    <!-- Hint text for question field when creating a poll  -->
+    <string name="CreatePollFragment__ask_a_question">提出問題</string>
+    <!-- Section text to enter in options for a poll -->
+    <string name="CreatePollFragment__options">選項</string>
+    <!-- Hint text for the option field, where %1$d is the option number (max 10) -->
+    <string name="CreatePollFragment__option_n">選項 %1$d</string>
+    <!-- Accessibility label for the polls drag and drop handle used to reorder the list. -->
+    <string name="CreatePollFragment__drag_handle">拖放橫桿</string>
+    <!-- Text next to button to allow the poll to allow for multiple votes -->
+    <string name="CreatePollFragment__allow_multiple_votes">允許多次投票</string>
+    <!-- Snackbar text to add a question and two options before creating a poll -->
+    <string name="CreatePollFragment__add_question_option">新增一個問題和至少 2 個選項</string>
+    <!-- Snackbar text to add two options before creating a poll -->
+    <string name="CreatePollFragment__add_option">新增至少 2 個選項</string>
+    <!-- Snackbar text to add a question before creating a poll -->
+    <string name="CreatePollFragment__add_question">新增問題</string>
 
-    <string name="link_ba_platform_account_scan_fail_title">綁定 BAXS 帳號失敗</string>
-    <!-- Section header when BAXS account is not linked -->
-    <!-- Section header when BAXS account is linked -->
-    <string name="link_ba_platform_linked_section_title" >已綁定 BAXS 帳號</string>
+    <!-- Bottom sheet title telling users to scan a qr code -->
+    <string name="QuickRestoreInfoDialog__scan_qr_code">掃描 QR code</string>
+    <!-- Bottom sheet description telling users how to scan a qr code -->
+    <string name="QuickRestoreInfoDialog__use_this_device_to_scan_qr_code">使用此裝置來掃描目標裝置上顯示的二維碼</string>
+    <!-- Confirmation button to dismiss bottom sheet dialog -->
+    <string name="QuickRestoreInfoDialog__okay">好的</string>
 
-    <!-- Section header when BAXS account is not linked -->
-    <string name="link_ba_platform_unlinked_section_title" >BAXS 帳號</string>
+    <!-- CallQualityIssue -->
+    <!-- Label for general audio issue category -->
+    <string name="CallQualityIssue__audio_issue">音訊問題</string>
+    <!-- Label for general video issue category -->
+    <string name="CallQualityIssue__video_issue">視訊問題</string>
+    <!-- Label for call dropped issue -->
+    <string name="CallQualityIssue__call_droppped">通話中斷</string>
+    <!-- Label for other/custom issues not covered by predefined categories -->
+    <string name="CallQualityIssue__something_else">其他</string>
+    <!-- Label for audio stuttering/choppy audio issue -->
+    <string name="CallQualityIssue__audio_stuttering">音訊斷續現象</string>
+    <!-- Label for audio cutting out/dropping issue -->
+    <string name="CallQualityIssue__audio_cut_out">音訊切斷</string>
+    <!-- Label for echo heard by the user -->
+    <string name="CallQualityIssue__i_heard_echo">我聽到回音</string>
+    <!-- Label for echo heard by other call participants -->
+    <string name="CallQualityIssue__others_heard_echo">其他人聽到回音</string>
+    <!-- Label for poor video quality issue -->
+    <string name="CallQualityIssue__poor_video_quality">影像畫質不佳</string>
+    <!-- Label for low video resolution issue -->
+    <string name="CallQualityIssue__low_resolution">低解析度</string>
+    <!-- Label for camera malfunction issue -->
+    <string name="CallQualityIssue__camera_did_not_work">相機無法運作</string>
 
-    <!-- Footer text explaining how to link BAXS account -->
-    <string name="link_ba_platform_scan_footer" >掃描 BAXS 顯示的二維碼，完成帳號綁定。</string>
+    <!-- CallQualitySomethingElseScreen -->
+    <!-- Title for the "Something else" call quality issue screen -->
+    <string name="CallQualitySomethingElseScreen__title">描述問題</string>
+    <!-- Label for text field where user describes their call quality issue -->
+    <string name="CallQualitySomethingElseScreen__describe_your_issue">描述你的問題</string>
+    <!-- Privacy notice explaining that issue details will be kept private and used to improve Signal calls -->
+    <string name="CallQualitySomethingElseScreen__privacy_notice">請提供與問題相關的任何詳細資訊。你在此分享的任何內容都將保密，並僅用於協助改善 B&amp;A 中的通話。</string>
+    <!-- Button to save the call quality issue description -->
+    <string name="CallQualitySomethingElseScreen__save">儲存</string>
+    <!-- Content description for the back navigation button -->
+    <string name="CallQualitySomethingElseScreen__back">返回</string>
 
-    <!-- Button to scan QR code to link BAXS account -->
-    <string name="link_ba_platform_scan_qr_code" >掃描二維碼</string>
-    <string name="unlock_link_ba_platform_scan_qr_code" >解鎖以掃描二維碼</string>
+    <!-- CallQualitySheet -->
+    <!-- Title asking user how their call was -->
+    <string name="CallQualitySheet__how_was_your_call">通話順利嗎？</string>
+    <!-- Subtitle explaining that feedback helps improve Signal and no PII is stored -->
+    <string name="CallQualitySheet__how_was_your_call_subtitle">這有助於我們改善 B&amp;A 中的通話。個人識別資訊將不會被儲存。</string>
+    <!-- Button label indicating the call had issues -->
+    <string name="CallQualitySheet__had_issues">遇到問題</string>
+    <!-- Button label indicating the call was great -->
+    <string name="CallQualitySheet__great">非常好</string>
+    <!-- Title asking what issues the user experienced -->
+    <string name="CallQualitySheet__what_issues_did_you_have">你遇到了什麼問題？</string>
+    <!-- Instruction to select all applicable issues -->
+    <string name="CallQualitySheet__select_all_that_apply">請選擇所有適用的項目</string>
+    <!-- Placeholder text for describing a custom issue -->
+    <string name="CallQualitySheet__describe_your_issue">描述你的問題</string>
+    <!-- Button to continue to the next step -->
+    <string name="CallQualitySheet__continue">繼續</string>
+    <!-- Title asking user to help improve Signal -->
+    <string name="CallQualitySheet__help_us_improve">幫助我們改進</string>
+    <!-- First part of description explaining diagnostics help improve call quality -->
+    <string name="CallQualitySheet__help_us_improve_description_prefix">提交將分享你的意見回饋，</string>
+    <!-- Clickable text to launch diagnostic fragment -->
+    <string name="CallQualitySheet__diagnostic_information_about_your_call">同時包含關於你通話的診斷資訊</string>
+    <!-- End of description explaining diagnostics help improve call quality -->
+    <string name="CallQualitySheet__help_us_improve_description_suffix">你可以選擇分享除錯日誌，協助我們改善通話品質。</string>
+    <!-- Text explaining the debug log -->
+    <string name="CallQualitySheet__information_shared_with_us">與我們分享的資訊包含基礎應用程式資訊，並不包含你的通話內容。</string>
+    <!-- Link text to view debug log -->
+    <string name="CallQualitySheet__view_debug_log">檢視除錯日誌</string>
+    <!-- Toggle label for sharing debug log -->
+    <string name="CallQualitySheet__share_debug_log">分享除錯日誌</string>
+    <!-- Privacy notice explaining what debug logs contain and why they are helpful -->
+    <string name="CallQualitySheet__debug_log_privacy_notice">除錯日誌包含低階應用程式資訊，不會顯示任何訊息內容。</string>
+    <!-- Button to submit the call quality feedback -->
+    <string name="CallQualitySheet__submit">提交</string>
+    <!-- Displayed as a snackbar after submitting feedback -->
+    <string name="CallQualitySheet__thanks_for_your_feedback">感謝你的意見！</string>
+    <!-- Content description for the thumbs down button indicating user had issues with the call -->
+    <string name="CallQualitySheet__had_issues_content_description">我在通話中遇到問題</string>
+    <!-- Content description for the thumbs up button indicating the call was great -->
+    <string name="CallQualitySheet__great_content_description">這次通話很棒</string>
+    <!-- Dialog body shown when feedback submission fails due to network issues -->
+    <string name="CallQualitySheet__your_feedback_failed_to_send">你的回饋傳送失敗。</string>
+    <!-- Dialog button to retry sending feedback after a failure -->
+    <string name="CallQualitySheet__try_again">再試一次</string>
 
-    <!-- Label for BA operator name -->
-    <string name="link_ba_platform_operator_name" >操作員</string>
+    <!-- Message body when someone pins a message where %1$s is the name of the person -->
+    <string name="PinnedMessage__s_pinned_a_message">%1$s已釘選訊息</string>
+    <!-- Message body when you pin a message -->
+    <string name="PinnedMessage__you_pinned_a_message">你已釘選訊息</string>
+    <!-- Button body to go to the pinned message -->
+    <string name="PinnedMessage__go_to_message">前往「訊息」</string>
+    <!-- Toast shown when a pinned message is not found -->
+    <string name="PinnedMessage__not_found">找不到訊息</string>
+    <!-- Content description for the pin icon -->
+    <string name="PinnedMessage__pinned">已釘選</string>
+    <!-- Caption shown when the pinned message is a photo -->
+    <string name="PinnedMessage__photo">照片</string>
+    <!-- Caption shown when the pinned message is a video -->
+    <string name="PinnedMessage__video">影片</string>
+    <!-- Caption shown when the pinned message is a sticker -->
+    <string name="PinnedMessage__sticker">貼圖</string>
+    <!-- Caption shown when the pinned message is a voice message  -->
+    <string name="PinnedMessage__voice">語音訊息</string>
+    <!-- Caption shown when the pinned message is a gif -->
+    <string name="PinnedMessage__gif">動態圖檔</string>
+    <!-- Caption shown when the pinned message is a view once media -->
+    <string name="PinnedMessage__view_once">一次性多媒體檔案</string>
+    <!-- Context menu option to unpin the message -->
+    <string name="PinnedMessage__unpin_message">取消釘選</string>
+    <!-- Context menu option to view all the message -->
+    <string name="PinnedMessage__view_all_messages">檢視所有訊息</string>
+    <!-- Text to unpin all messages -->
+    <string name="PinnedMessage__unpin_all_messages">取消釘選所有訊息</string>
+    <!-- Title of bottom sheet when pinning a disappearing message -->
+    <string name="PinnedMessage__disappearing_message_title">釘選自動銷毀訊息</string>
+    <!-- Body of bottom sheet when pinning a disappearing message -->
+    <string name="PinnedMessage__disappearing_message_body">當自動銷毀訊息時限已到和從聊天中被移除時，系統會將其解除釘選。</string>
+    <!-- Confirmation button for bottom sheet -->
+    <string name="PinnedMessage__got_it">我知道了</string>
+    <!-- Content description of disappearing timer icon -->
+    <string name="PinnedMessage__disappearing_message_content_description">自動銷毀訊息</string>
+    <!-- Title of bottom sheet -->
+    <string name="PinnedMessage__pinned_messages">已釘選的訊息</string>
+    <!-- Context menu option to unpin message -->
+    <string name="PinnedMessage__unpin">取消釘選</string>
+    <!-- Title of dialog to unpin all messages -->
+    <string name="PinnedMessage__unpin_title">要取消釘選所有訊息嗎？</string>
+    <!-- Body of dialog to unpin all messages -->
+    <string name="PinnedMessage__unpin_body">所有成員的訊息都會被取消釘選。</string>
+    <!-- Dialog title when failing to pin a message -->
+    <string name="PinnedMessage__couldnt_pin">無法釘選訊息</string>
+    <!-- Dialog title when failing to unpin a message -->
+    <string name="PinnedMessage__couldnt_unpin">無法取消釘選訊息</string>
+    <!-- Dialog title when failing to unpin all messages -->
+    <string name="PinnedMessage__couldnt_unpin_all">無法取消釘選訊息</string>
+    <!-- Dialog body when failing to pin a message -->
+    <string name="PinnedMessage__check_connection">請檢查你的網路連接並再試一次。</string>
 
-    <!-- Label for BA merchant ID -->
-    <string name="link_ba_platform_merchant_id" >商戶 ID</string>
-
-    <!-- Label for BA operator mobile -->
-    <string name="link_ba_platform_operator_mobile" >手機號</string>
-
-    <!-- Label for BA account link date -->
-    <string name="link_ba_platform_linked_date" >綁定時間</string>
-
-    <!-- Title for BAXS binding confirmation dialog -->
-    <string name="link_ba_platform_confirm_title" >綁定 BAXS 帳號</string>
-
-    <!-- Message for BAXS binding confirmation dialog. Placeholder is merchant/operator name. -->
-    <string name="link_ba_platform_confirm_message_format" >確認綁定到“%1$s”?</string>
-
-    <!-- Toast shown when BAXS account is successfully linked -->
-    <string name="link_ba_platform_success_toast" >BAXS 帳號綁定成功。</string>
-
-    <!-- Invalid QR code alert title -->
-    <string name="link_ba_platform_invalid_qr_title" >無效的 QR Code</string>
-
-    <!-- Invalid QR code alert message -->
-    <string name="link_ba_platform_invalid_qr_message" >此二維碼不是有效的 BAXS 綁定碼。</string>
-
-    <!-- Button to scan QR code again -->
-    <string name="link_ba_platform_scan_again" >重新掃描</string>
-
-    <!-- Cannot link alert title -->
-    <string name="link_ba_platform_cannot_link_title" >無法綁定</string>
-
-    <!-- Default message when BAXS linking is not allowed -->
-    <string name="link_ba_platform_cannot_link_default_reason" >此二維碼不可用於綁定。</string>
-
-    <!-- Linking failed alert title -->
-    <string name="link_ba_platform_failed_title" >綁定失敗</string>
-
-    <!-- Default message when BAXS linking fails -->
-    <string name="link_ba_platform_failed_default_reason" >BAXS 拒絕了綁定請求。</string>
-
-    <!-- Linking timeout alert title -->
-    <string name="link_ba_platform_timeout_title" >綁定逾時</string>
-
-    <!-- Linking timeout alert message -->
-    <string name="link_ba_platform_timeout_message" >BAXS 未在規定時間內回應，請重試。</string>
-
-    <!-- Generic error alert title -->
-    <string name="link_ba_platform_error_title" >錯誤</string>
-
-    <string name="link_ba_platform_server_fail" >服務端傳回無效回應。</string>
-
-
-    <string name="link_ba_platform_operator_email" >郵箱</string>
-    <string name="link_ba_platform_confirm_bt_cancel">取消</string>
-    <!-- Alert dialog button to cancel dialog -->
-    <string name="link_ba_platform_confirm_bt_next">綁定</string>
-    <string name="link_ba_platform_user_id" >用戶ID</string>
-    <string name="link_ba_platform_user_name" >用戶名</string>
-    <string name="photo_capture_link_ba_qr_code_found_message" >您似乎正在嘗試綁定 BAXS 帳號，請點擊「繼續」，然後點擊「掃描二維碼」，並再次掃描二維碼。</string>
     <!-- EOF -->
 </resources>

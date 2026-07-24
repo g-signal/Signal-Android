@@ -41,10 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
@@ -62,17 +59,18 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import org.signal.core.ui.compose.Buttons
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Dialogs
 import org.signal.core.ui.compose.DropdownMenus
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.SignalPreview
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.ui.compose.horizontalGutters
-import org.signal.core.ui.compose.theme.SignalTheme
 import org.signal.registration.proto.RegistrationProvisionMessage
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.components.settings.app.usernamelinks.QrCode
 import org.thoughtcrime.securesms.components.settings.app.usernamelinks.QrCodeData
 import org.thoughtcrime.securesms.compose.ComposeFragment
+import org.thoughtcrime.securesms.compose.SignalTheme
 import org.thoughtcrime.securesms.registration.data.network.RegisterAccountResult
 import org.thoughtcrime.securesms.registration.ui.RegistrationViewModel
 import org.thoughtcrime.securesms.registration.ui.shared.RegistrationScreen
@@ -110,6 +108,7 @@ class RestoreViaQrFragment : ComposeFragment() {
             if (message.platform == RegistrationProvisionMessage.Platform.ANDROID || message.tier != null) {
               sharedViewModel.registerWithBackupKey(requireContext(), message.accountEntropyPool, message.e164, message.pin, message.aciIdentityKeyPair, message.pniIdentityKeyPair)
             } else {
+              sharedViewModel.registrationProvisioningMessage = message
               findNavController().safeNavigate(RestoreViaQrFragmentDirections.goToNoBackupToRestore())
             }
           }
@@ -179,7 +178,7 @@ private fun RestoreViaQrScreen(
 
         IconButton(onClick = { controller.toggle() }) {
           Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.symbol_more_vertical_24),
+            imageVector = SignalIcons.MoreVertical.imageVector,
             contentDescription = null
           )
         }
@@ -301,17 +300,17 @@ private fun RestoreViaQrScreen(
           .widthIn(160.dp, 320.dp)
       ) {
         InstructionRow(
-          icon = painterResource(R.drawable.symbol_phone_24),
+          icon = SignalIcons.Phone.painter,
           instruction = stringResource(R.string.RestoreViaQr_instruction_1)
         )
 
         InstructionRow(
-          icon = painterResource(R.drawable.symbol_camera_24),
+          icon = SignalIcons.Camera.painter,
           instruction = stringResource(R.string.RestoreViaQr_instruction_2)
         )
 
         InstructionRow(
-          icon = painterResource(R.drawable.symbol_qrcode_24),
+          icon = SignalIcons.QrCode.painter,
           instruction = stringResource(R.string.RestoreViaQr_instruction_3)
         )
       }
@@ -335,7 +334,7 @@ private fun RestoreViaQrScreen(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun RestoreViaQrScreenPreview() {
   Previews.Preview {
@@ -349,7 +348,7 @@ private fun RestoreViaQrScreenPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun RestoreViaQrScreenLoadingPreview() {
   Previews.Preview {
@@ -359,7 +358,7 @@ private fun RestoreViaQrScreenLoadingPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun RestoreViaQrScreenFailurePreview() {
   Previews.Preview {
@@ -369,7 +368,7 @@ private fun RestoreViaQrScreenFailurePreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun RestoreViaQrScreenScannedPreview() {
   Previews.Preview {
@@ -379,7 +378,7 @@ private fun RestoreViaQrScreenScannedPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun RestoreViaQrScreenRegisteringPreview() {
   Previews.Preview {
@@ -389,7 +388,7 @@ private fun RestoreViaQrScreenRegisteringPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun RestoreViaQrScreenRegistrationFailedPreview() {
   Previews.Preview {
@@ -424,12 +423,12 @@ private fun InstructionRow(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun InstructionRowPreview() {
   Previews.Preview {
     InstructionRow(
-      icon = painterResource(R.drawable.symbol_phone_24),
+      icon = SignalIcons.Phone.painter,
       instruction = "Instruction!"
     )
   }

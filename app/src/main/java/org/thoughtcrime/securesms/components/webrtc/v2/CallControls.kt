@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import org.signal.core.ui.compose.DarkPreview
+import org.signal.core.ui.compose.NightPreview
 import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.TriggerAlignedPopupState.Companion.popupTrigger
 import org.signal.core.ui.compose.TriggerAlignedPopupState.Companion.rememberTriggerAlignedPopupState
@@ -36,7 +36,6 @@ import org.thoughtcrime.securesms.components.webrtc.CallParticipantsState
 import org.thoughtcrime.securesms.components.webrtc.ToggleButtonOutputState
 import org.thoughtcrime.securesms.components.webrtc.WebRtcAudioOutput
 import org.thoughtcrime.securesms.components.webrtc.WebRtcControls
-import org.thoughtcrime.securesms.events.WebRtcViewModel
 import org.thoughtcrime.securesms.util.RemoteConfig
 
 /**
@@ -77,7 +76,8 @@ fun CallControls(
         CallAudioToggleButton(
           contentDescription = stringResource(id = R.string.WebRtcAudioOutputToggle__audio_output),
           onSheetDisplayChanged = callScreenSheetDisplayListener::onAudioDeviceSheetDisplayChanged,
-          pickerController = audioOutputPickerController
+          pickerController = audioOutputPickerController,
+          enabled = !callControlsState.isAudioOutputChangePending
         )
       }
 
@@ -143,7 +143,7 @@ fun CallControls(
   }
 }
 
-@DarkPreview
+@NightPreview
 @Composable
 fun CallControlsPreview() {
   Previews.Preview {
@@ -203,6 +203,7 @@ data class CallControlsState(
   val skipHiddenState: Boolean = true,
   val displayAudioOutputToggle: Boolean = false,
   val audioOutput: WebRtcAudioOutput = WebRtcAudioOutput.HANDSET,
+  val isAudioOutputChangePending: Boolean = false,
   val displayVideoToggle: Boolean = false,
   val isVideoEnabled: Boolean = false,
   val displayMicToggle: Boolean = false,
@@ -223,14 +224,9 @@ data class CallControlsState(
     fun fromViewModelData(
       callParticipantsState: CallParticipantsState,
       webRtcControls: WebRtcControls,
-      groupMemberCount: Int
+      groupMemberCount: Int,
+      isAudioDeviceChangePending: Boolean = false
     ): CallControlsState {
-      val isGroupRingingEnabled = if (callParticipantsState.callState == WebRtcViewModel.State.CALL_PRE_JOIN) {
-        callParticipantsState.groupCallState.isNotIdle
-      } else {
-        callParticipantsState.ringGroup
-      }
-
       return CallControlsState(
         isEarpieceAvailable = webRtcControls.isEarpieceAvailableForAudioToggle,
         isBluetoothHeadsetAvailable = webRtcControls.isBluetoothHeadsetAvailableForAudioToggle,
@@ -238,12 +234,13 @@ data class CallControlsState(
         skipHiddenState = !(webRtcControls.isFadeOutEnabled || webRtcControls == WebRtcControls.PIP || webRtcControls.displayErrorControls()),
         displayAudioOutputToggle = webRtcControls.displayAudioToggle(),
         audioOutput = webRtcControls.audioOutput,
+        isAudioOutputChangePending = isAudioDeviceChangePending,
         displayVideoToggle = webRtcControls.displayVideoToggle(),
         isVideoEnabled = callParticipantsState.localParticipant.isVideoEnabled,
         displayMicToggle = webRtcControls.displayMuteAudio(),
         isMicEnabled = callParticipantsState.localParticipant.isMicrophoneEnabled,
         displayGroupRingingToggle = webRtcControls.displayRingToggle(),
-        isGroupRingingEnabled = isGroupRingingEnabled,
+        isGroupRingingEnabled = callParticipantsState.ringGroup,
         isGroupRingingAllowed = groupMemberCount <= RemoteConfig.maxGroupCallRingSize,
         displayAdditionalActions = webRtcControls.displayOverflow(),
         displayStartCallButton = webRtcControls.displayStartCallControls(),

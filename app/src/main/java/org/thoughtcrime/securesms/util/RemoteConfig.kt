@@ -11,7 +11,6 @@ import org.signal.core.util.gibiBytes
 import org.signal.core.util.kibiBytes
 import org.signal.core.util.logging.Log
 import org.signal.core.util.mebiBytes
-import org.signal.libsignal.protocol.UsePqRatchet
 import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.groups.SelectionLimits
 import org.thoughtcrime.securesms.jobs.RemoteConfigRefreshJob
@@ -1054,28 +1053,6 @@ object RemoteConfig {
     value.asLong(8.kibiBytes.inWholeBytes).bytes
   }
 
-  /** Whether the chat web socket is backed by libsignal for direct connections  */
-  @JvmStatic
-  @get:JvmName("libSignalWebSocketEnabled")
-  val libSignalWebSocketEnabled: Boolean by remoteValue(
-    key = "android.libsignalWebSocketEnabled.8",
-    hotSwappable = false
-  ) { value ->
-    value.asBoolean(false) || Environment.IS_NIGHTLY
-  }
-
-  /** Whether the chat web socket is backed by libsignal for all connections, including proxied connections.
-   *  Note, this does *not* gate HTTP proxies, which are treated as direct connections.
-   *  This only has an effect if libSignalWebSocketEnabled is also enabled. */
-  @JvmStatic
-  @get:JvmName("libSignalWebSocketEnabledForProxies")
-  val libSignalWebSocketEnabledForProxies: Boolean by remoteValue(
-    key = "android.libSignalWebSocketEnabledForProxies.8",
-    hotSwappable = false
-  ) { value ->
-    value.asBoolean(false) || Environment.IS_NIGHTLY
-  }
-
   @JvmStatic
   @get:JvmName("libsignalEnforceMinTlsVersion")
   val libsignalEnforceMinTlsVersion by remoteBoolean(
@@ -1138,26 +1115,11 @@ object RemoteConfig {
   )
 
   @JvmStatic
-  @get:JvmName("newCallUi")
-  val newCallUi: Boolean by remoteBoolean(
-    key = "android.newCallUi",
-    defaultValue = false,
-    hotSwappable = false
-  )
-
-  @JvmStatic
   @get:JvmName("useHevcEncoder")
   val useHevcEncoder: Boolean by remoteBoolean(
     key = "android.useHevcEncoder",
     defaultValue = false,
     hotSwappable = false
-  )
-
-  /** Whether to allow different WindowSizeClasses to be used to determine screen layout */
-  val largeScreenUi: Boolean by remoteBoolean(
-    key = "android.largeScreenUI",
-    hotSwappable = false,
-    defaultValue = false
   )
 
   @JvmStatic
@@ -1187,22 +1149,92 @@ object RemoteConfig {
     durationUnit = DurationUnit.DAYS
   )
 
-  /** Whether or not to use the new post-quantum ratcheting. */
-  @JvmStatic
-  @get:JvmName("usePqRatchet")
-  val usePqRatchet: UsePqRatchet by remoteValue(
-    key = "android.usePqRatchet",
-    hotSwappable = false
-  ) { value ->
-    if (value.asBoolean(false)) UsePqRatchet.YES else UsePqRatchet.NO
-  }
-
   /** The maximum allowed envelope size for messages we send. */
   @JvmStatic
   @get:JvmName("maxEnvelopeSizeBytes")
   val maxEnvelopeSizeBytes: Long by remoteLong(
     key = "android.maxEnvelopeSizeBytes",
     defaultValue = 256.kibiBytes.inWholeBytes,
+    hotSwappable = true
+  )
+
+  /** Whether or not to send over binary service ids (alongside string service ids). */
+  @JvmStatic
+  @get:JvmName("useBinaryId")
+  val useBinaryId: Boolean by remoteBoolean(
+    key = "android.useBinaryServiceId",
+    defaultValue = Environment.IS_STAGING,
+    hotSwappable = false
+  )
+
+  @JvmStatic
+  @get:JvmName("backupsBetaMegaphone")
+  val backupsBetaMegaphone: Boolean by remoteBoolean(
+    key = "android.backupsBetaMegaphone.2",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  @JvmStatic
+  @get:JvmName("pinLimit")
+  val pinLimit: Int by remoteInt(
+    key = "global.pinnedMessageLimit",
+    defaultValue = 3,
+    hotSwappable = true
+  )
+
+  @JvmStatic
+  @get:JvmName("receivePinnedMessages")
+  val receivePinnedMessages: Boolean by remoteBoolean(
+    key = "android.receivePinnedMessages.2",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  @JvmStatic
+  @get:JvmName("sendPinnedMessages")
+  val sendPinnedMessages: Boolean by remoteBoolean(
+    key = "android.sendPinnedMessages.2",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  @JvmStatic
+  @get:JvmName("callQualitySurvey")
+  val callQualitySurvey: Boolean by remoteBoolean(
+    key = "android.callQualitySurvey.4",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  @JvmStatic
+  @get:JvmName("callQualitySurveyPPM")
+  val callQualitySurveyPPM: String by remoteString(
+    key = "android.callQualitySurveyPPM",
+    defaultValue = "*:10000",
+    hotSwappable = true
+  )
+
+  /**
+   * Whether or not to allow 1:1 polls and a higher character limit for questions
+   */
+  @JvmStatic
+  @get:JvmName("pollsV2")
+  val pollsV2: Boolean by remoteBoolean(
+    key = "android.pollsV2",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  /**
+   * Whether or not to show any UI related to key transparency
+   */
+  @JvmStatic
+  @get:JvmName("keyTransparency")
+  val keyTransparency: Boolean by remoteBoolean(
+    key = "android.keyTransparency",
+    active = false,
+    defaultValue = false,
     hotSwappable = true
   )
 

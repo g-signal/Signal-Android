@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
@@ -22,8 +21,8 @@ import org.thoughtcrime.securesms.notifications.DeviceSpecificNotificationConfig
 import org.thoughtcrime.securesms.util.BottomSheetUtil
 import org.thoughtcrime.securesms.util.LocalMetrics
 import org.thoughtcrime.securesms.util.PowerManagerCompat
+import org.signal.core.ui.R as CoreUiR
 
-@RequiresApi(23)
 class PromptBatterySaverDialogFragment : FixedRoundedCornerBottomSheetDialogFragment() {
 
   companion object {
@@ -60,7 +59,7 @@ class PromptBatterySaverDialogFragment : FixedRoundedCornerBottomSheetDialogFrag
 
     val learnMoreLink = arguments?.getString(ARG_LEARN_MORE_LINK) ?: getString(R.string.PromptBatterySaverBottomSheet__learn_more_url)
     binding.message.setLearnMoreVisible(true)
-    binding.message.setLinkColor(ContextCompat.getColor(requireContext(), R.color.signal_colorPrimary))
+    binding.message.setLinkColor(ContextCompat.getColor(requireContext(), CoreUiR.color.signal_colorPrimary))
     binding.message.setLink(learnMoreLink)
 
     binding.continueButton.setOnClickListener {

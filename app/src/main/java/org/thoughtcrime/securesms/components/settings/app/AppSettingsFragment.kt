@@ -29,12 +29,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -48,12 +50,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Dividers
 import org.signal.core.ui.compose.IconButtons
 import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.Rows
 import org.signal.core.ui.compose.Scaffolds
-import org.signal.core.ui.compose.SignalPreview
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.ui.compose.horizontalGutters
 import org.signal.core.ui.compose.theme.SignalTheme
 import org.thoughtcrime.securesms.R
@@ -207,7 +210,7 @@ private fun AppSettingsContent(
   Scaffolds.Settings(
     title = stringResource(R.string.text_secure_normal__menu_settings),
     navigationContentDescription = stringResource(R.string.CallScreenTopBar__go_back),
-    navigationIcon = ImageVector.vectorResource(R.drawable.symbol_arrow_start_24),
+    navigationIcon = SignalIcons.ArrowStart.imageVector,
     onNavigationClick = callbacks::onNavigationClick
   ) { contentPadding ->
     Column(
@@ -281,7 +284,7 @@ private fun AppSettingsContent(
 
               Rows.TextRow(
                 text = stringResource(R.string.AppSettingsFragment__backup_storage_limit_reached),
-                icon = ImageVector.vectorResource(R.drawable.symbol_error_circle_fill_24),
+                icon = SignalIcons.ErrorCircle.imageVector,
                 iconTint = MaterialTheme.colorScheme.error,
                 onClick = {
                   callbacks.navigate(AppSettingsRoute.BackupsRoute.Remote())
@@ -296,27 +299,27 @@ private fun AppSettingsContent(
         }
         */
 
-        item {
-          Rows.TextRow(
-            text = stringResource(R.string.AccountSettingsFragment__account),
-            icon = painterResource(R.drawable.symbol_person_circle_24),
-            onClick = {
-              callbacks.navigate(AppSettingsRoute.AccountRoute.Account)
-            }
-          )
-        }
+        if (state.isPrimaryDevice) {
+          item {
+            Rows.TextRow(
+              text = stringResource(R.string.AccountSettingsFragment__account),
+              icon = painterResource(R.drawable.symbol_person_circle_24),
+              onClick = {
+                callbacks.navigate(AppSettingsRoute.AccountRoute.Account)
+              }
+            )
+          }
 
-        item {
-          Rows.TextRow(
-            text = stringResource(R.string.preferences__linked_devices),
-            icon = painterResource(R.drawable.symbol_devices_24),
-            onClick = {
-              callbacks.navigate(AppSettingsRoute.LinkDeviceRoute.LinkDevice)
-            },
-            enabled = isRegisteredAndUpToDate
-          )
-        }
-
+          item {
+            Rows.TextRow(
+              text = stringResource(R.string.preferences__linked_devices),
+              icon = painterResource(R.drawable.symbol_devices_24),
+              onClick = {
+                callbacks.navigate(AppSettingsRoute.LinkDeviceRoute.LinkDevice)
+              },
+              enabled = isRegisteredAndUpToDate
+            )
+          }
         item {
           Rows.TextRow(
             text = stringResource(R.string.link_ba_platform_account_title),
@@ -327,52 +330,51 @@ private fun AppSettingsContent(
             enabled = isRegisteredAndUpToDate
           )
         }
-
         // 隐藏捐赠入口
         /*
-        item {
-          val context = LocalContext.current
-          val donateUrl = stringResource(R.string.donate_url)
+          item {
+            val context = LocalContext.current
+            val donateUrl = stringResource(R.string.donate_url)
 
-          Rows.TextRow(
-            text = {
-              Text(
-                text = stringResource(R.string.preferences__donate_to_signal),
-                modifier = Modifier.weight(1f)
-              )
-
-              if (state.hasExpiredGiftBadge) {
-                Icon(
-                  painter = painterResource(R.drawable.symbol_info_fill_24),
-                  tint = colorResource(R.color.signal_accent_primary),
-                  contentDescription = null
+            Rows.TextRow(
+              text = {
+                Text(
+                  text = stringResource(R.string.preferences__donate_to_signal),
+                  modifier = Modifier.weight(1f)
                 )
-              }
-            },
-            icon = {
-              Icon(
-                painter = painterResource(R.drawable.symbol_heart_24),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface
-              )
-            },
-            onClick = {
-              if (state.allowUserToGoToDonationManagementScreen) {
-                callbacks.navigate(AppSettingsRoute.DonationsRoute.Donations())
-              } else {
-                CommunicationActions.openBrowserLink(context, donateUrl)
-              }
-            },
-            onLongClick = {
-              callbacks.copyDonorBadgeSubscriberIdToClipboard()
-            }
-          )
-        }
-        */
 
-        item {
-          Dividers.Default()
-        }
+                if (state.hasExpiredGiftBadge) {
+                  Icon(
+                    painter = painterResource(R.drawable.symbol_info_fill_24),
+                    tint = colorResource(R.color.signal_accent_primary),
+                    contentDescription = null
+                  )
+                }
+              },
+              icon = {
+                Icon(
+                  painter = painterResource(R.drawable.symbol_heart_24),
+                  contentDescription = null,
+                  tint = MaterialTheme.colorScheme.onSurface
+                )
+              },
+              onClick = {
+                if (state.allowUserToGoToDonationManagementScreen) {
+                  callbacks.navigate(AppSettingsRoute.DonationsRoute.Donations())
+                } else {
+                  CommunicationActions.openBrowserLink(context, donateUrl)
+                }
+              },
+              onLongClick = {
+                callbacks.copyDonorBadgeSubscriberIdToClipboard()
+              }
+            )
+          }
+        */
+          item {
+            Dividers.Default()
+          }
+
 
         item {
           Rows.TextRow(
@@ -420,42 +422,43 @@ private fun AppSettingsContent(
         item {
           Rows.TextRow(
             text = stringResource(R.string.preferences__privacy),
-            icon = painterResource(R.drawable.symbol_lock_24),
+            icon = SignalIcons.Lock.painter,
             onClick = {
               callbacks.navigate(AppSettingsRoute.PrivacyRoute.Privacy)
             },
             enabled = isRegisteredAndUpToDate
           )
         }
-
         // 隐藏备份入口
         /*
-        item {
-          Rows.TextRow(
-            text = {
-              TextWithBetaLabel(
-                text = stringResource(R.string.preferences_chats__backups),
-                textStyle = MaterialTheme.typography.bodyLarge
-              )
-            },
-            icon = {
-              Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.symbol_backup_24),
-                contentDescription = stringResource(R.string.preferences_chats__backups),
-                tint = MaterialTheme.colorScheme.onSurface
-              )
-            },
-            onClick = {
-              callbacks.navigate(AppSettingsRoute.BackupsRoute.Backups)
-            },
-            onLongClick = {
-              callbacks.copyRemoteBackupsSubscriberIdToClipboard()
-            },
-            enabled = isRegisteredAndUpToDate
-          )
+        if (state.isPrimaryDevice) {
+          item {
+            Rows.TextRow(
+              text = {
+                TextWithBetaLabel(
+                  text = stringResource(R.string.preferences_chats__backups),
+                  textStyle = MaterialTheme.typography.bodyLarge,
+                  enabled = isRegisteredAndUpToDate
+                )
+              },
+              icon = {
+                Icon(
+                  imageVector = SignalIcons.Backup.imageVector,
+                  contentDescription = stringResource(R.string.preferences_chats__backups),
+                  tint = MaterialTheme.colorScheme.onSurface
+                )
+              },
+              onClick = {
+                callbacks.navigate(AppSettingsRoute.BackupsRoute.Backups)
+              },
+              onLongClick = {
+                callbacks.copyRemoteBackupsSubscriberIdToClipboard()
+              },
+              enabled = isRegisteredAndUpToDate
+            )
+          }
         }
         */
-
         item {
           Rows.TextRow(
             text = stringResource(R.string.preferences__data_and_storage),
@@ -582,7 +585,7 @@ private fun BackupsWarningRow(
     icon = {
       Box {
         Icon(
-          imageVector = ImageVector.vectorResource(R.drawable.symbol_backup_24),
+          imageVector = SignalIcons.Backup.imageVector,
           tint = MaterialTheme.colorScheme.onSurface,
           contentDescription = null
         )
@@ -675,7 +678,10 @@ private fun BioRow(
 
       Text(
         text = prettyPhoneNumber,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = TextStyle(
+          textDirection = TextDirection.ContentOrLtr
+        )
       )
 
       if (hasUsername) {
@@ -710,7 +716,7 @@ private fun BioRow(
         )
       ) {
         Icon(
-          painter = painterResource(R.drawable.symbol_qrcode_24),
+          painter = SignalIcons.QrCode.painter,
           contentDescription = null,
           modifier = Modifier.size(20.dp)
         )
@@ -719,7 +725,7 @@ private fun BioRow(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun AppSettingsContentPreview() {
   Previews.Preview {
@@ -737,6 +743,7 @@ private fun AppSettingsContentPreview() {
         )
       ),
       state = AppSettingsState(
+        isPrimaryDevice = true,
         unreadPaymentsCount = 5,
         hasExpiredGiftBadge = true,
         allowUserToGoToDonationManagementScreen = true,
@@ -755,7 +762,44 @@ private fun AppSettingsContentPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
+@Composable
+private fun AppSettingsContentUnregisteredPreview() {
+  Previews.Preview {
+    AppSettingsContent(
+      self = BioRecipientState(
+        Recipient(
+          systemContactName = "Miles Morales",
+          profileName = ProfileName.fromParts("Miles", "Morales ❤\uFE0F"),
+          isSelf = true,
+          e164Value = "+15555555555",
+          usernameValue = "miles.98",
+          aboutEmoji = "❤\uFE0F",
+          about = "About",
+          isResolving = false
+        )
+      ),
+      state = AppSettingsState(
+        isPrimaryDevice = true,
+        unreadPaymentsCount = 5,
+        hasExpiredGiftBadge = true,
+        allowUserToGoToDonationManagementScreen = true,
+        userUnregistered = true,
+        clientDeprecated = false,
+        showInternalPreferences = true,
+        showPayments = true,
+        showAppUpdates = true,
+        backupFailureState = BackupFailureState.OUT_OF_STORAGE_SPACE
+      ),
+      bannerManager = BannerManager(
+        banners = listOf(TestBanner())
+      ),
+      callbacks = EmptyCallbacks
+    )
+  }
+}
+
+@DayNightPreviews
 @Composable
 private fun BioRowPreview() {
   Previews.Preview {

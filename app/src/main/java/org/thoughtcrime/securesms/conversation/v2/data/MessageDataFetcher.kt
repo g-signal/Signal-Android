@@ -6,6 +6,7 @@
 package org.thoughtcrime.securesms.conversation.v2.data
 
 import androidx.annotation.WorkerThread
+import org.signal.core.util.UuidUtil
 import org.signal.core.util.concurrent.SignalExecutors
 import org.signal.core.util.roundedString
 import org.thoughtcrime.securesms.attachments.DatabaseAttachment
@@ -17,12 +18,13 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.database.model.withAttachments
 import org.thoughtcrime.securesms.database.model.withCall
 import org.thoughtcrime.securesms.database.model.withPayment
+import org.thoughtcrime.securesms.database.model.withPoll
 import org.thoughtcrime.securesms.database.model.withReactions
 import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.payments.Payment
+import org.thoughtcrime.securesms.polls.PollRecord
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
-import org.whispersystems.signalservice.api.util.UuidUtil
 import java.util.UUID
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
@@ -78,7 +80,7 @@ object MessageDataFetcher {
         .filter { it.isMms && it.isPaymentNotification }
         .map { UuidUtil.parseOrNull(it.body) to it.id }
         .filter { it.first != null }
-        .associate { it.first to it.second }
+        .associate { it.first!! to it.second }
 
       SignalDatabase
         .payments
@@ -99,6 +101,10 @@ object MessageDataFetcher {
       }
     }
 
+    val pollsFuture = executor.submitTimed {
+      SignalDatabase.polls.getPollsForMessages(messageIds)
+    }
+
     val mentionsResult = mentionsFuture.get()
     val hasBeenQuotedResult = hasBeenQuotedFuture.get()
     val reactionsResult = reactionsFuture.get()
@@ -106,6 +112,7 @@ object MessageDataFetcher {
     val paymentsResult = paymentsFuture.get()
     val callsResult = callsFuture.get()
     val recipientsResult = recipientsFuture.get()
+    val pollsResult = pollsFuture.get()
 
     val wallTimeMs = (System.nanoTime() - startTimeNanos).nanoseconds.toDouble(DurationUnit.MILLISECONDS)
 
@@ -119,6 +126,7 @@ object MessageDataFetcher {
       attachments = attachmentsResult.result,
       payments = paymentsResult.result,
       calls = callsResult.result,
+      polls = pollsResult.result,
       timeLog = "mentions: ${mentionsResult.duration}, is-quoted: ${hasBeenQuotedResult.duration}, reactions: ${reactionsResult.duration}, attachments: ${attachmentsResult.duration}, payments: ${paymentsResult.duration}, calls: ${callsResult.duration} >> cpuTime: ${cpuTimeMs.roundedString(2)}, wallTime: ${wallTimeMs.roundedString(2)}"
     )
   }
@@ -157,6 +165,10 @@ object MessageDataFetcher {
       output.withCall(it)
     } ?: output
 
+    output = data.polls[id]?.let {
+      output.withPoll(it)
+    } ?: output
+
     return output
   }
 
@@ -187,6 +199,7 @@ object MessageDataFetcher {
     val attachments: Map<Long, List<DatabaseAttachment>>,
     val payments: Map<Long, Payment>,
     val calls: Map<Long, CallTable.Call>,
+    val polls: Map<Long, PollRecord>,
     val timeLog: String
   )
 }

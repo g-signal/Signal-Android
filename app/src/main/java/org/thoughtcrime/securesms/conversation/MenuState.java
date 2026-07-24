@@ -8,6 +8,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.util.MessageRecordUtil;
 import org.thoughtcrime.securesms.util.MessageConstraintsUtil;
+import org.thoughtcrime.securesms.util.RemoteConfig;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,6 +27,9 @@ public final class MenuState {
   private final boolean reactions;
   private final boolean paymentDetails;
   private final boolean edit;
+  private final boolean pollTerminate;
+  private final boolean pinMessage;
+  private final boolean unpinMessage;
 
   private MenuState(@NonNull Builder builder) {
     forward        = builder.forward;
@@ -38,6 +42,9 @@ public final class MenuState {
     reactions      = builder.reactions;
     paymentDetails = builder.paymentDetails;
     edit           = builder.edit;
+    pollTerminate  = builder.pollTerminate;
+    pinMessage     = builder.pinMessage;
+    unpinMessage   = builder.unpinMessage;
   }
 
   public boolean shouldShowForwardAction() {
@@ -80,23 +87,40 @@ public final class MenuState {
     return edit;
   }
 
+  public boolean shouldShowPollTerminateAction() {
+    return pollTerminate;
+  }
+
+  public boolean shouldShowPinMessage() {
+    return pinMessage;
+  }
+
+  public boolean showShowUnpinMessage() {
+    return unpinMessage;
+  }
+
   public static MenuState getMenuState(@NonNull Recipient conversationRecipient,
                                        @NonNull Set<MultiselectPart> selectedParts,
                                        boolean shouldShowMessageRequest,
-                                       boolean isNonAdminInAnnouncementGroup)
+                                       boolean isNonAdminInAnnouncementGroup,
+                                       boolean canEditGroupInfo)
   {
     
-    Builder builder         = new Builder();
-    boolean actionMessage   = false;
-    boolean hasText         = false;
-    boolean sharedContact   = false;
-    boolean viewOnce        = false;
-    boolean remoteDelete    = false;
-    boolean hasInMemory     = false;
-    boolean hasPendingMedia = false;
-    boolean mediaIsSelected = false;
-    boolean hasGift         = false;
+    Builder builder          = new Builder();
+    boolean actionMessage    = false;
+    boolean hasText          = false;
+    boolean sharedContact    = false;
+    boolean viewOnce         = false;
+    boolean remoteDelete     = false;
+    boolean hasInMemory      = false;
+    boolean hasPendingMedia  = false;
+    boolean mediaIsSelected  = false;
+    boolean hasGift          = false;
     boolean hasPayment       = false;
+    boolean hasPoll          = false;
+    boolean hasPollTerminate = false;
+    boolean canPinMessage    = false;
+    boolean canUnpinMessage  = false;
 
     for (MultiselectPart part : selectedParts) {
       MessageRecord messageRecord = part.getMessageRecord();
@@ -138,14 +162,32 @@ public final class MenuState {
       if (messageRecord.isPaymentNotification() || messageRecord.isPaymentTombstone()) {
         hasPayment = true;
       }
+
+      if (MessageRecordUtil.hasPoll(messageRecord)) {
+        hasPoll = true;
+      }
+
+      if (MessageRecordUtil.hasPoll(messageRecord) && !MessageRecordUtil.getPoll(messageRecord).getHasEnded() && messageRecord.isOutgoing()) {
+        hasPollTerminate = true;
+      }
+
+      if (RemoteConfig.sendPinnedMessages() && !messageRecord.isPending() && messageRecord.getPinnedUntil() == 0 && !conversationRecipient.isReleaseNotes() && canEditGroupInfo && !hasGift) {
+        canPinMessage = true;
+      }
+
+      if (RemoteConfig.sendPinnedMessages() && messageRecord.getPinnedUntil() != 0 && !conversationRecipient.isReleaseNotes() && canEditGroupInfo && !hasGift) {
+        canUnpinMessage = true;
+      }
     }
 
-    boolean shouldShowForwardAction = !actionMessage   &&
-                                      !viewOnce        &&
-                                      !remoteDelete    &&
-                                      !hasPendingMedia &&
-                                      !hasGift         &&
-                                      !hasPayment      &&
+    boolean shouldShowForwardAction = !actionMessage    &&
+                                      !viewOnce         &&
+                                      !remoteDelete     &&
+                                      !hasPendingMedia  &&
+                                      !hasGift          &&
+                                      !hasPayment       &&
+                                      !hasPoll          &&
+                                      !hasPollTerminate &&
                                       selectedParts.size() <= MAX_FORWARDABLE_COUNT;
 
     int uniqueRecords = selectedParts.stream()
@@ -159,7 +201,10 @@ public final class MenuState {
              .shouldShowDetailsAction(false)
              .shouldShowSaveAttachmentAction(false)
              .shouldShowResendAction(false)
-             .shouldShowEdit(false);
+             .shouldShowEdit(false)
+             .shouldShowPollTerminate(false)
+             .shouldShowPinMessage(false)
+             .shouldShowUnpinMessage(false);
     } else {
       MultiselectPart multiSelectRecord = selectedParts.iterator().next();
 
@@ -182,13 +227,17 @@ public final class MenuState {
       builder.shouldShowEdit(!actionMessage &&
                              hasText &&
                              !multiSelectRecord.getConversationMessage().getOriginalMessage().isFailed() &&
+                             !hasPoll &&
                              MessageConstraintsUtil.isValidEditMessageSend(multiSelectRecord.getConversationMessage().getOriginalMessage(), System.currentTimeMillis()));
     }
 
-    return builder.shouldShowCopyAction(!actionMessage && !remoteDelete && hasText && !hasGift && !hasPayment)
+    return builder.shouldShowCopyAction(!actionMessage && !remoteDelete && hasText && !hasGift && !hasPayment && !hasPoll)
                   .shouldShowDeleteAction(!hasInMemory && onlyContainsCompleteMessages(selectedParts))
                   .shouldShowReactions(!conversationRecipient.isReleaseNotes())
                   .shouldShowPaymentDetails(hasPayment)
+                  .shouldShowPollTerminate(hasPollTerminate)
+                  .shouldShowPinMessage(canPinMessage)
+                  .shouldShowUnpinMessage(canUnpinMessage)
                   .build();
   }
 
@@ -233,6 +282,9 @@ public final class MenuState {
     private boolean reactions;
     private boolean paymentDetails;
     private boolean edit;
+    private boolean pollTerminate;
+    private boolean pinMessage;
+    private boolean unpinMessage;
 
     @NonNull Builder shouldShowForwardAction(boolean forward) {
       this.forward = forward;
@@ -281,6 +333,21 @@ public final class MenuState {
 
     @NonNull Builder shouldShowEdit(boolean edit) {
       this.edit = edit;
+      return this;
+    }
+
+    @NonNull Builder shouldShowPollTerminate(boolean pollTerminate) {
+      this.pollTerminate = pollTerminate;
+      return this;
+    }
+
+    @NonNull Builder shouldShowPinMessage(boolean pinMessage) {
+      this.pinMessage = pinMessage;
+      return this;
+    }
+
+    @NonNull Builder shouldShowUnpinMessage(boolean unpinMessage) {
+      this.unpinMessage = unpinMessage;
       return this;
     }
 

@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.signal.core.models.media.Media
 import org.signal.core.util.concurrent.LifecycleDisposable
 import org.signal.core.util.concurrent.addTo
 import org.thoughtcrime.securesms.LoggingFragment
@@ -23,12 +24,12 @@ import org.thoughtcrime.securesms.conversation.AttachmentKeyboardButton
 import org.thoughtcrime.securesms.conversation.ManageContextMenu
 import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel
 import org.thoughtcrime.securesms.keyvalue.SignalStore
-import org.thoughtcrime.securesms.mediasend.Media
 import org.thoughtcrime.securesms.permissions.PermissionCompat
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.recipients.GextRobot
 import org.thoughtcrime.securesms.recipients.Recipient
+import org.thoughtcrime.securesms.util.RemoteConfig
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.Optional
@@ -52,7 +53,6 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
   private lateinit var attachmentKeyboardView: AttachmentKeyboard
 
   private val lifecycleDisposable = LifecycleDisposable()
-  private val removePaymentFilter: Predicate<AttachmentKeyboardButton> = Predicate { button -> button != AttachmentKeyboardButton.PAYMENT }
 
   @Suppress("ReplaceGetOrSet")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,7 +77,7 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
 
     val snapshot = conversationViewModel.recipientSnapshot
     if (snapshot != null) {
-      updatePaymentsAvailable(snapshot)
+      updateButtonsAvailable(snapshot)
     }
 
     conversationViewModel
@@ -85,7 +85,7 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
       .observeOn(AndroidSchedulers.mainThread())
       .subscribeBy {
         attachmentKeyboardView.setWallpaperEnabled(it.hasWallpaper)
-        updatePaymentsAvailable(it)
+        updateButtonsAvailable(it)
       }
       .addTo(lifecycleDisposable)
   }
@@ -131,7 +131,7 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
       .execute()
   }
 
-  private fun updatePaymentsAvailable(recipient: Recipient) {
+  private fun updateButtonsAvailable(recipient: Recipient) {
     // 异步查 robot/msgButtonVisible，结合 payment 规则一起 filter
     Single.fromCallable<Optional<GextRobot>> {
       Optional.ofNullable(SignalDatabase.gExtRecipients.getRobot(recipient.id))
@@ -155,16 +155,20 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
     applyButtonFilter(recipient, null)
   }
 
+
   private fun applyButtonFilter(recipient: Recipient, mv: GextRobot.MsgButtonVisible?) {
     val paymentsValues = SignalStore.payments
-    val paymentAllowed = paymentsValues.paymentsAvailability.isSendAllowed &&
+    val isPaymentsAvailable = paymentsValues.paymentsAvailability.isSendAllowed &&
       !recipient.isSelf &&
       !recipient.isGroup &&
       recipient.isRegistered
+    val isPollsAvailable = recipient.isPushV2Group || RemoteConfig.pollsV2
 
+    // 同时结合：机器人按钮可见性(mv) + payment 可用性 + poll 可用性
     val predicate = Predicate<AttachmentKeyboardButton> { button ->
       when (button) {
-        AttachmentKeyboardButton.PAYMENT -> paymentAllowed && (mv == null || mv.payment)
+        AttachmentKeyboardButton.PAYMENT -> isPaymentsAvailable && (mv == null || mv.payment)
+        AttachmentKeyboardButton.POLL -> isPollsAvailable && (mv == null || mv.poll)
         AttachmentKeyboardButton.GALLERY -> mv == null || mv.photos
         AttachmentKeyboardButton.FILE -> mv == null || mv.file
         AttachmentKeyboardButton.CONTACT -> mv == null || mv.contact
@@ -173,4 +177,5 @@ class AttachmentKeyboardFragment : LoggingFragment(R.layout.attachment_keyboard_
     }
     attachmentKeyboardView.filterAttachmentKeyboardButtons(predicate)
   }
+
 }

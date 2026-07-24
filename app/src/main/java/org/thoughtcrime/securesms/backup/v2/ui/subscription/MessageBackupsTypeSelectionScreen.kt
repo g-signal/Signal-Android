@@ -30,14 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -48,10 +46,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import org.signal.core.ui.compose.Buttons
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Dialogs
 import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.Scaffolds
-import org.signal.core.ui.compose.SignalPreview
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.ui.compose.theme.SignalTheme
 import org.signal.core.util.billing.BillingResponseCode
 import org.signal.core.util.bytes
@@ -91,7 +90,7 @@ fun MessageBackupsTypeSelectionScreen(
   Scaffolds.Settings(
     title = "",
     onNavigationClick = onNavigationClick,
-    navigationIcon = ImageVector.vectorResource(id = R.drawable.symbol_arrow_start_24)
+    navigationIcon = SignalIcons.ArrowStart.imageVector
   ) { paddingValues ->
     Column(
       modifier = Modifier
@@ -277,7 +276,7 @@ private fun UserNotSignedInDialog(
   )
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun MessageBackupsTypeSelectionScreenPreview() {
   var selectedBackupsType by remember { mutableStateOf(MessageBackupTier.FREE) }
@@ -302,7 +301,7 @@ private fun MessageBackupsTypeSelectionScreenPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun MessageBackupsTypeSelectionScreenWithCurrentTierPreview() {
   var selectedBackupsType by remember { mutableStateOf(MessageBackupTier.FREE) }

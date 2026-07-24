@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,14 +22,18 @@ import org.signal.core.util.readToList
 import org.signal.core.util.requireLong
 import org.signal.core.util.requireString
 import org.signal.ringrtc.CallManager
+import org.signal.storageservice.protos.calls.quality.SubmitCallQualitySurveyRequest
 import org.thoughtcrime.securesms.BuildConfig
 import org.thoughtcrime.securesms.R
+import org.thoughtcrime.securesms.calls.quality.CallQualityBottomSheetFragment
 import org.thoughtcrime.securesms.components.settings.DSLConfiguration
 import org.thoughtcrime.securesms.components.settings.DSLSettingsFragment
 import org.thoughtcrime.securesms.components.settings.DSLSettingsText
 import org.thoughtcrime.securesms.components.settings.app.privacy.advanced.AdvancedPrivacySettingsRepository
 import org.thoughtcrime.securesms.components.settings.app.subscription.InAppPaymentsRepository
 import org.thoughtcrime.securesms.components.settings.configure
+import org.thoughtcrime.securesms.components.snackbars.SnackbarState
+import org.thoughtcrime.securesms.components.snackbars.makeSnackbar
 import org.thoughtcrime.securesms.conversation.ConversationIntents
 import org.thoughtcrime.securesms.database.JobDatabase
 import org.thoughtcrime.securesms.database.LocalMetricsDatabase
@@ -56,6 +61,7 @@ import org.thoughtcrime.securesms.payments.DataExportUtil
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.storage.StorageSyncHelper
+import org.thoughtcrime.securesms.util.BottomSheetUtil
 import org.thoughtcrime.securesms.util.ConversationUtil
 import org.thoughtcrime.securesms.util.Util
 import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
@@ -92,6 +98,16 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     scrollToPosition = SignalStore.internal.lastScrollPosition
+
+    setFragmentResultListener(CallQualityBottomSheetFragment.REQUEST_KEY) { _, bundle ->
+      if (bundle.getBoolean(CallQualityBottomSheetFragment.REQUEST_KEY, false)) {
+        makeSnackbar(
+          SnackbarState(
+            message = getString(R.string.CallQualitySheet__thanks_for_your_feedback)
+          )
+        )
+      }
+    }
   }
 
   override fun bindAdapter(adapter: MappingAdapter) {
@@ -165,22 +181,10 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
       sectionHeaderPref(DSLSettingsText.from("App UI"))
 
       switchPref(
-        title = DSLSettingsText.from("Enable new split pane UI."),
-        summary = DSLSettingsText.from("Warning: Some bugs and non functional buttons are expected. App will restart."),
-        isChecked = state.largeScreenUi,
+        title = DSLSettingsText.from("Force split pane UI on phones."),
+        isChecked = state.forceSplitPane,
         onClick = {
-          viewModel.setUseLargeScreenUi(!state.largeScreenUi)
-          AppUtil.restart(requireContext())
-        }
-      )
-
-      switchPref(
-        isEnabled = state.largeScreenUi,
-        title = DSLSettingsText.from("Force split pane UI on landscape phones."),
-        summary = DSLSettingsText.from("This setting requires split pane UI to be enabled."),
-        isChecked = state.forceSplitPaneOnCompactLandscape,
-        onClick = {
-          viewModel.setForceSplitPaneOnCompactLandscape(!state.forceSplitPaneOnCompactLandscape)
+          viewModel.setForceSplitPane(!state.forceSplitPane)
         }
       )
 
@@ -575,11 +579,12 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
 
       sectionHeaderPref(DSLSettingsText.from("Calling options"))
 
-      switchPref(
-        title = DSLSettingsText.from("Use new calling UI"),
-        isChecked = state.newCallingUi,
+      clickPref(
+        title = DSLSettingsText.from("Display call quality survey"),
         onClick = {
-          viewModel.setUseNewCallingUi(!state.newCallingUi)
+          CallQualityBottomSheetFragment
+            .create(SubmitCallQualitySurveyRequest())
+            .show(parentFragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG)
         }
       )
 
@@ -994,6 +999,7 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
   private fun refreshRemoteValues() {
     Toast.makeText(context, "Running remote config refresh, app will restart after completion.", Toast.LENGTH_LONG).show()
     SignalExecutors.BOUNDED.execute {
+      SignalStore.remoteConfig.eTag = ""
       val result: Optional<JobTracker.JobState> = AppDependencies.jobManager.runSynchronously(RemoteConfigRefreshJob(), TimeUnit.SECONDS.toMillis(10))
 
       if (result.isPresent && result.get() == JobTracker.JobState.SUCCESS) {

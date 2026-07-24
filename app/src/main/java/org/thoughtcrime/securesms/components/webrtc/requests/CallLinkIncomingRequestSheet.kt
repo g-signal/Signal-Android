@@ -33,10 +33,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import org.signal.core.ui.compose.BottomSheets
-import org.signal.core.ui.compose.DarkPreview
 import org.signal.core.ui.compose.Dividers
+import org.signal.core.ui.compose.NightPreview
 import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.Rows
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.util.getParcelableCompat
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.avatar.AvatarImage
@@ -103,10 +104,10 @@ class CallLinkIncomingRequestSheet : ComposeBottomSheetDialogFragment() {
   }
 }
 
-@DarkPreview
+@NightPreview
 @Composable
 private fun CallLinkIncomingRequestSheetContentPreview() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     CallLinkIncomingRequestSheetContent(
       state = CallLinkIncomingRequestState(
         name = "Miles Morales",
@@ -166,7 +167,7 @@ private fun CallLinkIncomingRequestSheetContent(
     item {
       Rows.TextRow(
         text = stringResource(id = R.string.CallLinkIncomingRequestSheet__approve_entry),
-        icon = painterResource(R.drawable.symbol_check_circle_24),
+        icon = SignalIcons.CheckCircle.painter,
         onClick = onApproveEntry
       )
     }

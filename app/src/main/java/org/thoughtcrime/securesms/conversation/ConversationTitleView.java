@@ -115,6 +115,7 @@ public class ConversationTitleView extends ConstraintLayout {
     isSelf = recipient.isSelf();
 
     expirationBadgeTime.setText(ExpirationUtil.getExpirationAbbreviatedDisplayValue(getContext(), recipient.getExpiresInSeconds()));
+    expirationBadgeTime.setContentDescription(ExpirationUtil.getExpirationDisplayValue(getContext(), recipient.getExpiresInSeconds()));
     expirationBadgeContainer.setVisibility(View.VISIBLE);
     updateSubtitleVisibility();
   }
