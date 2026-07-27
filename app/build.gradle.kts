@@ -186,7 +186,14 @@ android {
     jniLibs {
       excludes += setOf(
         "**/*.dylib",
-        "**/*.dll"
+        "**/*.dll",
+        // Desktop-only native libs bundled in the repackaged libsignal-client jar.
+        // The _amd64/_aarch64 suffix keeps them distinct from Android's libsignal_jni.so,
+        // so excluding them drops ~280MB (Linux .so) without affecting the app.
+        "**/libsignal_jni_amd64.so",
+        "**/libsignal_jni_aarch64.so",
+        "**/libsignal_jni_testing_amd64.so",
+        "**/libsignal_jni_testing_aarch64.so"
       )
     }
     resources {
@@ -201,7 +208,12 @@ android {
         "META-INF/LICENSE-notice.md",
         "META-INF/proguard/androidx-annotations.pro",
         "**/*.dylib",
-        "**/*.dll"
+        "**/*.dll",
+        // Desktop-only native libs from the repackaged libsignal-client jar (see jniLibs above).
+        "**/libsignal_jni_amd64.so",
+        "**/libsignal_jni_aarch64.so",
+        "**/libsignal_jni_testing_amd64.so",
+        "**/libsignal_jni_testing_aarch64.so"
       )
     }
   }
