@@ -354,7 +354,7 @@ public class CommunicationActions {
   public static boolean handlePotentialQuickRestoreUrl(@NonNull FragmentActivity activity, @NonNull String potentialQuickRestoreUrl, @NonNull Runnable onContinue) {
     URI uri = URI.create(potentialQuickRestoreUrl);
 
-    if ("sgnl".equalsIgnoreCase(uri.getScheme()) && "rereg".equalsIgnoreCase(uri.getHost())) {
+    if ("baxs".equalsIgnoreCase(uri.getScheme()) && "rereg".equalsIgnoreCase(uri.getHost())) {
       new MaterialAlertDialogBuilder(activity)
           .setTitle(R.string.CommunicationActions__transfer_dialog_title)
           .setMessage(R.string.CommunicationActions__transfer_dialog_message)
