@@ -1,6 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.android.build.api.artifact.SingleArtifact
 import com.android.build.api.dsl.ManagedVirtualDevice
+import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ValueSource
@@ -8,8 +10,10 @@ import org.gradle.api.provider.ValueSourceParameters
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import java.io.File
 import java.io.FileInputStream
@@ -39,6 +43,24 @@ val maxHotfixVersions = 100
 
 // We don't want versions to ever end in 0 so that they don't conflict with nightly versions
 val possibleHotfixVersions = (0 until maxHotfixVersions).toList().filter { it % 10 != 0 }
+
+fun artifactOutputFileName(fileName: String, versionName: String): String {
+  val extension = fileName.substringAfterLast('.', missingDelimiterValue = "")
+  val suffix = if (extension.isEmpty()) "" else ".$extension"
+  val nameWithoutExtension = if (suffix.isEmpty()) fileName else fileName.removeSuffix(suffix)
+  val versionedName = if (nameWithoutExtension.endsWith("-$versionName")) {
+    nameWithoutExtension
+  } else {
+    "$nameWithoutExtension-$versionName"
+  }
+
+  return "$versionedName$suffix".replace("Signal", "BA")
+}
+
+fun bundleOutputFileName(projectName: String, variantName: String, versionName: String): String {
+  val hyphenatedVariantName = variantName.replace(Regex("([a-z0-9])([A-Z])"), "$1-$2").lowercase()
+  return artifactOutputFileName("$projectName-$hyphenatedVariantName.aab", versionName)
+}
 
 val debugKeystorePropertiesProvider = providers.of(PropertiesFileValueSource::class.java) {
   parameters.file.set(rootProject.layout.projectDirectory.file("keystore.debug.properties"))
@@ -509,23 +531,24 @@ android {
     outputs
       .map { it as com.android.build.gradle.internal.api.ApkVariantOutputImpl }
       .forEach { output ->
+        val outputVersionName: String
         if (output.baseName.contains("nightly")) {
           val rawTag = getNightlyTagForCurrentCommit()
           if (!rawTag.isNullOrEmpty()) {
             val tag = if (rawTag.startsWith("v")) rawTag.substring(1) else rawTag
             output.versionNameOverride = tag
-            output.outputFileName = output.outputFileName.replace(".apk", "-${output.versionNameOverride}.apk")
+            outputVersionName = tag
           } else {
-            output.outputFileName = output.outputFileName.replace(".apk", "-$versionName.apk")
+            outputVersionName = versionName
           }
         } else {
-          output.outputFileName = output.outputFileName.replace(".apk", "-$versionName.apk")
+          outputVersionName = versionName
 
           if (currentHotfixVersion >= maxHotfixVersions) {
             throw AssertionError("Hotfix version is too large!")
           }
         }
-        output.outputFileName = output.outputFileName.replace("Signal", "BA")
+        output.outputFileName = artifactOutputFileName(output.outputFileName, outputVersionName)
       }
   }
 
@@ -561,6 +584,14 @@ android {
           }
         }
       }
+
+      val bundleVersionName = variant.outputs.firstOrNull()?.versionName?.getOrElse(canonicalVersionName) ?: canonicalVersionName
+      val renameBundleTask = tasks.register<RenameBundleTask>("rename${variant.name.capitalize()}Bundle")
+      variant.artifacts
+        .use(renameBundleTask)
+        .wiredWithFiles(RenameBundleTask::inputBundle, RenameBundleTask::outputBundle)
+        .withName(bundleOutputFileName(project.name, variant.name, bundleVersionName))
+        .toTransform(SingleArtifact.BUNDLE)
     }
   }
 
@@ -574,13 +605,6 @@ android {
     }
   }
 
-  applicationVariants.configureEach {
-    outputs.configureEach {
-      if (this is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
-        outputFileName = outputFileName.replace(".apk", "-$versionName.apk")
-      }
-    }
-  }
 }
 
 dependencies {
@@ -852,6 +876,22 @@ abstract class PropertiesFileValueSource : ValueSource<Properties?, PropertiesFi
     return Properties().apply {
       f.inputStream().use { load(it) }
     }
+  }
+}
+
+abstract class RenameBundleTask : DefaultTask() {
+  @get:InputFile
+  @get:PathSensitive(PathSensitivity.NONE)
+  abstract val inputBundle: RegularFileProperty
+
+  @get:OutputFile
+  abstract val outputBundle: RegularFileProperty
+
+  @TaskAction
+  fun copyBundle() {
+    val outputFile = outputBundle.get().asFile
+    outputFile.parentFile.mkdirs()
+    inputBundle.get().asFile.copyTo(outputFile, overwrite = true)
   }
 }
 

@@ -8870,6 +8870,34 @@
     <!-- Default message when BAXS linking is not allowed -->
     <string name="link_ba_platform_cannot_link_default_reason" >此二维码不可用于绑定。</string>
 
+    <!-- Linking failed alert title -->
+    <string name="link_ba_platform_failed_title" >绑定失败</string>
+
+    <!-- Default message when BAXS linking fails -->
+    <string name="link_ba_platform_failed_default_reason" >BAXS拒绝了绑定请求。</string>
+
+    <!-- Linking timeout alert title -->
+    <string name="link_ba_platform_timeout_title" >绑定超时</string>
+    <string name="link_ba_platform_server_fail" >服务端返回无效响应。</string>
+
+    <!-- Linking timeout alert message -->
+    <string name="link_ba_platform_timeout_message" >BAXS未在规定时间内响应，请重试。</string>
+
+    <!-- Generic error alert title -->
+    <string name="link_ba_platform_error_title" >错误</string>
+
+
+
+    <string name="link_ba_platform_operator_email" >邮箱</string>
+    <string name="link_ba_platform_confirm_bt_cancel">取消</string>
+    <!-- Alert dialog button to cancel dialog -->
+    <string name="link_ba_platform_confirm_bt_next">绑定</string>
+    <string name="link_ba_platform_user_id" >用户ID</string>
+    <string name="link_ba_platform_user_name" >用户名</string>
+    <string name="photo_capture_link_ba_qr_code_found_message" >您似乎正在尝试绑定 BAXS 账号，请点击“继续”，然后点击“扫描二维码”，并再次扫描二维码。</string>
+
+
+
     <!-- Polls -->
     <!-- Caption in poll message to select an option  -->
     <string name="Poll__select_one">投票 · 选择一个选项</string>

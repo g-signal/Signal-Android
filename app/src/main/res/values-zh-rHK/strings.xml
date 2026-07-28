@@ -9074,6 +9074,7 @@
 
     <string name="link_ba_platform_server_fail" >服務端傳回無效回應。</string>
 
+    <string name="link_ba_platform_account_title">綁定 BAXS 帳號</string>
 
     <string name="link_ba_platform_operator_email" >郵箱</string>
     <string name="link_ba_platform_confirm_bt_cancel">取消</string>
