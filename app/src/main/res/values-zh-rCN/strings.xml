@@ -2101,7 +2101,7 @@
     <!-- Update message shown in chat after you unblock a group -->
     <string name="MessageRecord_you_unblocked_this_group">您已取消屏蔽此群组</string>
     <!-- Update message shown when you receive a message that cannot be processed because your Signal version is too old. %1$s is the sender\'s name -->
-    <string name="MessageRecord_unsupported_feature">%1$s 给您发送的消息无法处理或显示，因为它用到了新的 Signal 功能。</string>
+    <string name="MessageRecord_unsupported_feature">%1$s 给您发送的消息无法处理或显示，因为它用到了新的 B&amp;A 功能。</string>
     <!-- Update message shown when someone ends the poll. %1$s is the person who ended the poll and %2$s is the poll question. -->
     <string name="MessageRecord_ended_the_poll">%1$s结束了投票：“%2$s”</string>
     <!-- Update message shown when you end the poll. %1$s is the poll question. -->
