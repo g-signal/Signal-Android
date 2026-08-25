@@ -5,13 +5,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
-import android.util.Pair;
+import kotlin.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.blurhash.BlurHash;
+import org.signal.core.models.media.TransformProperties;
 import org.thoughtcrime.securesms.database.AttachmentTable;
 import org.thoughtcrime.securesms.util.MediaUtil;
 
@@ -41,7 +42,7 @@ public final class SlideFactory {
    *
    * @return A Slide with all the information we can gather about it.
    */
-  public static @Nullable Slide getSlide(@NonNull Context context, @Nullable String contentType, @NonNull Uri uri, int width, int height, @Nullable AttachmentTable.TransformProperties transformProperties) {
+  public static @Nullable Slide getSlide(@NonNull Context context, @Nullable String contentType, @NonNull Uri uri, int width, int height, @Nullable TransformProperties transformProperties) {
     MediaType mediaType = MediaType.from(contentType);
 
     try {
@@ -65,7 +66,7 @@ public final class SlideFactory {
       @NonNull Uri uri,
       int width,
       int height,
-      @Nullable AttachmentTable.TransformProperties transformProperties
+      @Nullable TransformProperties transformProperties
   ) {
     long start = System.currentTimeMillis();
 
@@ -77,8 +78,8 @@ public final class SlideFactory {
 
         if (width == 0 || height == 0) {
           Pair<Integer, Integer> dimens = MediaUtil.getDimensions(context, mimeType, uri);
-          width  = dimens.first;
-          height = dimens.second;
+          width  = dimens.getFirst();
+          height = dimens.getSecond();
         }
 
         if (mediaType == null) {
@@ -99,7 +100,7 @@ public final class SlideFactory {
       @NonNull Uri uri,
       int width,
       int height,
-      @Nullable AttachmentTable.TransformProperties transformProperties
+      @Nullable TransformProperties transformProperties
   ) throws IOException
   {
     long     start     = System.currentTimeMillis();
@@ -125,8 +126,8 @@ public final class SlideFactory {
 
     if (width == 0 || height == 0) {
       Pair<Integer, Integer> dimens = MediaUtil.getDimensions(context, mimeType, uri);
-      width  = dimens.first;
-      height = dimens.second;
+      width  = dimens.getFirst();
+      height = dimens.getSecond();
     }
 
     if (mediaType == null) {
@@ -162,7 +163,7 @@ public final class SlideFactory {
                                       int       width,
                                       int       height,
                                       boolean   gif,
-                                      @Nullable AttachmentTable.TransformProperties transformProperties)
+                                      @Nullable TransformProperties transformProperties)
     {
       if (mimeType == null) {
         mimeType = "application/octet-stream";
@@ -172,7 +173,7 @@ public final class SlideFactory {
       case IMAGE:    return new ImageSlide(context, uri, mimeType, dataSize, width, height, false, null, blurHash, transformProperties);
       case GIF:      return new GifSlide(context, uri, dataSize, width, height);
       case AUDIO:    return new AudioSlide(context, uri, dataSize, false);
-      case VIDEO:    return new VideoSlide(context, uri, dataSize, gif, null, AttachmentTable.TransformProperties.forSentMediaQuality(transformProperties != null ? transformProperties.sentMediaQuality : SentMediaQuality.STANDARD.getCode()));
+      case VIDEO:    return new VideoSlide(context, uri, dataSize, gif, null, TransformProperties.forSentMediaQuality(transformProperties != null ? transformProperties.sentMediaQuality : SentMediaQuality.STANDARD.getCode()));
       case VCARD:
       case DOCUMENT: return new DocumentSlide(context, uri, mimeType, dataSize, fileName);
       default:       throw  new AssertionError("unrecognized enum");

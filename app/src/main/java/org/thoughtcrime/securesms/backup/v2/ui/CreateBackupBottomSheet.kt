@@ -27,8 +27,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import org.signal.core.ui.compose.BottomSheets
 import org.signal.core.ui.compose.Buttons
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.SignalPreview
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.components.settings.app.backups.BackupStateObserver
 import org.thoughtcrime.securesms.compose.ComposeBottomSheetDialogFragment
@@ -134,10 +134,10 @@ private fun CreateBackupBottomSheetContent(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun CreateBackupBottomSheetContentPaidPreview() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     CreateBackupBottomSheetContent(
       isPaidTier = true,
       onBackupNowClick = {}
@@ -145,10 +145,10 @@ private fun CreateBackupBottomSheetContentPaidPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun CreateBackupBottomSheetContentFreePreview() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     CreateBackupBottomSheetContent(
       isPaidTier = false,
       onBackupNowClick = {}

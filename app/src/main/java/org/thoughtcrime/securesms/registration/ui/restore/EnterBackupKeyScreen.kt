@@ -49,16 +49,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import org.signal.core.models.AccountEntropyPool
 import org.signal.core.ui.compose.BottomSheets
 import org.signal.core.ui.compose.Buttons
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.SignalPreview
 import org.signal.core.ui.compose.horizontalGutters
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.backup.v2.ui.BackupsIconColors
 import org.thoughtcrime.securesms.fonts.MonoTypeface
 import org.thoughtcrime.securesms.registration.ui.shared.RegistrationScreen
-import org.whispersystems.signalservice.api.AccountEntropyPool
 
 /**
  * Shared screen infrastructure for entering an [AccountEntropyPool].
@@ -214,7 +214,7 @@ private fun AccountEntropyPoolVerification.AEPValidationError.ValidationErrorMes
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun EnterBackupKeyScreenPreview() {
   Previews.Preview {
@@ -229,7 +229,7 @@ private fun EnterBackupKeyScreenPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun EnterBackupKeyScreenErrorPreview() {
   Previews.Preview {
@@ -322,20 +322,20 @@ private fun NoBackupKeyBottomSheet(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun NoBackupKeyBottomSheetPreview() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     NoBackupKeyBottomSheet(
       showSecondParagraph = true
     )
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun NoBackupKeyBottomSheetNoSecondParagraphPreview() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     NoBackupKeyBottomSheet(
       showSecondParagraph = false
     )

@@ -30,8 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import org.signal.core.ui.compose.BottomSheets
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.SignalPreview
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.ui.compose.horizontalGutters
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.compose.ComposeBottomSheetDialogFragment
@@ -86,7 +87,7 @@ private fun Sheet(
     Spacer(modifier = Modifier.size(26.dp))
 
     RestoreActionRow(
-      icon = painterResource(R.drawable.symbol_qrcode_24),
+      icon = SignalIcons.QrCode.painter,
       title = stringResource(R.string.WelcomeFragment_restore_action_i_have_my_old_phone),
       subtitle = stringResource(R.string.WelcomeFragment_restore_action_scan_qr),
       onRowClick = onHasOldPhone
@@ -102,9 +103,9 @@ private fun Sheet(
 }
 
 @Composable
-@SignalPreview
+@DayNightPreviews
 private fun SheetPreview() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     Sheet()
   }
 }
@@ -151,12 +152,12 @@ fun RestoreActionRow(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun RestoreActionRowPreview() {
   Previews.Preview {
     RestoreActionRow(
-      icon = painterResource(R.drawable.symbol_qrcode_24),
+      icon = SignalIcons.QrCode.painter,
       title = stringResource(R.string.WelcomeFragment_restore_action_i_have_my_old_phone),
       subtitle = stringResource(R.string.WelcomeFragment_restore_action_scan_qr)
     )

@@ -25,16 +25,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.text.util.LinkifyCompat
 import org.signal.core.ui.compose.BottomSheets
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Previews
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.util.getParcelableCompat
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.components.emoji.EmojiTextView
@@ -99,7 +99,7 @@ class ViewNoteSheet : ComposeBottomSheetDialogFragment() {
   }
 }
 
-@Preview
+@DayNightPreviews
 @Composable
 private fun ViewNoteBottomSheetContentPreview() {
   Previews.Preview {
@@ -131,7 +131,7 @@ private fun ViewNoteBottomSheetContent(
       actions = {
         IconButton(onClick = onEditNoteClick) {
           Icon(
-            painter = painterResource(id = R.drawable.symbol_edit_24),
+            painter = SignalIcons.Edit.painter,
             contentDescription = stringResource(id = R.string.ViewNoteSheet__edit_note)
           )
         }

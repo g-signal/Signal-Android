@@ -37,8 +37,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.Parcelize
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.SignalPreview
 import org.signal.core.ui.compose.theme.SignalTheme
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.backup.v2.BackupRepository
@@ -50,6 +50,7 @@ import org.thoughtcrime.securesms.jobs.BackupMessagesJob
 import org.thoughtcrime.securesms.keyvalue.protos.BackupDownloadNotifierState
 import org.thoughtcrime.securesms.util.CommunicationActions
 import org.thoughtcrime.securesms.util.PlayStoreUtil
+import org.signal.core.ui.R as CoreUiR
 
 /**
  * Notifies the user of an issue with their backup.
@@ -161,7 +162,7 @@ class BackupAlertBottomSheet : ComposeBottomSheetDialogFragment() {
       .create()
       .apply {
         setOnShowListener {
-          getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.signal_colorError))
+          getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(requireContext(), CoreUiR.color.signal_colorError))
         }
       }
       .show()
@@ -434,10 +435,10 @@ private fun rememberSecondaryAction(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupAlertSheetContentPreviewGeneric() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     val backupAlert = BackupAlert.CouldNotCompleteBackup(daysSinceLastBackup = 7)
     val primaryActionButtonState = rememberPrimaryAction(backupAlert) { }
     val secondaryActionButtonState = rememberSecondaryAction(backupAlert) { }
@@ -446,10 +447,10 @@ private fun BackupAlertSheetContentPreviewGeneric() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupAlertSheetContentPreviewPayment() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     val backupAlert = BackupAlert.FailedToRenew
     val primaryActionButtonState = rememberPrimaryAction(backupAlert) { }
     val secondaryActionButtonState = rememberSecondaryAction(backupAlert) { }
@@ -458,10 +459,10 @@ private fun BackupAlertSheetContentPreviewPayment() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupAlertSheetContentPreviewDelete() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     val backupAlert = BackupAlert.DownloadYourBackupData(
       isLastDay = false,
       formattedSize = "2.3MB"
@@ -473,10 +474,10 @@ private fun BackupAlertSheetContentPreviewDelete() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupAlertSheetContentPreviewDiskFull() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     val backupAlert = BackupAlert.DiskFull(requiredSpace = "12GB")
     val primaryActionButtonState = rememberPrimaryAction(backupAlert) { }
     val secondaryActionButtonState = rememberSecondaryAction(backupAlert) { }
@@ -485,10 +486,10 @@ private fun BackupAlertSheetContentPreviewDiskFull() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupAlertSheetContentPreviewBackupFailed() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     val backupAlert = BackupAlert.BackupFailed
     val primaryActionButtonState = rememberPrimaryAction(backupAlert) { }
     val secondaryActionButtonState = rememberSecondaryAction(backupAlert) { }
@@ -497,10 +498,10 @@ private fun BackupAlertSheetContentPreviewBackupFailed() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupAlertSheetContentPreviewCouldNotRedeemBackup() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     val backupAlert = BackupAlert.CouldNotRedeemBackup
     val primaryActionButtonState = rememberPrimaryAction(backupAlert) { }
     val secondaryActionButtonState = rememberSecondaryAction(backupAlert) { }
@@ -509,10 +510,10 @@ private fun BackupAlertSheetContentPreviewCouldNotRedeemBackup() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupAlertSheetContentPreviewSubscriptionExpired() {
-  Previews.BottomSheetPreview {
+  Previews.BottomSheetContentPreview {
     val backupAlert = BackupAlert.ExpiredAndDowngraded
     val primaryActionButtonState = rememberPrimaryAction(backupAlert) { }
     val secondaryActionButtonState = rememberSecondaryAction(backupAlert) { }

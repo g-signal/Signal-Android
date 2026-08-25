@@ -40,12 +40,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
@@ -59,12 +57,13 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import org.signal.core.ui.compose.Buttons
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Dialogs
 import org.signal.core.ui.compose.Dividers
 import org.signal.core.ui.compose.DropdownMenus
 import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.Scaffolds
-import org.signal.core.ui.compose.SignalPreview
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.BiometricDeviceAuthentication
 import org.thoughtcrime.securesms.BiometricDeviceLockContract
@@ -189,7 +188,7 @@ class LinkDeviceFragment : ComposeFragment() {
     Scaffolds.Settings(
       title = stringResource(id = R.string.preferences__linked_devices),
       onNavigationClick = { navController.popOrFinish() },
-      navigationIcon = ImageVector.vectorResource(id = R.drawable.symbol_arrow_start_24),
+      navigationIcon = SignalIcons.ArrowStart.imageVector,
       navigationContentDescription = stringResource(id = R.string.Material3SearchToolbar__close)
     ) { contentPadding: PaddingValues ->
       DeviceListScreen(
@@ -470,7 +469,7 @@ fun DeviceListScreen(
         val inlineContentMap = mapOf(
           "icon" to InlineTextContent(Placeholder(16.sp, 16.sp, PlaceholderVerticalAlign.Center)) {
             Image(
-              imageVector = ImageVector.vectorResource(id = R.drawable.symbol_lock_24),
+              imageVector = SignalIcons.Lock.imageVector,
               contentDescription = null,
               modifier = Modifier.fillMaxSize(),
               colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
@@ -554,8 +553,7 @@ fun DeviceRow(device: Device, setDeviceToRemove: (Device) -> Unit, onEditDevice:
               )
               Text(
                 text = stringResource(R.string.LinkDeviceFragment__unlink),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.bodyLarge
+                modifier = Modifier.padding(horizontal = 16.dp)
               )
             }
           },
@@ -573,14 +571,13 @@ fun DeviceRow(device: Device, setDeviceToRemove: (Device) -> Unit, onEditDevice:
               modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
               Icon(
-                painter = painterResource(id = R.drawable.symbol_edit_24),
+                painter = SignalIcons.Edit.painter,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp)
               )
               Text(
                 text = stringResource(R.string.LinkDeviceFragment__edit_name),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.bodyLarge
+                modifier = Modifier.padding(horizontal = 16.dp)
               )
             }
           },
@@ -594,7 +591,7 @@ fun DeviceRow(device: Device, setDeviceToRemove: (Device) -> Unit, onEditDevice:
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenPreview() {
   Previews.Preview {
@@ -610,7 +607,7 @@ private fun DeviceListScreenPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenLoadingPreview() {
   Previews.Preview {
@@ -623,7 +620,7 @@ private fun DeviceListScreenLoadingPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenLinkingPreview() {
   Previews.Preview {
@@ -636,7 +633,7 @@ private fun DeviceListScreenLinkingPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenUnlinkingPreview() {
   Previews.Preview {
@@ -649,7 +646,7 @@ private fun DeviceListScreenUnlinkingPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenSyncingMessagesPreview() {
   Previews.Preview {
@@ -662,7 +659,7 @@ private fun DeviceListScreenSyncingMessagesPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenSyncingFailedRetryPreview() {
   Previews.Preview {
@@ -675,7 +672,7 @@ private fun DeviceListScreenSyncingFailedRetryPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenSyncingFailedPreview() {
   Previews.Preview {
@@ -692,7 +689,7 @@ private fun DeviceListScreenSyncingFailedPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenContactSupportPreview() {
   Previews.Preview {
@@ -705,7 +702,7 @@ private fun DeviceListScreenContactSupportPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenDeviceUnlinkedPreview() {
   Previews.Preview {
@@ -718,7 +715,7 @@ private fun DeviceListScreenDeviceUnlinkedPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun DeviceListScreenNotEnoughStoragePreview() {
   Previews.Preview {

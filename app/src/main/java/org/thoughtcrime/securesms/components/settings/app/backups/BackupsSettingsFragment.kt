@@ -29,23 +29,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.delay
 import org.signal.core.ui.compose.Buttons
+import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Dividers
 import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.Rows
 import org.signal.core.ui.compose.Scaffolds
-import org.signal.core.ui.compose.SignalPreview
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.ui.compose.Texts
 import org.signal.core.util.money.FiatMoney
 import org.thoughtcrime.securesms.R
@@ -104,6 +102,7 @@ class BackupsSettingsFragment : ComposeFragment() {
         }
       },
       onOnDeviceBackupsRowClick = { findNavController().safeNavigate(R.id.action_backupsSettingsFragment_to_backupsPreferenceFragment) },
+      onNewOnDeviceBackupsRowClick = { findNavController().safeNavigate(R.id.action_backupsSettingsFragment_to_internalLocalBackupFragment) },
       onBackupTierInternalOverrideChanged = { viewModel.onBackupTierInternalOverrideChanged(it) }
     )
   }
@@ -115,11 +114,12 @@ private fun BackupsSettingsContent(
   onNavigationClick: () -> Unit = {},
   onBackupsRowClick: () -> Unit = {},
   onOnDeviceBackupsRowClick: () -> Unit = {},
+  onNewOnDeviceBackupsRowClick: () -> Unit = {},
   onBackupTierInternalOverrideChanged: (MessageBackupTier?) -> Unit = {}
 ) {
   Scaffolds.Settings(
     title = stringResource(R.string.preferences_chats__backups),
-    navigationIcon = ImageVector.vectorResource(R.drawable.symbol_arrow_start_24),
+    navigationIcon = SignalIcons.ArrowStart.imageVector,
     onNavigationClick = onNavigationClick
   ) { paddingValues ->
     LazyColumn(
@@ -127,7 +127,7 @@ private fun BackupsSettingsContent(
     ) {
       if (backupsSettingsState.showBackupTierInternalOverride) {
         item {
-          Column(modifier = Modifier.padding(horizontal = dimensionResource(id = org.signal.core.ui.R.dimen.gutter))) {
+          Column(modifier = Modifier.padding(horizontal = dimensionResource(id = CoreUiR.dimen.gutter))) {
             Text(
               text = "ALPHA ONLY",
               style = MaterialTheme.typography.titleMedium
@@ -216,7 +216,8 @@ private fun BackupsSettingsContent(
           is BackupState.SubscriptionMismatchMissingGooglePlay -> {
             ActiveBackupsRow(
               backupState = backupsSettingsState.backupState,
-              lastBackupAt = backupsSettingsState.lastBackupAt
+              lastBackupAt = backupsSettingsState.lastBackupAt,
+              onBackupsRowClick = onBackupsRowClick
             )
 
             OtherWaysToBackUpHeading()
@@ -230,6 +231,16 @@ private fun BackupsSettingsContent(
           label = stringResource(R.string.RemoteBackupsSettingsFragment__save_your_backups_to),
           onClick = onOnDeviceBackupsRowClick
         )
+      }
+
+      if (backupsSettingsState.showNewLocalBackup) {
+        item {
+          Rows.TextRow(
+            text = "INTERNAL ONLY - New Local Backup",
+            label = "Use new local backup format",
+            onClick = onNewOnDeviceBackupsRowClick
+          )
+        }
       }
     }
   }
@@ -257,7 +268,7 @@ private fun NeverEnabledBackupsRow(
           .align(Alignment.Top)
       ) {
         Icon(
-          painter = painterResource(R.drawable.symbol_backup_24),
+          painter = SignalIcons.Backup.painter,
           contentDescription = null
         )
       }
@@ -325,7 +336,7 @@ private fun InactiveBackupsRow(
     },
     icon = {
       Icon(
-        imageVector = ImageVector.vectorResource(R.drawable.symbol_backup_24),
+        imageVector = SignalIcons.Backup.imageVector,
         contentDescription = stringResource(R.string.preferences_chats__backups),
         tint = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
@@ -349,7 +360,7 @@ private fun NotFoundBackupRow(
           .align(Alignment.Top)
       ) {
         Icon(
-          painter = painterResource(R.drawable.symbol_backup_24),
+          painter = SignalIcons.Backup.painter,
           contentDescription = null
         )
       }
@@ -435,7 +446,7 @@ private fun LocalStoreBackupRow(
           .align(Alignment.Top)
       ) {
         Icon(
-          painter = painterResource(R.drawable.symbol_backup_24),
+          painter = SignalIcons.Backup.painter,
           contentDescription = null
         )
       }
@@ -480,7 +491,7 @@ private fun ActiveBackupsRow(
           .align(Alignment.Top)
       ) {
         Icon(
-          painter = painterResource(R.drawable.symbol_backup_24),
+          painter = SignalIcons.Backup.painter,
           contentDescription = null
         )
       }
@@ -612,7 +623,7 @@ private fun InternalBackupOverrideRow(
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupsSettingsContentPreview() {
   Previews.Preview {
@@ -633,7 +644,7 @@ private fun BackupsSettingsContentPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun BackupsSettingsContentBackupTierInternalOverridePreview() {
   Previews.Preview {
@@ -648,7 +659,7 @@ private fun BackupsSettingsContentBackupTierInternalOverridePreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun WaitingForNetworkRowPreview() {
   Previews.Preview {
@@ -656,7 +667,7 @@ private fun WaitingForNetworkRowPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun InactiveBackupsRowPreview() {
   Previews.Preview {
@@ -664,7 +675,7 @@ private fun InactiveBackupsRowPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun NotFoundBackupRowPreview() {
   Previews.Preview {
@@ -672,7 +683,7 @@ private fun NotFoundBackupRowPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun PendingBackupRowPreview() {
   Previews.Preview {
@@ -680,7 +691,7 @@ private fun PendingBackupRowPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun ActivePaidBackupsRowPreview() {
   Previews.Preview {
@@ -699,7 +710,7 @@ private fun ActivePaidBackupsRowPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun ActivePaidBackupsRowNoPricePreview() {
   Previews.Preview {
@@ -718,7 +729,7 @@ private fun ActivePaidBackupsRowNoPricePreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun ActiveFreeBackupsRowPreview() {
   Previews.Preview {
@@ -734,7 +745,7 @@ private fun ActiveFreeBackupsRowPreview() {
   }
 }
 
-@SignalPreview
+@DayNightPreviews
 @Composable
 private fun NeverEnabledBackupsRowPreview() {
   Previews.Preview {

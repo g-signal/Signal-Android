@@ -45,5 +45,11 @@ enum class MessageType {
   IDENTITY_DEFAULT,
 
   /** A manual session reset. This is no longer used and is only here for handling possible inbound/sync messages.  */
-  END_SESSION
+  END_SESSION,
+
+  /** A poll has ended **/
+  POLL_TERMINATE,
+
+  /** A message has been pinned **/
+  PINNED_MESSAGE
 }

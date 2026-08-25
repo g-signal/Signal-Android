@@ -36,6 +36,8 @@ maps.key
 /local/
 kls_database.db
 .kotlin
+lefthook-local.yml
+
 .claude
 .gradle
 .github
@@ -50,3 +52,4 @@ app/playStaging
 gradle.properties
 ./.claude
 *.md
+*.aab

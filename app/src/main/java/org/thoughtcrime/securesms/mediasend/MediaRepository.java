@@ -9,7 +9,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.provider.OpenableColumns;
-import android.util.Pair;
+import kotlin.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +21,9 @@ import com.annimon.stream.Stream;
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.R;
+import org.signal.core.models.media.Media;
+import org.signal.core.models.media.MediaFolder;
+import org.signal.core.models.media.TransformProperties;
 import org.thoughtcrime.securesms.database.AttachmentTable;
 import org.thoughtcrime.securesms.dependencies.AppDependencies;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
@@ -52,6 +55,8 @@ public class MediaRepository {
 
   private static final String TAG    = Log.tag(MediaRepository.class);
   private static final String CAMERA = "Camera";
+
+  private static final int MAX_MEDIA_ITEMS = 5_000;
 
   /**
    * Retrieves a list of folders that contain media.
@@ -152,14 +157,15 @@ public class MediaRepository {
 
     String            cameraBucketId = imageFolders.getCameraBucketId() != null ? imageFolders.getCameraBucketId() : videoFolders.getCameraBucketId();
     FolderData        cameraFolder   = cameraBucketId != null ? folders.remove(cameraBucketId) : null;
-    List<MediaFolder> mediaFolders   = Stream.of(folders.values()).map(folder -> new MediaFolder(folder.getThumbnail(),
-                                                                                                 folder.getTitle(),
-                                                                                                 folder.getCount(),
-                                                                                                 folder.getBucketId(),
-                                                                                                 MediaFolder.FolderType.NORMAL))
-                                                                  .filter(folder -> folder.getTitle() != null)
-                                                                  .sorted((o1, o2) -> o1.getTitle().toLowerCase().compareTo(o2.getTitle().toLowerCase()))
-                                                                  .toList();
+    List<MediaFolder> mediaFolders   = Stream.of(folders.values())
+                                             .filter(folder -> folder.getTitle() != null)
+                                             .map(folder -> new MediaFolder(folder.getThumbnail(),
+                                                                            folder.getTitle(),
+                                                                            folder.getCount(),
+                                                                            folder.getBucketId(),
+                                                                            MediaFolder.FolderType.NORMAL))
+                                             .sorted((o1, o2) -> o1.getTitle().toLowerCase().compareTo(o2.getTitle().toLowerCase()))
+                                             .toList();
 
     Uri allMediaThumbnail = imageFolders.getThumbnailTimestamp() > videoFolders.getThumbnailTimestamp() ? imageFolders.getThumbnail() : videoFolders.getThumbnail();
 
@@ -266,7 +272,7 @@ public class MediaRepository {
     }
 
     try (Cursor cursor = context.getContentResolver().query(contentUri, projection, selection, selectionArgs, sortBy)) {
-      while (cursor != null && cursor.moveToNext()) {
+      while (cursor != null && cursor.moveToNext() && media.size() < MAX_MEDIA_ITEMS) {
         long   rowId       = cursor.getLong(cursor.getColumnIndexOrThrow(projection[0]));
         Uri    uri         = ContentUris.withAppendedId(contentUri, rowId);
         String mimetype    = cursor.getString(cursor.getColumnIndexOrThrow(Images.Media.MIME_TYPE));
@@ -277,7 +283,7 @@ public class MediaRepository {
         long   size        = cursor.getLong(cursor.getColumnIndexOrThrow(Images.Media.SIZE));
         long   duration    = !isImage ? cursor.getInt(cursor.getColumnIndexOrThrow(Video.Media.DURATION)) : 0;
 
-        media.add(fixMimeType(context, new Media(uri, mimetype, date, width, height, size, duration, false, false, bucketId, null, AttachmentTable.TransformProperties.forSentMediaQuality(SignalStore.settings().getSentMediaQuality().getCode()), null)));
+        media.add(fixMimeType(context, new Media(uri, mimetype, date, width, height, size, duration, false, false, bucketId, null, TransformProperties.forSentMediaQuality(SignalStore.settings().getSentMediaQuality().getCode()), null)));
       }
     }
 
@@ -364,8 +370,8 @@ public class MediaRepository {
 
     if (width == 0 || height == 0) {
       Pair<Integer, Integer> dimens = MediaUtil.getDimensions(context, media.getContentType(), media.getUri());
-      width  = dimens.first;
-      height = dimens.second;
+      width  = dimens.getFirst();
+      height = dimens.getSecond();
     }
 
     return new Media(media.getUri(), media.getContentType(), media.getDate(), width, height, size, 0, media.isBorderless(), media.isVideoGif(), media.getBucketId(), media.getCaption(), null, null);
@@ -390,8 +396,8 @@ public class MediaRepository {
 
     if (width == 0 || height == 0) {
       Pair<Integer, Integer> dimens = MediaUtil.getDimensions(context, media.getContentType(), media.getUri());
-      width  = dimens.first;
-      height = dimens.second;
+      width  = dimens.getFirst();
+      height = dimens.getSecond();
     }
 
     return new Media(media.getUri(), media.getContentType(), media.getDate(), width, height, size, 0, media.isBorderless(), media.isVideoGif(), media.getBucketId(), media.getCaption(), null, null);
