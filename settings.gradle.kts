@@ -86,9 +86,12 @@ include(":lib:spinner")
 include(":lib:video")
 include(":lib:image-editor")
 include(":lib:debuglogs-viewer")
+include(":lib:blurhash")
 
 // Feature modules
 include(":feature:registration")
+include(":feature:camera")
+include(":feature:media-send")
 
 // Demo apps
 include(":demo:paging")
@@ -101,10 +104,12 @@ include(":demo:video")
 include(":demo:image-editor")
 include(":demo:debuglogs-viewer")
 include(":demo:registration")
+include(":demo:camera")
 
 // Testing/Lint modules
 include(":lintchecks")
 include(":benchmark")
+include(":baseline-profile")
 include(":microbenchmark")
 
 // App project name

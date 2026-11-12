@@ -64,7 +64,7 @@ import org.thoughtcrime.securesms.database.model.StickerRecord;
 import org.thoughtcrime.securesms.keyboard.KeyboardPage;
 import org.thoughtcrime.securesms.linkpreview.LinkPreview;
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository;
-import org.thoughtcrime.securesms.mms.DecryptableUri;
+import org.signal.glide.decryptableuri.DecryptableUri;
 import org.thoughtcrime.securesms.mms.QuoteModel;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideDeck;
@@ -219,7 +219,7 @@ public class InputPanel extends ConstraintLayout
                        @NonNull SlideDeck attachments,
                        @NonNull QuoteModel.Type quoteType)
   {
-    this.quoteView.setQuote(requestManager, id, author, body, false, attachments, null, quoteType, true);
+    this.quoteView.setQuote(requestManager, id, author, body, false, attachments, null, quoteType, true, null);
     if (listener != null) {
       this.quoteView.setOnClickListener(v -> listener.onQuoteClicked(id, author.getId()));
     }

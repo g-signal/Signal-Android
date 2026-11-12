@@ -23,6 +23,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.signal.core.ui.BottomSheetUtil
+import org.signal.core.ui.FixedRoundedCornerBottomSheetDialogFragment
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.avatar.view.AvatarView
@@ -40,13 +42,14 @@ import org.thoughtcrime.securesms.components.settings.conversation.preferences.B
 import org.thoughtcrime.securesms.conversation.v2.data.AvatarDownloadStateCache
 import org.thoughtcrime.securesms.fonts.SignalSymbols
 import org.thoughtcrime.securesms.groups.GroupId
+import org.thoughtcrime.securesms.groups.memberlabel.MemberLabelEducationSheet
+import org.thoughtcrime.securesms.groups.memberlabel.MemberLabelPillView
 import org.thoughtcrime.securesms.nicknames.NicknameActivity
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientExporter
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.recipients.RecipientUtil
 import org.thoughtcrime.securesms.recipients.ui.about.AboutSheet
-import org.thoughtcrime.securesms.util.BottomSheetUtil
 import org.thoughtcrime.securesms.util.ContextUtil
 import org.thoughtcrime.securesms.util.SpanUtil
 import org.thoughtcrime.securesms.util.ViewUtil
@@ -74,7 +77,8 @@ class RecipientBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
     fun show(fragmentManager: FragmentManager, recipientId: RecipientId, groupId: GroupId?) {
       val recipient = Recipient.resolved(recipientId)
       if (recipient.isSelf) {
-        AboutSheet.create(recipient).show(fragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG)
+        AboutSheet.create(recipient, groupId as? GroupId.V2)
+          .show(fragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG)
       } else {
         val args = Bundle()
         val fragment = RecipientBottomSheetDialogFragment()
@@ -115,6 +119,8 @@ class RecipientBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
     val fullName: TextView = view.findViewById(R.id.rbs_full_name)
     val gextTagsView: GExtTagsView = view.findViewById(R.id.rbs_gext_tags)
     val about: TextView = view.findViewById(R.id.rbs_about)
+    val memberLabelView: MemberLabelPillView = view.findViewById(R.id.rbs_member_label)
+    val aboutView: TextView = view.findViewById(R.id.rbs_about)
     val nickname: TextView = view.findViewById(R.id.rbs_nickname_button)
     val blockButton: TextView = view.findViewById(R.id.rbs_block_button)
     val unblockButton: TextView = view.findViewById(R.id.rbs_unblock_button)
@@ -154,6 +160,7 @@ class RecipientBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
           AvatarDownloadStateCache.forRecipient(recipient.id).collect {
             when (it) {
               AvatarDownloadStateCache.DownloadState.NONE -> {}
+
               AvatarDownloadStateCache.DownloadState.IN_PROGRESS -> {
                 if (inProgress) {
                   return@collect
@@ -165,12 +172,14 @@ class RecipientBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
                 delay(LOADING_DELAY)
                 progressBar.visible = AvatarDownloadStateCache.getDownloadState(recipient) == AvatarDownloadStateCache.DownloadState.IN_PROGRESS
               }
+
               AvatarDownloadStateCache.DownloadState.FINISHED -> {
                 AvatarDownloadStateCache.set(recipient, AvatarDownloadStateCache.DownloadState.NONE)
                 viewModel.refreshGroupId(groupId)
                 inProgress = false
                 progressBar.visible = false
               }
+
               AvatarDownloadStateCache.DownloadState.FAILED -> {
                 AvatarDownloadStateCache.set(recipient, AvatarDownloadStateCache.DownloadState.NONE)
                 avatar.displayGradientBlur(recipient)
@@ -358,6 +367,10 @@ class RecipientBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
       }
     }
 
+    viewModel.recipientDetails.observe(viewLifecycleOwner) { state ->
+      updateRecipientDetails(state, memberLabelView, aboutView, groupId?.v2OrNull())
+    }
+
     viewModel.canAddToAGroup.observe(getViewLifecycleOwner()) { canAdd: Boolean ->
       addToGroupButton.setText(if (groupId == null) R.string.RecipientBottomSheet_add_to_a_group else R.string.RecipientBottomSheet_add_to_another_group)
       addToGroupButton.visible = canAdd
@@ -466,6 +479,41 @@ class RecipientBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
       }
     })
     animator.start()
+  }
+
+  private fun updateRecipientDetails(
+    state: RecipientDetailsState,
+    memberLabelView: MemberLabelPillView,
+    aboutView: TextView,
+    groupId: GroupId.V2?
+  ) {
+    when {
+      state.memberLabel != null -> {
+        memberLabelView.setLabel(state.memberLabel.label, state.memberLabel.tintColor)
+        memberLabelView.visible = true
+        aboutView.visible = false
+
+        if (groupId != null) {
+          memberLabelView.setOnClickListener {
+            dismiss()
+            MemberLabelEducationSheet.show(parentFragmentManager, groupId)
+          }
+        } else {
+          memberLabelView.setOnClickListener(null)
+        }
+      }
+
+      !state.aboutText.isNullOrBlank() -> {
+        aboutView.text = state.aboutText
+        aboutView.visible = true
+        memberLabelView.visible = false
+      }
+
+      else -> {
+        memberLabelView.visible = false
+        aboutView.visible = false
+      }
+    }
   }
 
   interface Callback {

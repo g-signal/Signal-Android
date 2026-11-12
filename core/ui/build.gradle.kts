@@ -14,10 +14,16 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = "1.5.4"
   }
+
+  testFixtures {
+    enable = true
+  }
 }
 
 dependencies {
   lintChecks(project(":lintchecks"))
+
+  api(project(":core:util"))
 
   platform(libs.androidx.compose.bom).let { composeBom ->
     api(composeBom)
@@ -36,4 +42,10 @@ dependencies {
   api(libs.androidx.fragment.compose)
   implementation(libs.kotlinx.serialization.json)
   api(libs.google.zxing.core)
+  api(libs.material.material)
+  api(libs.androidx.window.window)
+  api(libs.accompanist.permissions)
+
+  // JUnit is used by test fixtures
+  testFixturesImplementation(testLibs.junit.junit)
 }

@@ -17,6 +17,10 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import java.io.File
 import java.io.FileInputStream
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.Properties
 
 plugins {
@@ -25,6 +29,7 @@ plugins {
   alias(libs.plugins.ktlint)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlinx.serialization)
+  alias(benchmarkLibs.plugins.baselineprofile)
   id("androidx.navigation.safeargs")
   id("kotlin-parcelize")
   id("com.squareup.wire")
@@ -36,8 +41,8 @@ plugins {
 
 apply(from = "static-ips.gradle.kts")
 
-val canonicalVersionCode = 1644
-val canonicalVersionName = "7.72.2"
+val canonicalVersionCode = 1657
+val canonicalVersionName = "8.1.0"
 val currentHotfixVersion = 1
 val maxHotfixVersions = 100
 
@@ -79,6 +84,14 @@ val keystores: Map<String, Properties?> = mapOf(
   "release" to loadKeystoreProperties("D:/project/signal/key/keystore.release.properties")
 )
 
+val localPropertiesFile = File(rootProject.projectDir, "local.properties")
+val localProperties: Properties? = if (localPropertiesFile.exists()) {
+  Properties().apply { localPropertiesFile.inputStream().use { load(it) } }
+} else {
+  null
+}
+val quickstartCredentialsDir: String? = localProperties?.getProperty("quickstart.credentials.dir")
+
 val selectableVariants = listOf(
   "nightlyBackupRelease",
   "nightlyBackupSpinner",
@@ -90,6 +103,8 @@ val selectableVariants = listOf(
   "playProdSpinner",
   "playProdCanary",
   "playProdPerf",
+  "playProdMocked",
+  "playProdNonMinifiedMocked",
   "playProdBenchmark",
   "playProdInstrumentation",
   "playProdRelease",
@@ -99,8 +114,12 @@ val selectableVariants = listOf(
   "playStagingPerf",
   "playStagingInstrumentation",
   "playStagingRelease",
+  "playProdQuickstart",
+  "playStagingQuickstart",
   "websiteProdSpinner",
-  "websiteProdRelease"
+  "websiteProdRelease",
+  "githubProdSpinner",
+  "githubProdRelease"
 )
 
 wire {
@@ -235,7 +254,8 @@ android {
         "**/libsignal_jni_amd64.so",
         "**/libsignal_jni_aarch64.so",
         "**/libsignal_jni_testing_amd64.so",
-        "**/libsignal_jni_testing_aarch64.so"
+        "**/libsignal_jni_testing_aarch64.so",
+        "**/*.proto"
       )
     }
   }
@@ -320,7 +340,7 @@ android {
     buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_live_6cmGZopuTsV8novGgJJW9JpC00vLIgtQ1D\"")
     buildConfigField("boolean", "TRACING_ENABLED", "false")
     buildConfigField("boolean", "LINK_DEVICE_UX_ENABLED", "false")
-    buildConfigField("boolean", "USE_STRING_ID", "true")
+    buildConfigField("boolean", "USE_STRING_ID", "false")
 
     ndk {
       abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -422,8 +442,25 @@ android {
       isDebuggable = false
       isMinifyEnabled = true
       matchingFallbacks += "debug"
+      applicationIdSuffix = ".benchmark"
+
       buildConfigField("String", "BUILD_VARIANT_TYPE", "\"Benchmark\"")
       buildConfigField("boolean", "TRACING_ENABLED", "true")
+      buildConfigField("String[]", "UNIDENTIFIED_SENDER_TRUST_ROOTS", "new String[]{ \"BVT/2gHqbrG1xzuIypLIOjFgMtihrMld1/5TGADL6Dhv\"}")
+
+      manifestPlaceholders["applicationClass"] = "org.thoughtcrime.securesms.BenchmarkApplicationContext"
+    }
+
+    create("mocked") {
+      initWith(getByName("debug"))
+      isDefault = false
+      isDebuggable = false
+      isMinifyEnabled = true
+      matchingFallbacks += "debug"
+      buildConfigField("String", "BUILD_VARIANT_TYPE", "\"Benchmark\"")
+      buildConfigField("boolean", "TRACING_ENABLED", "true")
+
+      manifestPlaceholders["applicationClass"] = "org.thoughtcrime.securesms.ApplicationContext"
     }
 
     create("canary") {
@@ -432,6 +469,14 @@ android {
       isMinifyEnabled = false
       matchingFallbacks += "debug"
       buildConfigField("String", "BUILD_VARIANT_TYPE", "\"Canary\"")
+    }
+
+    create("quickstart") {
+      initWith(getByName("debug"))
+      isDefault = false
+      isMinifyEnabled = false
+      matchingFallbacks += "debug"
+      buildConfigField("String", "BUILD_VARIANT_TYPE", "\"Quickstart\"")
     }
   }
 
@@ -449,6 +494,13 @@ android {
       buildConfigField("boolean", "MANAGES_APP_UPDATES", "true")
       buildConfigField("String", "APK_UPDATE_MANIFEST_URL", "\"https://updates.ba-chat.com/android/latest.json\"")
       buildConfigField("String", "BUILD_DISTRIBUTION_TYPE", "\"website\"")
+    }
+
+    create("github") {
+      dimension = "distribution"
+      buildConfigField("boolean", "MANAGES_APP_UPDATES", "false")
+      buildConfigField("String", "APK_UPDATE_MANIFEST_URL", "null")
+      buildConfigField("String", "BUILD_DISTRIBUTION_TYPE", "\"github\"")
     }
 
     create("nightly") {
@@ -498,7 +550,6 @@ android {
       buildConfigField("String", "RECAPTCHA_PROOF_URL", "\"https://captcha.imba-test.com/challenge/generate.html\"")
       buildConfigField("org.signal.libsignal.net.Network.Environment", "LIBSIGNAL_NET_ENV", "org.signal.libsignal.net.Network.Environment.STAGING")
       buildConfigField("int", "LIBSIGNAL_LOG_LEVEL", "org.signal.libsignal.protocol.logging.SignalProtocolLogger.DEBUG")
-      buildConfigField("boolean", "USE_STRING_ID", "false")
 
       buildConfigField("String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\"")
       buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\"")
@@ -525,6 +576,7 @@ android {
     ignoreWarnings = true
     quiet = true
     disable += "LintError"
+    lintConfig = rootProject.file("lint.xml")
   }
 
   applicationVariants.all {
@@ -564,7 +616,7 @@ android {
 
       // Starting with minSdk 23, Android leaves native libraries uncompressed, which is fine for the Play Store, but not for our self-distributed APKs.
       // This reverts it to the legacy behavior, compressing the native libraries, and drastically reducing the APK file size.
-      if (variant.name.contains("website", ignoreCase = true)) {
+      if (variant.name.contains("website", ignoreCase = true) || variant.name.contains("github", ignoreCase = true)) {
         variant.packaging.jniLibs.useLegacyPackaging.set(true)
       }
 
@@ -579,19 +631,37 @@ android {
           val nightlyVersionCode = (canonicalVersionCode * maxHotfixVersions) + (getNightlyBuildNumber(tag) * 10) + nightlyBuffer
 
           variant.outputs.forEach { output ->
-            output.versionName.set(tag)
+            output.versionName.set("$tag | ${getLastCommitDateTimeUtc()}")
             output.versionCode.set(nightlyVersionCode)
           }
         }
       }
 
-      val bundleVersionName = variant.outputs.firstOrNull()?.versionName?.getOrElse(canonicalVersionName) ?: canonicalVersionName
+      val bundleVersionName = (variant.outputs.firstOrNull()?.versionName?.getOrElse(canonicalVersionName) ?: canonicalVersionName).substringBefore(" |")
       val renameBundleTask = tasks.register<RenameBundleTask>("rename${variant.name.capitalize()}Bundle")
       variant.artifacts
         .use(renameBundleTask)
         .wiredWithFiles(RenameBundleTask::inputBundle, RenameBundleTask::outputBundle)
         .withName(bundleOutputFileName(project.name, variant.name, bundleVersionName))
         .toTransform(SingleArtifact.BUNDLE)
+    }
+
+    onVariants(selector().withBuildType("quickstart")) { variant ->
+      val environment = variant.flavorName?.let { name ->
+        when {
+          name.contains("staging", ignoreCase = true) -> "staging"
+          name.contains("prod", ignoreCase = true) -> "prod"
+          else -> "prod"
+        }
+      } ?: "prod"
+
+      val taskProvider = tasks.register<CopyQuickstartCredentialsTask>("copyQuickstartCredentials${variant.name.capitalize()}") {
+        if (quickstartCredentialsDir != null) {
+          inputDir.set(File(quickstartCredentialsDir))
+        }
+        filePrefix.set("${environment}_")
+      }
+      variant.sources.assets?.addGeneratedSourceDirectory(taskProvider) { it.outputDir }
     }
   }
 
@@ -605,6 +675,31 @@ android {
     }
   }
 
+  sourceSets {
+    getByName("mocked") {
+      java.srcDir("$projectDir/src/benchmarkShared/java")
+      manifest.srcFile("$projectDir/src/benchmarkShared/AndroidManifest.xml")
+    }
+
+    getByName("benchmark") {
+      java.srcDir("$projectDir/src/benchmarkShared/java")
+      manifest.srcFile("$projectDir/src/benchmarkShared/AndroidManifest.xml")
+    }
+  }
+}
+
+baselineProfile {
+  warnings {
+    disabledVariants = false
+  }
+
+  mergeIntoMain = true
+
+  variants.create("mocked") {
+    from(project(":baseline-profile"))
+  }
+
+  dexLayoutOptimization = false
 }
 
 dependencies {
@@ -625,9 +720,12 @@ dependencies {
   implementation(project(":lib:qr"))
   implementation(project(":lib:sticky-header-grid"))
   implementation(project(":lib:photoview"))
+  implementation(project(":lib:blurhash"))
   implementation(project(":core:ui"))
   implementation(project(":core:models"))
   implementation(project(":core:models-jvm"))
+  implementation(project(":feature:camera"))
+  implementation(project(":feature:registration"))
 
   implementation(libs.androidx.fragment.ktx)
   implementation(libs.androidx.appcompat) {
@@ -731,6 +829,7 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
 
   implementation(project(":lib:billing"))
+  implementation(project(":feature:media-send"))
 
   "spinnerImplementation"(project(":lib:spinner"))
 
@@ -823,6 +922,16 @@ fun getNightlyBuildNumber(tag: String?): Int {
   return match?.groupValues?.get(1)?.toIntOrNull() ?: 0
 }
 
+fun getLastCommitDateTimeUtc(): String {
+  val timestamp = providers.exec {
+    commandLine("git", "log", "-1", "--pretty=format:%ct")
+  }.standardOutput.asText.get().trim().toLong()
+  val instant = Instant.ofEpochSecond(timestamp)
+  val formatter = DateTimeFormatter.ofPattern("MMM d '@' HH:mm 'UTC'", Locale.US)
+    .withZone(ZoneOffset.UTC)
+  return formatter.format(instant)
+}
+
 fun getMapsKey(): String {
   return providers
     .gradleProperty("mapsKey")
@@ -898,6 +1007,7 @@ abstract class RenameBundleTask : DefaultTask() {
 fun String.capitalize(): String {
   return this.replaceFirstChar { it.uppercase() }
 }
+
 fun loadKeystoreProperties(filename: String): Properties? {
   val keystorePropertiesFile = if (File(filename).isAbsolute) {
     file(filename)
@@ -911,5 +1021,40 @@ fun loadKeystoreProperties(filename: String): Properties? {
     keystoreProperties
   } else {
     null
+  }
+}
+
+abstract class CopyQuickstartCredentialsTask : DefaultTask() {
+  @get:InputDirectory
+  @get:Optional
+  abstract val inputDir: DirectoryProperty
+
+  @get:Input
+  abstract val filePrefix: Property<String>
+
+  @get:OutputDirectory
+  abstract val outputDir: DirectoryProperty
+
+  @TaskAction
+  fun copy() {
+    if (!inputDir.isPresent) {
+      throw GradleException("quickstart.credentials.dir is not set in local.properties. This is required for quickstart builds.")
+    }
+
+    val prefix = filePrefix.get()
+    val candidates = inputDir.get().asFile.listFiles()
+      ?.filter { it.extension == "json" && it.name.startsWith(prefix) }
+      ?: emptyList()
+
+    if (candidates.isEmpty()) {
+      throw GradleException("No credential files matching '$prefix*.json' found in ${inputDir.get().asFile}. Add files like '${prefix}account1.json' to your credentials directory.")
+    }
+
+    val chosen = candidates.random()
+    logger.lifecycle("Selected quickstart credential: ${chosen.name}")
+
+    val dest = outputDir.get().asFile.resolve("quickstart")
+    dest.mkdirs()
+    chosen.copyTo(dest.resolve(chosen.name), overwrite = true)
   }
 }

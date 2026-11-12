@@ -23,7 +23,6 @@ import java.net.URLDecoder
  */
 object CallLinks {
   private const val ROOT_KEY = "key"
-  private const val EPOCH = "epoch"
   private const val HTTPS_LINK_PREFIX = "https://link.baxs.com/call/#key="
   private const val SNGL_LINK_PREFIX = "baxs://link.baxs.com/call/#key="
   private const val LEGACY_HTTPS_LINK_PREFIX = "https://link.baxs.com/call#key="
@@ -32,13 +31,7 @@ object CallLinks {
 
   private val TAG = Log.tag(CallLinks::class.java)
 
-  fun url(rootKeyBytes: ByteArray, epochBytes: ByteArray?): String {
-    return if (epochBytes == null) {
-      "$HTTPS_LINK_PREFIX${CallLinkRootKey(rootKeyBytes)}"
-    } else {
-      "$HTTPS_LINK_PREFIX${CallLinkRootKey(rootKeyBytes)}&epoch=${CallLinkEpoch.fromBytes(epochBytes)}"
-    }
-  }
+  fun url(rootKeyBytes: ByteArray): String = "$HTTPS_LINK_PREFIX${CallLinkRootKey(rootKeyBytes)}"
 
   fun watchCallLink(roomId: CallLinkRoomId): Observable<CallLinkTable.CallLink> {
     return Observable.create { emitter ->
@@ -79,13 +72,8 @@ object CallLinks {
     return url.split("#").last().startsWith("key=")
   }
 
-  data class CallLinkParseResult(
-    val rootKey: CallLinkRootKey,
-    val epoch: CallLinkEpoch?
-  )
-
   @JvmStatic
-  fun parseUrl(url: String): CallLinkParseResult? {
+  fun parseUrl(url: String): CallLinkRootKey? {
     if (!isPrefixedCallLink(url)) {
       Log.w(TAG, "Invalid url prefix.")
       return null
@@ -133,13 +121,9 @@ object CallLinks {
     }
 
     return try {
-      val epoch = fragmentQuery[EPOCH]?.let { s -> CallLinkEpoch(s) }
-      CallLinkParseResult(
-        rootKey = CallLinkRootKey(key),
-        epoch = epoch
-      )
+      return CallLinkRootKey(key)
     } catch (e: CallException) {
-      Log.w(TAG, "Invalid root key or epoch found in fragment query string.")
+      Log.w(TAG, "Invalid root key found in fragment query string.")
       null
     }
   }

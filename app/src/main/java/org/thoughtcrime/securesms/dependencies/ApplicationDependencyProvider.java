@@ -592,6 +592,11 @@ public class ApplicationDependencyProvider implements AppDependencies.Provider {
     return new LinkBaPayApi(pushServiceSocket);
   }
 
+  @Override
+  public @NonNull KeyTransparencyApi provideKeyTransparencyApi(@NonNull SignalWebSocket.UnauthenticatedWebSocket unauthWebSocket) {
+    return new KeyTransparencyApi(unauthWebSocket);
+  }
+
   @VisibleForTesting
   static class DynamicCredentialsProvider implements CredentialsProvider {
 

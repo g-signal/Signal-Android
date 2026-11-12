@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
+import org.signal.core.ui.BottomSheetUtil
 import org.signal.core.util.concurrent.LifecycleDisposable
 import org.signal.core.util.dp
 import org.thoughtcrime.securesms.R
@@ -24,7 +25,6 @@ import org.thoughtcrime.securesms.stories.GroupStoryEducationSheet
 import org.thoughtcrime.securesms.stories.dialogs.StoryDialogs
 import org.thoughtcrime.securesms.stories.settings.create.CreateStoryFlowDialogFragment
 import org.thoughtcrime.securesms.stories.settings.create.CreateStoryWithViewersFragment
-import org.thoughtcrime.securesms.util.BottomSheetUtil
 import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
 import org.thoughtcrime.securesms.util.adapter.mapping.PagingMappingAdapter
 import org.thoughtcrime.securesms.util.navigation.safeNavigate
@@ -111,7 +111,7 @@ class StoriesPrivacySettingsFragment :
         noPadTextPref(
           title = DSLSettingsText.from(
             R.string.StoriesPrivacySettingsFragment__story_updates_automatically_disappear,
-            DSLSettingsText.TextAppearanceModifier(R.style.Signal_Text_BodyMedium),
+            DSLSettingsText.TextAppearanceModifier(CoreUiR.style.Signal_Text_BodyMedium),
             DSLSettingsText.ColorModifier(ContextCompat.getColor(requireContext(), CoreUiR.color.signal_colorOnSurfaceVariant))
           )
         )
@@ -173,7 +173,7 @@ class StoriesPrivacySettingsFragment :
           title = DSLSettingsText.from(R.string.StoriesPrivacySettingsFragment__turn_off_stories),
           summary = DSLSettingsText.from(
             R.string.StoriesPrivacySettingsFragment__if_you_opt_out,
-            DSLSettingsText.TextAppearanceModifier(R.style.Signal_Text_BodyMedium),
+            DSLSettingsText.TextAppearanceModifier(CoreUiR.style.Signal_Text_BodyMedium),
             DSLSettingsText.ColorModifier(ContextCompat.getColor(requireContext(), CoreUiR.color.signal_colorOnSurfaceVariant))
           ),
           onClick = {

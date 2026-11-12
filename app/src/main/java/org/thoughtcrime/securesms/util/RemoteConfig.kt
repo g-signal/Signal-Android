@@ -305,11 +305,13 @@ object RemoteConfig {
         val newKey = key.removePrefix("android.libsignal.")
         when (value) {
           is String -> newKey to value
+
           // The server is currently synthesizing "true" / "false" values
           // for RemoteConfigs that are otherwise empty string values.
           // Libsignal expects that disabled values are simply absent from the
           // map, so we map true to "true" and otherwise omit disabled values.
           is Boolean -> if (value) newKey to "true" else null
+
           else -> {
             val type = value?.let { value::class.simpleName }
             Log.w(TAG, "[libsignal] Unexpected type for $newKey! Was a $type")
@@ -562,6 +564,15 @@ object RemoteConfig {
     hotSwappable = true
   )
 
+  /** The maximum number of pinned conversations a user can have. */
+  @JvmStatic
+  @get:JvmName("pinnedChatLimit")
+  val pinnedChatLimit: Int by remoteInt(
+    key = "global.pinnedChatLimit",
+    defaultValue = 4,
+    hotSwappable = true
+  )
+
   /** The maximum number of grapheme  */
   @JvmStatic
   val maxGroupNameGraphemeLength: Int by remoteValue(
@@ -786,14 +797,14 @@ object RemoteConfig {
 
   /** A comma-separated list of manufacturers that should *not* use CameraX.  */
   val cameraXModelBlocklist: String by remoteString(
-    key = "android.cameraXModelBlockList",
+    key = "android.cameraXModelBlockList.3",
     defaultValue = "",
     hotSwappable = true
   )
 
   /** A comma-separated list of manufacturers that should *not* use CameraX mixed mode.  */
   val cameraXMixedModelBlocklist: String by remoteString(
-    key = "android.cameraXMixedModelBlockList",
+    key = "android.cameraXMixedModelBlockList.2",
     defaultValue = "",
     hotSwappable = false
   )
@@ -1162,15 +1173,15 @@ object RemoteConfig {
   @JvmStatic
   @get:JvmName("useBinaryId")
   val useBinaryId: Boolean by remoteBoolean(
-    key = "android.useBinaryServiceId",
-    defaultValue = Environment.IS_STAGING,
+    key = "android.useBinaryServiceId.2",
+    defaultValue = true,
     hotSwappable = false
   )
 
   @JvmStatic
-  @get:JvmName("backupsBetaMegaphone")
-  val backupsBetaMegaphone: Boolean by remoteBoolean(
-    key = "android.backupsBetaMegaphone.2",
+  @get:JvmName("backupsMegaphone")
+  val backupsMegaphone: Boolean by remoteBoolean(
+    key = "android.backupsMegaphone.3",
     defaultValue = false,
     hotSwappable = true
   )
@@ -1227,16 +1238,67 @@ object RemoteConfig {
   )
 
   /**
-   * Whether or not to show any UI related to key transparency
+   * Whether to receive and display group member labels.
    */
-  @JvmStatic
-  @get:JvmName("keyTransparency")
-  val keyTransparency: Boolean by remoteBoolean(
-    key = "android.keyTransparency",
-    active = false,
+  val receiveMemberLabels: Boolean by remoteBoolean(
+    key = "android.receiveMemberLabels.2",
     defaultValue = false,
     hotSwappable = true
   )
 
+  /**
+   * Whether to enable modifying group member labels.
+   */
+  @JvmStatic
+  @get:JvmName("sendMemberLabels")
+  val sendMemberLabels: Boolean by remoteBoolean(
+    key = "android.sendMemberLabels.2",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  /**
+   * Whether or not to receive admin delete messages.
+   */
+  @JvmStatic
+  @get:JvmName("receiveAdminDelete")
+  val receiveAdminDelete: Boolean by remoteBoolean(
+    key = "android.receiveAdminDelete",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  /**
+   * Whether or not to send admin delete messages.
+   */
+  @JvmStatic
+  @get:JvmName("sendAdminDelete")
+  val sendAdminDelete: Boolean by remoteBoolean(
+    key = "android.sendAdminDelete",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  /**
+   * Maximum time that passes where a message can still be regularly deleted
+   */
+  @JvmStatic
+  @get:JvmName("regularDeleteThreshold")
+  val regularDeleteThreshold: Long by remoteLong(
+    key = "android.regularDeleteThreshold",
+    defaultValue = 1.days.inWholeMilliseconds,
+    hotSwappable = true
+  )
+
+  /**
+   * Maximum time that passes where a message can still be deleted by an admin
+   */
+  @JvmStatic
+  @get:JvmName("adminDeleteThreshold")
+  val adminDeleteThreshold: Long by remoteLong(
+    key = "android.adminDeleteThreshold",
+    defaultValue = 1.days.inWholeMilliseconds,
+    hotSwappable = true
+  )
   // endregion
 }

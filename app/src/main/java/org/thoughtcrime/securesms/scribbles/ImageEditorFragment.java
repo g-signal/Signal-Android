@@ -45,6 +45,7 @@ import org.signal.imageeditor.core.model.EditorModel;
 import org.signal.imageeditor.core.renderers.BezierDrawingRenderer;
 import org.signal.imageeditor.core.renderers.FaceBlurRenderer;
 import org.signal.imageeditor.core.renderers.MultiLineTextRenderer;
+import org.signal.imageeditor.core.renderers.UriGlideRenderer;
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.animation.ResizeAnimation;
 import org.thoughtcrime.securesms.attachments.AttachmentSaver;
@@ -56,7 +57,7 @@ import org.thoughtcrime.securesms.mediasend.v2.MediaAnimations;
 import org.thoughtcrime.securesms.mms.MediaConstraints;
 import org.thoughtcrime.securesms.mms.PushMediaConstraints;
 import org.thoughtcrime.securesms.mms.SentMediaQuality;
-import org.thoughtcrime.securesms.permissions.Permissions;
+import org.signal.core.ui.permissions.Permissions;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.scribbles.stickers.AnalogClockStickerRenderer;
 import org.thoughtcrime.securesms.scribbles.stickers.DigitalClockStickerRenderer;
@@ -128,7 +129,7 @@ public final class ImageEditorFragment extends Fragment implements ImageEditorHu
       this(new Bundle());
     }
 
-    void writeModel(@NonNull EditorModel model) {
+    public void writeModel(@NonNull EditorModel model) {
       byte[] bytes = ParcelUtil.serialize(model);
       bundle.putByteArray("MODEL", bytes);
     }

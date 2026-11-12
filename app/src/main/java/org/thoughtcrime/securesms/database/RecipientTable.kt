@@ -16,6 +16,7 @@ import org.signal.core.util.Base64
 import org.signal.core.util.Bitmask
 import org.signal.core.util.CursorUtil
 import org.signal.core.util.SqlUtil
+import org.signal.core.util.Util
 import org.signal.core.util.delete
 import org.signal.core.util.exists
 import org.signal.core.util.forEach
@@ -102,7 +103,6 @@ import org.thoughtcrime.securesms.util.IdentityUtil
 import org.thoughtcrime.securesms.util.ProfileUtil
 import org.thoughtcrime.securesms.util.RemoteConfig
 import org.thoughtcrime.securesms.util.SignalE164Util
-import org.thoughtcrime.securesms.util.Util
 import org.thoughtcrime.securesms.wallpaper.ChatWallpaper
 import org.thoughtcrime.securesms.wallpaper.ChatWallpaperFactory
 import org.thoughtcrime.securesms.wallpaper.WallpaperStorage
@@ -199,6 +199,7 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
     const val SORT_NAME = "sort_name"
     const val IDENTITY_STATUS = "identity_status"
     const val IDENTITY_KEY = "identity_key"
+    const val KEY_TRANSPARENCY_DATA = "key_transparency_data"
 
     @JvmField
     val CREATE_TABLE =
@@ -267,13 +268,15 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
         $NICKNAME_FAMILY_NAME TEXT DEFAULT NULL,
         $NICKNAME_JOINED_NAME TEXT DEFAULT NULL,
         $NOTE TEXT DEFAULT NULL,
-        $MESSAGE_EXPIRATION_TIME_VERSION INTEGER DEFAULT 1 NOT NULL
+        $MESSAGE_EXPIRATION_TIME_VERSION INTEGER DEFAULT 1 NOT NULL,
+        $KEY_TRANSPARENCY_DATA BLOB DEFAULT NULL
       )
       """
 
     val CREATE_INDEXS = arrayOf(
       "CREATE INDEX IF NOT EXISTS recipient_type_index ON $TABLE_NAME ($TYPE);",
-      "CREATE INDEX IF NOT EXISTS recipient_aci_profile_key_index ON $TABLE_NAME ($ACI_COLUMN, $PROFILE_KEY) WHERE $ACI_COLUMN NOT NULL AND $PROFILE_KEY NOT NULL"
+      "CREATE INDEX IF NOT EXISTS recipient_aci_profile_key_index ON $TABLE_NAME ($ACI_COLUMN, $PROFILE_KEY) WHERE $ACI_COLUMN NOT NULL AND $PROFILE_KEY NOT NULL",
+      "CREATE UNIQUE INDEX recipient_username_unique_nocase ON recipient(username COLLATE NOCASE)"
     )
 
     private val RECIPIENT_PROJECTION: Array<String> = arrayOf(
@@ -331,7 +334,8 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
       PHONE_NUMBER_SHARING,
       NICKNAME_GIVEN_NAME,
       NICKNAME_FAMILY_NAME,
-      NOTE
+      NOTE,
+      KEY_TRANSPARENCY_DATA
     )
 
     private val ID_PROJECTION = arrayOf(ID)
@@ -443,7 +447,14 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
   }
 
   fun getByUsername(username: String): Optional<RecipientId> {
-    return getByColumn(USERNAME, username)
+    return readableDatabase
+      .select(ID)
+      .from(TABLE_NAME)
+      .where("$USERNAME = ? COLLATE NOCASE", username)
+      .run()
+      .readToSingleObject { cursor ->
+        Optional.of(RecipientId.from(cursor.requireLong(ID)))
+      } ?: Optional.empty()
   }
 
   fun getByCallLinkRoomId(callLinkRoomId: CallLinkRoomId): Optional<RecipientId> {
@@ -971,7 +982,7 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
       writableDatabase
         .update(TABLE_NAME)
         .values(USERNAME to null)
-        .where("$USERNAME = ? AND $ID != ?", username, recipientId.serialize())
+        .where("$USERNAME = ? COLLATE NOCASE AND $ID != ?", username, recipientId.serialize())
         .run()
     }
   }
@@ -1002,14 +1013,16 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
     val groupId = GroupId.v2(masterKey)
     val values = getValuesForStorageGroupV2(insert, true)
 
-    writableDatabase.insertOrThrow(TABLE_NAME, null, values)
+    val createdId = writableDatabase.withinTransaction {
+      writableDatabase.insertOrThrow(TABLE_NAME, null, values)
 
-    Log.i(TAG, "Creating restore placeholder for $groupId")
-    val createdId = groups.create(
-      groupMasterKey = masterKey,
-      groupState = DecryptedGroup(revision = GroupsV2StateProcessor.RESTORE_PLACEHOLDER_REVISION),
-      groupSendEndorsements = null
-    )
+      Log.i(TAG, "Creating restore placeholder for $groupId")
+      groups.create(
+        groupMasterKey = masterKey,
+        groupState = DecryptedGroup(revision = GroupsV2StateProcessor.RESTORE_PLACEHOLDER_REVISION),
+        groupSendEndorsements = null
+      )
+    }
 
     if (createdId == null) {
       Log.w(TAG, "Unable to create restore placeholder for $groupId, group already exists")
@@ -2231,6 +2244,7 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
         .values(NEEDS_PNI_SIGNATURE to 0)
         .run()
 
+      clearSelfKeyTransparencyData()
       SignalDatabase.pendingPniSignatureMessages.deleteAll()
 
       db.setTransactionSuccessful()
@@ -2257,6 +2271,10 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
           Log.i(TAG, "Username was previously thought to be owned by " + existingUsername.get() + ". Clearing their username.")
           setUsername(existingUsername.get(), null)
         }
+      }
+
+      if (id == Recipient.self().id) {
+        clearSelfKeyTransparencyData()
       }
 
       if (update(id, contentValuesOf(USERNAME to username))) {
@@ -3869,7 +3887,7 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
     }
   }
 
-  fun setHasGroupsInCommon(recipientIds: List<RecipientId?>) {
+  fun setHasGroupsInCommon(recipientIds: Collection<RecipientId>) {
     if (recipientIds.isEmpty()) {
       return
     }
@@ -4024,6 +4042,41 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
       .where(ID_WHERE, id)
       .run()
       .readToSingleLong(0L)
+  }
+
+  fun getKeyTransparencyData(aci: ACI): ByteArray? {
+    return readableDatabase
+      .select(KEY_TRANSPARENCY_DATA)
+      .from(TABLE_NAME)
+      .where("$ACI_COLUMN = ?", aci.toString())
+      .run()
+      .readToSingleObject { cursor ->
+        cursor.requireBlob(KEY_TRANSPARENCY_DATA)
+      }
+  }
+
+  fun setKeyTransparencyData(aci: ACI, data: ByteArray?) {
+    writableDatabase
+      .update(TABLE_NAME)
+      .values(KEY_TRANSPARENCY_DATA to data)
+      .where("$ACI_COLUMN = ?", aci.toString())
+      .run()
+  }
+
+  fun clearAllKeyTransparencyData() {
+    writableDatabase
+      .update(TABLE_NAME)
+      .values(KEY_TRANSPARENCY_DATA to null)
+      .where("$KEY_TRANSPARENCY_DATA IS NOT NULL")
+      .run()
+  }
+
+  fun clearSelfKeyTransparencyData() {
+    writableDatabase
+      .update(TABLE_NAME)
+      .values(KEY_TRANSPARENCY_DATA to null)
+      .where("$ACI_COLUMN = ?", Recipient.self().requireAci().toString())
+      .run()
   }
 
   /**
